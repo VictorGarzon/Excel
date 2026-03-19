@@ -1,0 +1,19 @@
+<table>
+    <thead>
+        <tr>
+            <th>dato</th>
+            <th>dato2</th>
+            <th>suma</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (fila of tabla; track $index) {
+        <tr app-fila [fila]="fila"></tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
