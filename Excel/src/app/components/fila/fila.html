@@ -1,0 +1,3 @@
+@for (celda of fila(); track $index) {
+<td app-celda [valorInicial]="celda?.valorInicial" [funcion]="celda?.funcion" [columnas]="buscarColumna(celda?.columnas)"></td>
+}
