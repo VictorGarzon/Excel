@@ -1,19 +1,31 @@
 <table>
     <thead>
-        <tr>
-            <th>dato</th>
-            <th>dato2</th>
-            <th>suma</th>
-        </tr>
+        @for (fila of tabla.header; track $index) {
+        <tr app-fila [fila]="fila"></tr>
+        }
     </thead>
     <tbody>
-        @for (fila of tabla; track $index) {
-        <tr app-fila [fila]="fila"></tr>
+        @for (fila of tabla.body.contenido; track fila.fila ;let i = $index) {
+
+            @if (i == 0 && fila.fila != 0) {
+                @for (n of [].constructor(fila.fila); track $index) {
+                    <tr app-fila [fila]="[...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"></tr>
+                }   
+            }
+
+            <tr app-fila [fila]="[...tabla.body.formato,...fila.celdas].sort((a,b)=>a.columna - b.columna)"></tr>
+
+            @let siguiente = tabla.body.contenido[i+1]?.fila ;
+            @if ( siguiente && fila.fila != (siguiente - 1) ) {
+                @for (n of [].constructor(siguiente - fila.fila -1); track $index) {
+                    <tr app-fila [fila]="[...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"></tr>
+                }
+            }
         }
     </tbody>
     <tfoot>
-        <tr>
-            <td></td>
-        </tr>
+        @for (fila of tabla.footer; track $index) {
+        <tr app-fila [fila]="fila.map(e=> e.funcion && ({...e,columnas:buscarColumna(e.columna)}))"></tr>
+        }
     </tfoot>
 </table>
