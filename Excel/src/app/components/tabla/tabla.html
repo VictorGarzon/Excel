@@ -1,16 +1,13 @@
 <table>
     <thead>
-        @for (fila of tabla.header; track $index) {
-        <tr app-fila [fila]="fila"></tr>
-        }
+        <tr app-fila [fila]="tabla.header"></tr>
     </thead>
     <tbody>
         @for (fila of tabla.body.contenido; track fila.fila ;let i = $index) {
-
             @if (i == 0 && fila.fila != 0) {
                 @for (n of [].constructor(fila.fila); track $index) {
                     <tr app-fila [fila]="[...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"></tr>
-                }   
+                }
             }
 
             <tr app-fila [fila]="[...tabla.body.formato,...fila.celdas].sort((a,b)=>a.columna - b.columna)"></tr>
@@ -24,8 +21,6 @@
         }
     </tbody>
     <tfoot>
-        @for (fila of tabla.footer; track $index) {
-        <tr app-fila [fila]="fila.map(e=> e.funcion && ({...e,columnas:buscarColumna(e.columna)}))"></tr>
-        }
+        <tr app-fila [fila]="tabla.footer.map(e=> e.funcion && ({...e,columnas:buscarColumna(e.columna)}))"></tr>
     </tfoot>
 </table>

@@ -18,20 +18,18 @@ export class Tabla {
 
   tabla = {
     header: [
-      [
-        {
-          columna: 0,
-          valorInicial: "dato1"
-        },
-        {
-          columna: 1,
-          valorInicial: "dato2"
-        },
-        {
-          columna: 2,
-          valorInicial: "suma"
-        },
-      ]
+      {
+        columna: 0,
+        valorInicial: "dato1"
+      },
+      {
+        columna: 1,
+        valorInicial: "dato2"
+      },
+      {
+        columna: 2,
+        valorInicial: "suma"
+      },
     ],
     body: {
       formato: [
@@ -73,15 +71,14 @@ export class Tabla {
       ]
     },
     footer: [
-      [{
-          columna: 1,
-          funcion: 'sumar',
-        },
-        {
-          columna: 2,
-          funcion: 'sumar',
-        },
-      ]
+      {
+        columna: 1,
+        funcion: 'sumar',
+      },
+      {
+        columna: 2,
+        funcion: 'sumar',
+      },
     ]
   }
 

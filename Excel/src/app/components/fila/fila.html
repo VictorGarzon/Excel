@@ -1,19 +1,19 @@
 @for (celda of fila(); track celda.columna ;let i = $index) {
-<!--Para que empieze-->
-@if (i == 0 && celda.columna != 0) {
-    @for (n of [].constructor(celda.columna); track $index) {
-        <td app-celda></td>
+    <!--Para que empieze-->
+    @if (i == 0 && celda.columna != 0) {
+        @for (n of [].constructor(celda.columna); track $index) {
+            <td app-celda></td>
+        }
     }
-}
 
-<td app-celda [valorInicial]="celda?.valorInicial" [funcion]="celda?.funcion"
-    [columnas]="celda.columnas && buscarColumna(celda.columnas)"></td>
+    <td app-celda [valorInicial]="celda?.valorInicial" [funcion]="celda?.funcion"
+        [columnas]="celda.columnas && buscarColumna(celda.columnas)"></td>
 
-<!--Completar hasta el proximo-->
-@let siguiente = fila()[i+1]?.columna ;
-@if ( siguiente && celda.columna != (siguiente - 1) ) {
-    @for (n of [].constructor(siguiente - celda.columna -1); track $index) {
-        <td app-celda></td>
+    <!--Completar hasta el proximo-->
+    @let siguiente = fila()[i+1]?.columna ;
+    @if ( siguiente && celda.columna != (siguiente - 1) ) {
+        @for (n of [].constructor(siguiente - celda.columna -1); track $index) {
+            <td app-celda></td>
+        }
     }
-}
 }
