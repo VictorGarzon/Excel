@@ -1,4 +1,4 @@
-import { Component, input, viewChildren } from '@angular/core';
+import { AfterViewInit, Component, computed, contentChildren, input, viewChildren } from '@angular/core';
 import { Celda } from "../celda/celda";
 
 @Component({
@@ -12,8 +12,8 @@ export class Fila {
   celdas = viewChildren<Celda>(Celda)
   //celdas = contentChildren(Celda, { descendants: true });
 
-  buscarColumna(posicion: Array<any>) {
-    if (typeof posicion[0] === 'number') {
+  buscarColumna(posicion: Array<number>) {
+    if (posicion) {
       return posicion.map((i) => this.celdas()[i])
     }
     return posicion
