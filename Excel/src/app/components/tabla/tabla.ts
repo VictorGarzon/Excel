@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, contentChildren, viewChildren } from '@angular/core';
+import { Component, computed, viewChildren } from '@angular/core';
 import { Fila } from "../fila/fila";
 
 @Component({
@@ -11,37 +11,57 @@ export class Tabla {
 
   filas = viewChildren<Fila>(Fila)
 
-  buscarColumna(columna: number) {
+  limite = 10;
+
+  buscarColumnas(columna: number) {
     let filasBody = this.filas().slice(1).slice(0, -1)
     return filasBody.map((fila) => fila.celdas()[columna])
+  }
+
+  cambiarColumna(funcion: string) {
+    let celdas = this.buscarColumnas(6)
+    for (let celda of celdas) {
+      celda.funcion.set(funcion)
+      celda.columnas.set([0, 1, 2])
+    }
   }
 
   tabla = {
     header: [
       {
         columna: 0,
-        valorInicial: "dato1"
+        valoresIniales: {
+          valor: "dato1"
+        }
       },
       {
         columna: 1,
-        valorInicial: "dato2"
+        valoresIniales: {
+          valor: "dato2"
+        }
       },
       {
         columna: 2,
-        valorInicial: "suma"
+        valoresIniales: {
+          valor: "sumar"
+        }
       },
     ],
     body: {
       formato: [
         {
           columna: 2,
-          funcion: 'sumar',
-          columnas: [0, 1],
+          valoresIniales: {
+            funcion: 'sumar',
+            columnas: [0, 1],
+          }
         },
         {
           columna: 3,
-          funcion: 'restar',
-          columnas: [0, 1],
+          valoresIniales: {
+            funcion: 'restar',
+            columnas: [0, 1],
+          }
         },
       ],
       contenido: [
@@ -50,7 +70,9 @@ export class Tabla {
           celdas: [
             {
               columna: 0,
-              valorInicial: 1
+              valoresIniales: {
+                valor: 1
+              }
             }
           ]
         },
@@ -59,7 +81,9 @@ export class Tabla {
           celdas: [
             {
               columna: 1,
-              valorInicial: 2
+              valoresIniales: {
+                valor: 2
+              }
             }
           ]
         },
@@ -73,11 +97,15 @@ export class Tabla {
     footer: [
       {
         columna: 1,
-        funcion: 'sumar',
+        valoresIniales: {
+          funcion: 'sumar',
+        }
       },
       {
         columna: 2,
-        funcion: 'sumar',
+        valoresIniales: {
+          funcion: 'sumar',
+        }
       },
     ]
   }

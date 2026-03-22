@@ -1,26 +1,34 @@
-<table>
-    <thead>
-        <tr app-fila [fila]="tabla.header"></tr>
-    </thead>
-    <tbody>
-        @for (fila of tabla.body.contenido; track fila.fila ;let i = $index) {
-            @if (i == 0 && fila.fila != 0) {
-                @for (n of [].constructor(fila.fila); track $index) {
-                    <tr app-fila [fila]="[...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"></tr>
-                }
+<header>
+    <button (click)="cambiarColumna('sumar')">Sumar</button>
+</header>
+<main>
+    <table>
+        <thead>
+            <tr app-fila [fila]="tabla.header"></tr>
+        </thead>
+        <tbody>
+            @let bosySort = tabla.body.contenido.sort((a,b)=>a.fila - b.fila);
+            @for (fila of bosySort; track fila.fila ;let i = $index) {
+            @if ($first && fila.fila != 0) {
+            @for (n of [].constructor(fila.fila); track $index) {
+            <tr app-fila [fila]="[...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"></tr>
+            }
             }
 
-            <tr app-fila [fila]="[...tabla.body.formato,...fila.celdas].sort((a,b)=>a.columna - b.columna)"></tr>
+            <tr app-fila [fila]="[...fila.celdas,...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"></tr>
 
-            @let siguiente = tabla.body.contenido[i+1]?.fila ;
-            @if ( siguiente && fila.fila != (siguiente - 1) ) {
-                @for (n of [].constructor(siguiente - fila.fila -1); track $index) {
-                    <tr app-fila [fila]="[...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"></tr>
-                }
+            @let siguiente = $last?limite:bosySort[i+1].fila ;
+            @if ((siguiente && fila.fila != (siguiente - 1)) || $last ) {
+            @for (n of [].constructor(siguiente - fila.fila -1); track $index) {
+            <tr app-fila [fila]="[...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"></tr>
             }
-        }
-    </tbody>
-    <tfoot>
-        <tr app-fila [fila]="tabla.footer.map(e=> e.funcion && ({...e,columnas:buscarColumna(e.columna)}))"></tr>
-    </tfoot>
-</table>
+            }
+            }
+        </tbody>
+        <tfoot>
+            <tr app-fila
+                [fila]="tabla.footer.map(e=> e.valoresIniales.funcion && ({...e,valoresIniales:{...e.valoresIniales,columnas:buscarColumnas(e.columna)}}))">
+            </tr>
+        </tfoot>
+    </table>
+</main>

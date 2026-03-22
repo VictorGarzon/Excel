@@ -1,0 +1,22 @@
+header{
+    position: sticky;
+    top: 0;
+}
+
+table {
+    position: relative;
+    width: auto;
+    border-collapse: collapse;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    background-color: white;
+}
+
+tfoot {
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+}

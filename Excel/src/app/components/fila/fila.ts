@@ -12,11 +12,13 @@ export class Fila {
   celdas = viewChildren<Celda>(Celda)
   //celdas = contentChildren(Celda, { descendants: true });
 
-  buscarColumna(posicion: Array<any>) {
-    if (typeof posicion[0] === 'number') {
-      return posicion.map((i) => this.celdas()[i])
-    }
-    return posicion
+  limite = 10;
+
+  buscarColumnas = (columnas: Array<number>): Array<Celda> => {
+    //if (typeof posicion[0] === 'number') {
+    return columnas.map((i) => this.celdas()[i])
+    //}
+    //return posicion
   }
 
 }
