@@ -11,7 +11,7 @@ export class Tabla {
 
   filas = viewChildren<Fila>(Fila)
 
-  limite = 10;
+  limite = 100;
 
   buscarColumnas(columna: number) {
     let filasBody = this.filas().slice(1).slice(0, -1)

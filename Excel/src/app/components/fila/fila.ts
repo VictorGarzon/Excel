@@ -12,7 +12,7 @@ export class Fila {
   celdas = viewChildren<Celda>(Celda)
   //celdas = contentChildren(Celda, { descendants: true });
 
-  limite = 10;
+  limite = 50;
 
   buscarColumnas = (columnas: Array<number>): Array<Celda> => {
     //if (typeof posicion[0] === 'number') {
