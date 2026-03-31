@@ -1,1 +1,1 @@
-<input type="text" [value]="valor() ?? ''" (input)="cambiar($event)" [disabled]="funcion()?true:false">
+<input type="text" [value]="valor() ?? ''" (input)="cambiar($event)" [readOnly]="funcion() || disabled() ?true:false">

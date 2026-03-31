@@ -1,27 +1,24 @@
 <header>
-    <button (click)="cambiarColumna('sumar')">Sumar</button>
+    <button (click)="aplicarFuncion('sumar')">Sumar</button>
+    <button (click)="aplicarFuncion('restar')">restar</button>
+    <button (click)="aplicarFuncionColumna('sumar')">sumar columna</button>
+    <button (click)="confirmarColumnas()" >Confirmar</button>
 </header>
 <main>
     <table>
         <thead>
-            <tr app-fila [fila]="tabla.header"></tr>
+            <tr app-fila [fila]="tabla.header" [disabled]="modoSeleccion()" (selecionado)="onSelect($event)" ></tr>
         </thead>
         <tbody>
             @let bosySort = tabla.body.contenido.sort((a,b)=>a.fila - b.fila);
-            @for (fila of bosySort; track fila.fila ;let i = $index) {
-            @if ($first && fila.fila != 0) {
-            @for (n of [].constructor(fila.fila); track $index) {
-            <tr app-fila [fila]="[...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"></tr>
-            }
-            }
-
-            <tr app-fila [fila]="[...fila.celdas,...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"></tr>
-
-            @let siguiente = $last?limite:bosySort[i+1].fila ;
-            @if ((siguiente && fila.fila != (siguiente - 1)) || $last ) {
-            @for (n of [].constructor(siguiente - fila.fila -1); track $index) {
-            <tr app-fila [fila]="[...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"></tr>
-            }
+            @for (fila of bosySort; track fila.fila ;let primero= $first) {
+            @let inicio = ((primero && fila.fila == 0) || !primero )?fila.fila:0;
+            @let fin = bosySort[$index+1]?.fila ?? limite;
+            @for (n of [].constructor(fin - inicio); track $index) {
+            <tr app-fila
+                [fila]="[ ...((($first && inicio == fila.fila) || (primero && fila.fila == $index ))?fila.celdas:[]) ,...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"
+                [disabled]="modoSeleccion()" (selecionado)="onSelect($event)">
+            </tr>
             }
             }
         </tbody>

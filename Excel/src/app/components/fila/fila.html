@@ -1,19 +1,10 @@
- @for (celda of fila(); track celda.columna ;let  i= $index) {
-    <!--Para que empieze-->
-    @if ($first && celda.columna != 0) {
-        @for (n of [].constructor(celda.columna); track $index) {
-            <td app-celda [buscarCeldas]="buscarColumnas" ></td>
-        }
-    }
+@for (celda of fila(); track celda.columna ;let i = $index;let primero= $first) {
 
-    <td app-celda [valoresIniales]="celda?.valoresIniales" [buscarCeldas]="buscarColumnas" ></td>
-
-
-     <!--Completar hasta el proximo o limite-->
-     @let siguiente = $last? limite:fila()[i+1].columna ;
-     @if ( (siguiente && celda.columna != (siguiente - 1)) || $last ) {
-         @for (n of [].constructor(siguiente - celda.columna -1); track $index) {
-            <td app-celda [buscarCeldas]="buscarColumnas"></td>
-        }
-    }   
+@let inicio = ((primero && celda.columna == 0) || !primero )?celda.columna:0;
+@let fin = fila()[i+1]?.columna ?? limite;
+@for (n of [].constructor(fin - inicio); track $index) {
+<td app-celda
+    [valoresIniales]="(($first && inicio == celda.columna) || (primero && celda.columna == $index ) )?celda.valoresIniales: undefined"
+    [buscarCeldas]="buscarColumnas" [disabled]="disabled()" (click)="disabled() && onSelect(inicio + $index)"></td>
+}
 }

@@ -1,0 +1,12 @@
+input:read-only {
+    color: rgb(102, 102, 102)
+}
+
+input:focus-visible {
+    outline: none;
+}
+
+input:focus-visible:not([readonly]) {
+    outline: none;
+    box-shadow: inset 0 -2px 0 0 black, inset 0 2px 0 0 black, inset -2px 0 0 0 black, inset 2px 0 0 0 black;
+}

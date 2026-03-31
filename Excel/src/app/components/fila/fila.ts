@@ -1,4 +1,4 @@
-import { Component, input, viewChildren } from '@angular/core';
+import { Component, ElementRef, input, output, Renderer2, viewChildren } from '@angular/core';
 import { Celda } from "../celda/celda";
 
 @Component({
@@ -9,8 +9,10 @@ import { Celda } from "../celda/celda";
 })
 export class Fila {
   fila = input<any>()
+  disabled = input<boolean>();
   celdas = viewChildren<Celda>(Celda)
   //celdas = contentChildren(Celda, { descendants: true });
+  selecionado = output<number>()
 
   limite = 50;
 
@@ -19,6 +21,10 @@ export class Fila {
     return columnas.map((i) => this.celdas()[i])
     //}
     //return posicion
+  }
+
+  onSelect(n:number) {
+    this.selecionado.emit(n);
   }
 
 }

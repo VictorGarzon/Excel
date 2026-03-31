@@ -1,4 +1,4 @@
-import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewInit, OnInit, effect } from '@angular/core';
+import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewInit, OnInit, effect, output } from '@angular/core';
 @Component({
   selector: 'td[app-celda],th[app-celda]',
   imports: [],
@@ -8,6 +8,7 @@ import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewIni
 export class Celda implements AfterViewInit {
   valoresIniales = input<any>();
   buscarCeldas = input<(columnas: Array<number>) => Array<Celda>>()
+  disabled = input<boolean>();
 
   valorCampo = signal<any>(null);
   funcion = signal<string>("")
@@ -16,9 +17,11 @@ export class Celda implements AfterViewInit {
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
     effect(() => {
-      this.valorCampo.set(this.valoresIniales()?.valor ?? null)
-      this.funcion.set(this.valoresIniales()?.funcion ?? "")
-      this.columnas.set(this.valoresIniales()?.columnas ?? null)
+      if (this.valoresIniales()) {
+        this.valorCampo.set(this.valoresIniales().valor ?? null)
+        this.funcion.set(this.valoresIniales().funcion ?? "")
+        this.columnas.set(this.valoresIniales().columnas ?? null)
+      }
     })
   }
 
@@ -36,13 +39,14 @@ export class Celda implements AfterViewInit {
     try {
       if (this.funcion() && this.columnas()) {
         let accion = this.funcion() as keyof typeof this.acciones
-        return this.acciones[accion](this.datos())
+        let resultado = this.acciones[accion](this.datos());
+        return resultado == 0?"":resultado
       } else {
         return this.valorCampo();
       }
     } catch (error) {
       console.error(error);
-      return "e"
+      return ""
     }
   })
 
@@ -74,5 +78,4 @@ export class Celda implements AfterViewInit {
     sumar: (datos: Array<number>) => datos.reduce((total: number, valor: number) => total + valor, 0),
     restar: (datos: Array<number>) => datos.reduce((total: number, valor: number) => - total + valor, 0),
   };
-
 }
