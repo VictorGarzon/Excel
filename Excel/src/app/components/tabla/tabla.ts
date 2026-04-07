@@ -1,6 +1,6 @@
-import { Component, computed, ElementRef, Renderer2, signal, viewChildren } from '@angular/core';
+import { AfterViewInit, Component, computed, signal, viewChildren } from '@angular/core';
 import { Fila } from "../fila/fila";
-import { table } from 'console';
+import { Celda } from '../celda/celda';
 
 @Component({
   selector: 'app-tabla',
@@ -8,7 +8,7 @@ import { table } from 'console';
   templateUrl: './tabla.html',
   styleUrl: './tabla.css',
 })
-export class Tabla {
+export class Tabla implements AfterViewInit {
 
   filas = viewChildren<Fila>(Fila)
   modoSeleccion = signal(false);
@@ -18,11 +18,77 @@ export class Tabla {
   columnasSelecionadas: Array<number> = [];
   limite = 100;
 
-  constructor(private el: ElementRef, private renderer: Renderer2) { }
+  ngAfterViewInit(): void {
+    this.footer().forEach(e => {
+      let columna = this.filaFooter().celdas()[e.columna]
+      columna.columnas.set(this.buscarColumnas(e.columna))
+    })
+  }
+
+  header() {
+    return Object.values(
+      [...this.tabla.header, ...this.tabla.formato].reduce((conjunto, elemeto) => {
+        const columna = elemeto.columna
+        if (!conjunto[columna]) {
+          conjunto[columna] = { ...elemeto }
+        } else {
+          conjunto[columna] = { ...conjunto[columna], ...elemeto, valoresIniales: { ...conjunto[columna].valoresIniales, ...elemeto.valoresIniales } };
+        }
+        return conjunto;
+      }, {} as Record<number, any>)
+    )
+  }
+  body() {
+    return Object.values(
+      this.tabla.body.reduce((conjunto, elemeto) => {
+        const fila = elemeto.fila
+        if (!conjunto[fila]) {
+          conjunto[fila] = { ...elemeto, columnas: [...this.columnas(elemeto.columnas)] }
+        } else {
+          conjunto[fila] = { ...conjunto[fila], ...elemeto, columnas: [...conjunto[fila].columnas, ...this.columnas(elemeto.columnas)] };
+        }
+        return conjunto;
+      }, {} as Record<number, any>)
+    )
+  }
+
+  columnas(columnas: any) {
+    return Object.values(
+      [...this.tabla.formato, ...columnas].reduce((conjunto, elemeto) => {
+        const columna = elemeto.columna
+        if (!conjunto[columna]) {
+          conjunto[columna] = { ...elemeto }
+        } else {
+          conjunto[columna] = { ...conjunto[columna], ...elemeto, valoresIniales: { ...conjunto[columna].valoresIniales, ...elemeto.valoresIniales } };
+        }
+        return conjunto;
+      }, {} as Record<number, any>)
+    )
+  }
+
+  footer() {
+    return Object.values(
+      this.tabla.footer.reduce((conjunto, elemeto) => {
+        const columna = elemeto.columna
+        if (!conjunto[columna]) {
+          conjunto[columna] = { ...elemeto }
+        } else {
+          conjunto[columna] = { ...conjunto[columna], ...elemeto, valoresIniales: { ...conjunto[columna].valoresIniales, ...elemeto.valoresIniales } };
+        }
+        return conjunto;
+      }, {} as Record<number, any>)
+    )
+  }
+
+  filaHeader = computed(() => this.filas()[0])
+
+  filasBody = computed(() => this.filas().slice(1).slice(0, -1))
+
+  filaFooter = computed(() => this.filas()[this.filas().length - 1])
 
   buscarColumnas(columna: number) {
-    let filasBody = this.filas().slice(1).slice(0, -1)
-    return filasBody.map((fila) => fila.celdas()[columna])
+    let celdas = this.filasBody().map((fila) => fila.celdas()[columna])
+    return celdas;
   }
 
   aplicarFuncion(funcion: string) {
@@ -31,20 +97,19 @@ export class Tabla {
     this.funcion = funcion;
     this.seleccion = [];
     this.columnasSelecionadas = [];
-    /*
-let celdas = this.buscarColumnas(6)
-for (let celda of celdas) {
-  celda.funcion.set(funcion)
-  celda.columnas.set([0, 1, 2])
-}
-  */
   }
+
   aplicarFuncionColumna(funcion: string) {
     this.modoSeleccion.set(true)
     this.modo = 3;
     this.funcion = funcion;
     this.seleccion = [];
     this.columnasSelecionadas = [];
+  }
+
+  eliminarFuncion() {
+    this.modoSeleccion.set(true)
+    this.modo = 2;
   }
 
   onSelect(n: number) {
@@ -54,23 +119,17 @@ for (let celda of celdas) {
     let columnas = document.querySelectorAll("tr td:nth-child(" + (n + 1) + ")")
     columnas.forEach(c => c.classList.toggle("seleccionado"))
 
-    switch (this.modo) {
-      case 1:
-        if (Array.isArray(this.seleccion)) {
-          let posicion = this.seleccion.indexOf(n)
-          if (posicion === -1) {
-            this.seleccion.push(n)
-          } else {
-            this.seleccion.splice(posicion, 1)
-          }
+    if (this.modo === 1) {
+      if (Array.isArray(this.seleccion)) {
+        let posicion = this.seleccion.indexOf(n)
+        if (posicion === -1) {
+          this.seleccion.push(n)
+        } else {
+          this.seleccion.splice(posicion, 1)
         }
-        break;
-      case 2:
-      case 3:
-        this.seleccion = n;
-        break;
-      default:
-        break;
+      }
+    } else {
+      this.seleccion = n;
     }
   }
   confirmarColumnas() {
@@ -87,14 +146,17 @@ for (let celda of celdas) {
           celda.columnas.set(this.columnasSelecionadas)
         })
 
+        let head = this.filaHeader().celdas()[this.seleccion as number]
+        head.funcion.set(this.funcion)
+        head.columnas.set(this.columnasSelecionadas)
+
         this.valoresPredeterminados();
         break;
       case 3:
-        let filaFooter = this.filas()[this.filas().length - 1];
-        let columna = filaFooter.celdas()[this.seleccion as number]
+        let columna = this.filaFooter().celdas()[this.seleccion as number]
         columna.funcion.set(this.funcion)
         columna.columnas.set(this.buscarColumnas(this.seleccion as number))
-        
+
         this.valoresPredeterminados();
         break;
       default:
@@ -116,7 +178,95 @@ for (let celda of celdas) {
     this.columnasSelecionadas = [];
   }
 
+  exportar() {
+    let formato: any = [];
+    let header: any = [];
+    let body: any = [];
+    let footer: any = [];
+    this.filaHeader().celdas().forEach((e, i) => {
+      if (e.valor()) {
+        header.push({
+          columna: i,
+          valoresIniales: {
+            valor: e.valor()
+          }
+        })
+      }
+      if (e.funcion()) {
+        formato.push({
+          columna: i,
+          valoresIniales: {
+            funcion: e.funcion(),
+            columnas: e.columnas(),
+          }
+        })
+      }
+    })
+
+    this.filaFooter().celdas().forEach((e, i) => {
+      if (e.funcion()) {
+        footer.push({
+          columna: i,
+          valoresIniales: {
+            funcion: e.funcion(),
+          }
+        })
+      }
+    })
+
+    this.filasBody().forEach((fila, nfila) => {
+      let columnas: any = [];
+      fila.celdas().forEach((columna, ncolumna) => {
+        if (!columna.funcion() && columna.valor()) {
+          columnas.push({
+            columna: ncolumna,
+            valoresIniales: {
+              valor: columna.valor()
+            }
+          })
+        }
+      });
+      if (columnas.length != 0) {
+        body.push({
+          fila: nfila,
+          columnas: columnas
+        })
+      }
+    })
+
+    const dataStr = JSON.stringify({ formato, header, body, footer }, null, 2);
+
+    const blob = new Blob([dataStr], { type: 'application/json' });
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'datos.json';
+
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+
+
+  }
+
   tabla = {
+    formato: [
+      {
+        columna: 2,
+        valoresIniales: {
+          funcion: 'sumar',
+          columnas: [0, 1],
+        }
+      },
+      {
+        columna: 3,
+        valoresIniales: {
+          funcion: 'restar',
+          columnas: [0, 1],
+        }
+      },
+    ],
     header: [
       {
         columna: 0,
@@ -137,60 +287,60 @@ for (let celda of celdas) {
         }
       },
       {
-        columna: 4,
+        columna: 3,
         valoresIniales: {
           valor: "restar"
         }
       },
     ],
-    body: {
-      formato: [
-        {
-          columna: 2,
-          valoresIniales: {
-            funcion: 'sumar',
-            columnas: [0, 1],
-          }
-        },
-        {
-          columna: 3,
-          valoresIniales: {
-            funcion: 'restar',
-            columnas: [0, 1],
-          }
-        },
-      ],
-      contenido: [
-        {
-          fila: 0,
-          celdas: [
-            {
-              columna: 0,
-              valoresIniales: {
-                valor: 1
-              }
+    body: [
+      {
+        fila: 5,
+        columnas: [
+          {
+            columna: 1,
+            valoresIniales: {
+              valor: 1
             }
-          ]
-        },
-        {
-          fila: 1,
-          celdas: [
-            {
-              columna: 1,
-              valoresIniales: {
-                valor: 2
-              }
+          },
+          {
+            columna: 0,
+            valoresIniales: {
+              valor: 2
             }
-          ]
-        },
-        {
-          fila: 3,
-          celdas: [
-          ]
-        }
-      ]
-    },
+          }
+        ]
+      },
+      {
+        fila: 1,
+        columnas: [
+          {
+            columna: 1,
+            valoresIniales: {
+              valor: 2
+            }
+          }
+        ]
+      },
+      {
+        fila: 3,
+        columnas: [
+          {
+            columna: 1,
+            valoresIniales: {
+              valor: 2
+            }
+          }
+        ]
+      }
+    ],
     footer: [
+      {
+        columna: 4,
+        valoresIniales: {
+          funcion: 'sumar',
+        }
+      },
       {
         columna: 1,
         valoresIniales: {

@@ -1,1 +1,9 @@
-<input type="text" [value]="valor() ?? ''" (input)="cambiar($event)" [readOnly]="funcion() || disabled() ?true:false">
+<input type="text" [value]="valor() ?? ''" (input)="cambiar($event)"
+    [readOnly]="(funcion() && parte() !== 'head' ) || disabled() ?true:false">
+@if (parte() && funcion()) {
+@if (parte()=="head") {
+<p>{{valoresCeldas()}}</p>
+}@else {
+<p>{{funcion()}}</p>
+}
+}

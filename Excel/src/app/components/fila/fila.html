@@ -5,6 +5,6 @@
 @for (n of [].constructor(fin - inicio); track $index) {
 <td app-celda
     [valoresIniales]="(($first && inicio == celda.columna) || (primero && celda.columna == $index ) )?celda.valoresIniales: undefined"
-    [buscarCeldas]="buscarColumnas" [disabled]="disabled()" (click)="disabled() && onSelect(inicio + $index)"></td>
+    [buscarCeldas]="buscarColumnas" [disabled]="disabled()" (click)="disabled() && onSelect(inicio + $index)" [parte]="parte()"></td>
 }
 }

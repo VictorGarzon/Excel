@@ -5,26 +5,34 @@ import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewIni
   templateUrl: './celda.html',
   styleUrl: './celda.css',
 })
-export class Celda implements AfterViewInit {
+export class Celda implements AfterViewInit, OnInit {
   valoresIniales = input<any>();
   buscarCeldas = input<(columnas: Array<number>) => Array<Celda>>()
   disabled = input<boolean>();
+  parte = input();
 
-  valorCampo = signal<any>(null);
+  valorCampo = signal<string>("");
   funcion = signal<string>("")
   columnas = signal<any>(null)
   carga = signal(false)
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
-    effect(() => {
-      if (this.valoresIniales()) {
-        this.valorCampo.set(this.valoresIniales().valor ?? null)
-        this.funcion.set(this.valoresIniales().funcion ?? "")
-        this.columnas.set(this.valoresIniales().columnas ?? null)
-      }
-    })
   }
 
+  ngOnInit(): void {
+    if (this.valoresIniales()) {
+      this.valorCampo.set(this.valoresIniales().valor ?? "")
+      this.funcion.set(this.valoresIniales().funcion ?? "")
+      this.columnas.set(this.valoresIniales().columnas)
+    }
+  }
+
+  //cargar
+  ngAfterViewInit(): void {
+    this.carga.set(true)
+  }
+
+  //celdas asoscidas
   celdas = computed(() => {
     if (typeof this.columnas()[0] === 'number') {
       let buscar = this.buscarCeldas();
@@ -34,13 +42,14 @@ export class Celda implements AfterViewInit {
     }
   })
 
+  //valor de campo
   valor: any = computed(() => {
     if (!this.carga()) return "";
     try {
-      if (this.funcion() && this.columnas()) {
+      if (this.funcion() && this.columnas() && this.parte() !== "head") {
         let accion = this.funcion() as keyof typeof this.acciones
         let resultado = this.acciones[accion](this.datos());
-        return resultado == 0?"":resultado
+        return resultado == 0 ? "" : resultado
       } else {
         return this.valorCampo();
       }
@@ -50,6 +59,7 @@ export class Celda implements AfterViewInit {
     }
   })
 
+  //sacar datos
   datos() {
     let datos = this.celdas().map((e: Celda): number => {
       let input = e.el.nativeElement.querySelector('input');
@@ -66,12 +76,11 @@ export class Celda implements AfterViewInit {
     return datos;
   }
 
-  ngAfterViewInit(): void {
-    this.carga.set(true)
-  }
+  valoresCeldas = computed(() => this.celdas().reduce((texto: string, objeto: Celda) => texto + " " + objeto.valor(), this.funcion() + ":"))
 
-  cambiar(evento: any) {
-    this.valorCampo.set(evento.target.value)
+  cambiar(event: Event) {
+    const valor = (event.target as HTMLInputElement).value;
+    this.valorCampo.set(valor)
   }
 
   acciones = {

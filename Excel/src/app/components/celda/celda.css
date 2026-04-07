@@ -10,3 +10,9 @@ input:focus-visible:not([readonly]) {
     outline: none;
     box-shadow: inset 0 -2px 0 0 black, inset 0 2px 0 0 black, inset -2px 0 0 0 black, inset 2px 0 0 0 black;
 }
+
+p{
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+}

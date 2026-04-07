@@ -1,30 +1,34 @@
 <header>
+    <button (click)="exportar()" >Exportar</button>
+    <button>Importar</button>
     <button (click)="aplicarFuncion('sumar')">Sumar</button>
     <button (click)="aplicarFuncion('restar')">restar</button>
     <button (click)="aplicarFuncionColumna('sumar')">sumar columna</button>
-    <button (click)="confirmarColumnas()" >Confirmar</button>
+    <button (click)="confirmarColumnas()">Confirmar</button>
+    <button (click)="eliminarFuncion()">quitar</button>
+    <button (click)="aplicarFuncionColumna('')">quitar columna</button>
 </header>
 <main>
     <table>
         <thead>
-            <tr app-fila [fila]="tabla.header" [disabled]="modoSeleccion()" (selecionado)="onSelect($event)" ></tr>
+            <tr app-fila [fila]="header()" [disabled]="modoSeleccion()" (selecionado)="onSelect($event)"
+                [parte]="'head'"></tr>
         </thead>
         <tbody>
-            @let bosySort = tabla.body.contenido.sort((a,b)=>a.fila - b.fila);
-            @for (fila of bosySort; track fila.fila ;let primero= $first) {
+
+            @for (fila of body(); track fila.fila ;let primero= $first) {
             @let inicio = ((primero && fila.fila == 0) || !primero )?fila.fila:0;
-            @let fin = bosySort[$index+1]?.fila ?? limite;
+            @let fin = body()[$index+1]?.fila ?? limite;
             @for (n of [].constructor(fin - inicio); track $index) {
             <tr app-fila
-                [fila]="[ ...((($first && inicio == fila.fila) || (primero && fila.fila == $index ))?fila.celdas:[]) ,...tabla.body.formato].sort((a,b)=>a.columna - b.columna)"
+                [fila]="(($first && inicio == fila.fila) || (primero && fila.fila == $index ))? fila.columnas:columnas([])"
                 [disabled]="modoSeleccion()" (selecionado)="onSelect($event)">
             </tr>
             }
             }
         </tbody>
         <tfoot>
-            <tr app-fila
-                [fila]="tabla.footer.map(e=> e.valoresIniales.funcion && ({...e,valoresIniales:{...e.valoresIniales,columnas:buscarColumnas(e.columna)}}))">
+            <tr app-fila [fila]="footer()" [parte]="'footer'">
             </tr>
         </tfoot>
     </table>

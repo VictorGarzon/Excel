@@ -11,19 +11,16 @@ export class Fila {
   fila = input<any>()
   disabled = input<boolean>();
   celdas = viewChildren<Celda>(Celda)
-  //celdas = contentChildren(Celda, { descendants: true });
   selecionado = output<number>()
+  parte = input()
 
   limite = 50;
 
   buscarColumnas = (columnas: Array<number>): Array<Celda> => {
-    //if (typeof posicion[0] === 'number') {
     return columnas.map((i) => this.celdas()[i])
-    //}
-    //return posicion
   }
 
-  onSelect(n:number) {
+  onSelect(n: number) {
     this.selecionado.emit(n);
   }
 
