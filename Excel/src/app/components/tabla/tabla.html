@@ -1,6 +1,6 @@
 <header>
-    <button (click)="exportar()" >Exportar</button>
-    <button>Importar</button>
+    <button (click)="exportar()">Exportar</button>
+    <button (click)="impo()">Importar</button>
     <button (click)="aplicarFuncion('sumar')">Sumar</button>
     <button (click)="aplicarFuncion('restar')">restar</button>
     <button (click)="aplicarFuncionColumna('sumar')">sumar columna</button>
@@ -11,24 +11,35 @@
 <main>
     <table>
         <thead>
-            <tr app-fila [fila]="header()" [disabled]="modoSeleccion()" (selecionado)="onSelect($event)"
-                [parte]="'head'"></tr>
+            <tr app-fila [fila]="carga()?functions():headers()" [disabled]="modoSeleccion()"
+                (selecionado)="onSelect($event)" [parte]="'head'" [tamColumna]="tamColumna()"
+                (ampliar)="ampliarColum()">
+            </tr>
         </thead>
         <tbody>
-
-            @for (fila of body(); track fila.fila ;let primero= $first) {
+            <!--
+            @for (fila of rows(); track fila.fila;let primero= $first) {
             @let inicio = ((primero && fila.fila == 0) || !primero )?fila.fila:0;
-            @let fin = body()[$index+1]?.fila ?? limite;
+            @let fin = rows()[$index+1]?.fila ?? (tamFila() + 1);
             @for (n of [].constructor(fin - inicio); track $index) {
             <tr app-fila
-                [fila]="(($first && inicio == fila.fila) || (primero && fila.fila == $index ))? fila.columnas:columnas([])"
-                [disabled]="modoSeleccion()" (selecionado)="onSelect($event)">
+                [fila]="(($first && inicio == fila.fila) || (primero && fila.fila == $index ))? fila.columnas:functions()"
+                [disabled]="modoSeleccion()" (selecionado)="onSelect($event)" [tamColumna]="tamColumna()">
             </tr>
             }
             }
+        -->
+            @for (n of [].constructor(tamFila()! + 1 +5); track $index) {
+            @let fila = buscarFila($index);
+            <tr app-fila [fila]="carga()?functions():(fila?.columnas ?? functions())" [disabled]="modoSeleccion()"
+                (selecionado)="onSelect($event)" [tamColumna]="tamColumna()"
+                (click)="$index > (tamFila()! + 1) && ampliarFila()" (ampliar)="ampliarColum()">
+            </tr>
+            }
         </tbody>
         <tfoot>
-            <tr app-fila [fila]="footer()" [parte]="'footer'">
+            <tr app-fila [fila]="footerColumnas()" [parte]="'footer'" [tamColumna]="tamColumna()"
+                (ampliar)="ampliarColum()">
             </tr>
         </tfoot>
     </table>

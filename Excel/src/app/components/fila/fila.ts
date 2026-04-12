@@ -1,4 +1,4 @@
-import { Component, ElementRef, input, output, Renderer2, viewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, input, output, Renderer2, signal, viewChildren } from '@angular/core';
 import { Celda } from "../celda/celda";
 
 @Component({
@@ -12,9 +12,11 @@ export class Fila {
   disabled = input<boolean>();
   celdas = viewChildren<Celda>(Celda)
   selecionado = output<number>()
+  ampliar = output()
   parte = input()
+  tamColumna = input<number>();
 
-  limite = 50;
+  posicionFila = 0;
 
   buscarColumnas = (columnas: Array<number>): Array<Celda> => {
     return columnas.map((i) => this.celdas()[i])
@@ -23,5 +25,18 @@ export class Fila {
   onSelect(n: number) {
     this.selecionado.emit(n);
   }
+
+  buscarCelda(n: number) {
+    let celda = this.fila()[this.posicionFila]?.columna == n ? this.fila()[this.posicionFila] : null
+    if (celda) {
+      this.posicionFila++;
+      if (this.posicionFila == this.fila().length) {
+        this.posicionFila = 0;
+      }
+      return celda;
+    }
+    return null;
+  }
+
 
 }

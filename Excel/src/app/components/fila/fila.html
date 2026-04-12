@@ -1,10 +1,23 @@
+<!--
 @for (celda of fila(); track celda.columna ;let i = $index;let primero= $first) {
 
 @let inicio = ((primero && celda.columna == 0) || !primero )?celda.columna:0;
-@let fin = fila()[i+1]?.columna ?? limite;
+@let fin = fila()[i+1]?.columna ?? (tamColumna()! +1);
 @for (n of [].constructor(fin - inicio); track $index) {
 <td app-celda
-    [valoresIniales]="(($first && inicio == celda.columna) || (primero && celda.columna == $index ) )?celda.valoresIniales: undefined"
-    [buscarCeldas]="buscarColumnas" [disabled]="disabled()" (click)="disabled() && onSelect(inicio + $index)" [parte]="parte()"></td>
+    [valorCelda]="(($first && inicio == celda.columna) || (primero && celda.columna == $index ) )?celda.valor:undefined"
+    [funcion]="(($first && inicio == celda.columna) || (primero && celda.columna == $index ) )?celda.funcion: undefined"
+    [columnas]="(($first && inicio == celda.columna) || (primero && celda.columna == $index ) )?celda.columnas: undefined"
+    [buscarCeldas]="buscarColumnas" [disabled]="disabled()" (click)="disabled() && onSelect(inicio + $index)"
+    [parte]="parte()">
+</td>
 }
+}
+-->
+@for (n of [].constructor(tamColumna()! + 1 +5); track $index) {
+@let celda = buscarCelda($index);
+<td app-celda [valorCelda]="celda?.valor" [funcion]="celda?.funcion" [columnas]="celda?.columnas"
+    [buscarCeldas]="buscarColumnas" [disabled]="disabled()" (click)="disabled() && onSelect($index)" [parte]="parte()"
+    (click)="$index > (tamColumna()! + 1) && ampliar.emit()">
+</td>
 }

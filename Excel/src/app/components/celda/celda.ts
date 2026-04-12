@@ -5,35 +5,29 @@ import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewIni
   templateUrl: './celda.html',
   styleUrl: './celda.css',
 })
-export class Celda implements AfterViewInit, OnInit {
+export class Celda implements AfterViewInit {
   valoresIniales = input<any>();
   buscarCeldas = input<(columnas: Array<number>) => Array<Celda>>()
   disabled = input<boolean>();
   parte = input();
 
-  valorCampo = signal<string>("");
-  funcion = signal<string>("")
-  columnas = signal<any>(null)
+  valorCelda = input<string>("");
+  funcion = input<string>("");
+  columnas = input([]);
+
+  valorCambio = signal<string>("");
   carga = signal(false)
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {
-  }
-
-  ngOnInit(): void {
-    if (this.valoresIniales()) {
-      this.valorCampo.set(this.valoresIniales().valor ?? "")
-      this.funcion.set(this.valoresIniales().funcion ?? "")
-      this.columnas.set(this.valoresIniales().columnas)
-    }
-  }
+  constructor(private el: ElementRef, private renderer: Renderer2) { }
 
   //cargar
   ngAfterViewInit(): void {
+    this.valorCambio.set(this.valorCelda() ?? '')
     this.carga.set(true)
   }
 
   //celdas asoscidas
-  celdas = computed(() => {
+  celdas = computed<Celda[]>(() => {
     if (typeof this.columnas()[0] === 'number') {
       let buscar = this.buscarCeldas();
       return buscar!(this.columnas())
@@ -51,7 +45,7 @@ export class Celda implements AfterViewInit, OnInit {
         let resultado = this.acciones[accion](this.datos());
         return resultado == 0 ? "" : resultado
       } else {
-        return this.valorCampo();
+        return this.valorCambio();
       }
     } catch (error) {
       console.error(error);
@@ -61,16 +55,16 @@ export class Celda implements AfterViewInit, OnInit {
 
   //sacar datos
   datos() {
-    let datos = this.celdas().map((e: Celda): number => {
-      let input = e.el.nativeElement.querySelector('input');
-      if (input) {
-        e.renderer.setAttribute(input, 'type', 'number');
-      }
-      if (isNaN(e.valor())) {
-        e.renderer.setStyle(e.el.nativeElement, 'border', '2px solid red');
-        return 0;
+    let datos: Array<any> = []
+    this.celdas().forEach((e: Celda) => {
+      let input = e?.el.nativeElement.querySelector('input');
+      //e.renderer.setAttribute(input, 'type', 'number');
+      if (isNaN(e?.valor())) {
+        e?.renderer.setStyle(e.el.nativeElement, 'border', '2px solid red');
       } else {
-        return +e.valor()
+        if (+e?.valor() != 0) {
+          datos.push(+e.valor())
+        }
       }
     })
     return datos;
@@ -80,11 +74,11 @@ export class Celda implements AfterViewInit, OnInit {
 
   cambiar(event: Event) {
     const valor = (event.target as HTMLInputElement).value;
-    this.valorCampo.set(valor)
+    this.valorCambio.set(valor)
   }
 
   acciones = {
-    sumar: (datos: Array<number>) => datos.reduce((total: number, valor: number) => total + valor, 0),
-    restar: (datos: Array<number>) => datos.reduce((total: number, valor: number) => - total + valor, 0),
+    sumar: (datos: Array<any>) => datos.reduce((total: number, valor: number) => valor + total, 0),
+    restar: (datos: Array<any>) => datos.reduce((total: number, valor: number) => valor - total, 0),
   };
 }
