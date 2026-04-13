@@ -14,10 +14,10 @@
 }
 }
 -->
-@for (n of [].constructor(tamColumna()! + 1 +5); track $index) {
+@for (n of arrayColumn(); track $index) {
 @let celda = buscarCelda($index);
 <td app-celda [valorCelda]="celda?.valor" [funcion]="celda?.funcion" [columnas]="celda?.columnas"
     [buscarCeldas]="buscarColumnas" [disabled]="disabled()" (click)="disabled() && onSelect($index)" [parte]="parte()"
-    (click)="$index > (tamColumna()! + 1) && ampliar.emit()">
+    (click)="!disabled() && $index > (tamColumna()! + 1) && ampliar.emit()" [car]="car()">
 </td>
 }

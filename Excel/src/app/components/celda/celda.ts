@@ -1,4 +1,4 @@
-import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewInit, OnInit, effect, output } from '@angular/core';
+import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewInit, OnInit, effect, output, untracked, AfterViewChecked } from '@angular/core';
 @Component({
   selector: 'td[app-celda],th[app-celda]',
   imports: [],
@@ -10,6 +10,8 @@ export class Celda implements AfterViewInit {
   buscarCeldas = input<(columnas: Array<number>) => Array<Celda>>()
   disabled = input<boolean>();
   parte = input();
+
+  car = input();
 
   valorCelda = input<string>("");
   funcion = input<string>("");
@@ -45,6 +47,13 @@ export class Celda implements AfterViewInit {
         let resultado = this.acciones[accion](this.datos());
         return resultado == 0 ? "" : resultado
       } else {
+        if (!this.car()) {
+          untracked(() => this.valorCambio.set(this.valorCelda() ?? ''))
+        } else {
+          if (this.valorCelda()) {
+            untracked(() => this.valorCambio.set(this.valorCelda()))
+          }
+        }
         return this.valorCambio();
       }
     } catch (error) {
@@ -79,6 +88,11 @@ export class Celda implements AfterViewInit {
 
   acciones = {
     sumar: (datos: Array<any>) => datos.reduce((total: number, valor: number) => valor + total, 0),
-    restar: (datos: Array<any>) => datos.reduce((total: number, valor: number) => valor - total, 0),
+    restar: (datos: Array<any>) => datos.reduce((total: number, valor: number, i: number) => {
+      if (i === 0) {
+        return valor
+      }
+      return total - valor
+    }, 0),
   };
 }

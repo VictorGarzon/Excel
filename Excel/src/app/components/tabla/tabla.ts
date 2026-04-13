@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, effect, signal, untracked, viewChildren } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, computed, effect, signal, untracked, viewChildren } from '@angular/core';
 import { Fila } from "../fila/fila";
 
 interface tablaFuncion {
@@ -31,7 +31,7 @@ interface tabla {
   templateUrl: './tabla.html',
   styleUrl: './tabla.css',
 })
-export class Tabla implements AfterViewInit {
+export class Tabla implements AfterViewInit, AfterViewChecked {
 
   filas = viewChildren<Fila>(Fila)
   modoSeleccion = signal(false);
@@ -59,7 +59,12 @@ export class Tabla implements AfterViewInit {
     this.organizarFooter(this.tabla().footers);
 
   }
+
   ngAfterViewInit(): void {
+    //this.carga.set(true)
+  }
+
+  ngAfterViewChecked(): void {
     this.carga.set(true)
   }
 
@@ -89,55 +94,69 @@ export class Tabla implements AfterViewInit {
 
   filaFooter = computed(() => this.filas()[this.filas().length - 1])
 
-  organizarFunctions(obj: any) {
-    let datos: Array<tablaFuncion> = Object.values(
-      obj.reduce((conjunto: any, elemeto: any) => {
-        const columna = elemeto.columna
-        conjunto[columna] = { ...conjunto[columna], ...elemeto };
-        if (!conjunto[columna].funcion) delete conjunto[columna];
-        return conjunto;
-      }, {} as Record<number, any>)
-    )
-    if (!this.carga()) {
-      let ultimaColumna = datos[datos.length - 1].columna;
-      this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
-    }
+  arrayFila = computed(() => [].constructor(this.tamFila() + 1 + 5))
 
-    this.functions.set(datos)
+  organizarFunctions(obj: any) {
+    if (obj) {
+      let datos: Array<tablaFuncion> = Object.values(
+        obj.reduce((conjunto: any, elemeto: any) => {
+          const columna = elemeto.columna
+          conjunto[columna] = { ...conjunto[columna], ...elemeto };
+          if (!conjunto[columna].funcion) delete conjunto[columna];
+          return conjunto;
+        }, {} as Record<number, any>)
+      )
+      if (!this.carga()) {
+        let ultimaColumna = datos[datos.length - 1].columna;
+        this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
+      }
+
+      this.functions.set(datos)
+    } else {
+      this.functions.set([])
+    }
   }
 
   organizarHeaders(obj: any) {
-    let datos: Array<tablaColumna> = Object.values(
-      obj.reduce((conjunto: any, elemeto: any) => {
-        const columna = elemeto.columna
-        conjunto[columna] = { ...conjunto[columna], ...elemeto };
-        return conjunto;
-      }, {} as Record<number, any>)
-    )
-    let ultimaColumna = datos[datos.length - 1].columna;
-    this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
+    if (obj) {
+      let datos: Array<tablaColumna> = Object.values(
+        obj.reduce((conjunto: any, elemeto: any) => {
+          const columna = elemeto.columna
+          conjunto[columna] = { ...conjunto[columna], ...elemeto };
+          return conjunto;
+        }, {} as Record<number, any>)
+      )
+      let ultimaColumna = datos[datos.length - 1].columna;
+      this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
 
-    this.headers.set(datos)
+      this.headers.set(datos)
+    } else {
+      this.headers.set([])
+    }
   }
 
   organizarRows(obj: any) {
-    let datos: Array<tablaFila> = Object.values(
-      obj.reduce((conjunto: any, elemeto: any) => {
-        const fila = elemeto.fila
-        if (!conjunto[fila]) {
-          conjunto[fila] = { ...elemeto, columnas: this.column(...elemeto.columnas) }
-        } else {
-          conjunto[fila] = { ...conjunto[fila], ...elemeto, columnas: this.column(...conjunto[fila].columnas, ...elemeto.columnas) };
-        }
-        return conjunto;
-      }, {} as Record<number, any>)
-    )
-    this.tamFila.set(datos[datos.length - 1].fila)
+    if (obj) {
+      let datos: Array<tablaFila> = Object.values(
+        obj.reduce((conjunto: any, elemeto: any) => {
+          const fila = elemeto.fila
+          if (!conjunto[fila]) {
+            conjunto[fila] = { ...elemeto, columnas: this.column(...elemeto.columnas) }
+          } else {
+            conjunto[fila] = { ...conjunto[fila], ...elemeto, columnas: this.column(...conjunto[fila].columnas, ...elemeto.columnas) };
+          }
+          return conjunto;
+        }, {} as Record<number, any>)
+      )
+      this.tamFila.set(datos[datos.length - 1].fila)
 
-    let ultimaColumna = Math.max(...datos.map(f => Math.max(...f.columnas.map(c => c.columna))));
-    this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
+      let ultimaColumna = Math.max(...datos.map(f => Math.max(...f.columnas.map(c => c.columna))));
+      this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
 
-    this.rows.set(datos)
+      this.rows.set(datos)
+    } else {
+      this.rows.set([])
+    }
   }
 
   column(...columnas: any) {
@@ -151,20 +170,25 @@ export class Tabla implements AfterViewInit {
   }
 
   organizarFooter(obj: any) {
-    let datos: Array<tablaFuncion> = Object.values(
-      obj.reduce((conjunto: any, elemeto: any) => {
-        const columna = elemeto.columna
-        conjunto[columna] = { ...conjunto[columna], ...elemeto };
-        if (!conjunto[columna].funcion) delete conjunto[columna];
-        return conjunto;
-      }, {} as Record<number, any>)
-    )
-    if (!this.carga()) {
-      let ultimaColumna = datos[datos.length - 1].columna;
-      this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
-    }
+    if (obj) {
+      let datos: Array<tablaFuncion> = Object.values(
+        obj.reduce((conjunto: any, elemeto: any) => {
+          const columna = elemeto.columna
+          conjunto[columna] = { ...conjunto[columna], ...elemeto };
+          if (!conjunto[columna].funcion) delete conjunto[columna];
+          return conjunto;
+        }, {} as Record<number, any>)
+      )
 
-    this.footers.set(datos)
+      if (!this.carga()) {
+        let ultimaColumna = datos[datos.length - 1].columna;
+        this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
+      }
+
+      this.footers.set(datos)
+    } else {
+      this.footers.set([])
+    }
   }
 
   footerColumnas = computed(() =>
@@ -283,9 +307,32 @@ export class Tabla implements AfterViewInit {
   }
 
   impo() {
-    console.log(this.functions());
-    console.log(this.footers());
 
+    this.carga.set(false)
+
+    let tabla = {
+      functions: [
+        {
+          columna: 2,
+          funcion: 'restar',
+          columnas: [0, 1],
+        }
+      ],
+      headers: [
+        {
+          columna: 1,
+          valor: "mul"
+        },
+      ]
+    }
+
+    this.tamFila.set(0)
+    this.tamColumna.set(0)
+
+    this.organizarFunctions(tabla.functions);
+    this.organizarHeaders(tabla.headers);
+    this.organizarRows(null);
+    this.organizarFooter(null);
 
   }
 

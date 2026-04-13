@@ -12,8 +12,8 @@
     <table>
         <thead>
             <tr app-fila [fila]="carga()?functions():headers()" [disabled]="modoSeleccion()"
-                (selecionado)="onSelect($event)" [parte]="'head'" [tamColumna]="tamColumna()"
-                (ampliar)="ampliarColum()">
+                (selecionado)="onSelect($event)" [parte]="'head'" [tamColumna]="tamColumna()" (ampliar)="ampliarColum()"
+                [car]="carga()">
             </tr>
         </thead>
         <tbody>
@@ -29,17 +29,18 @@
             }
             }
         -->
-            @for (n of [].constructor(tamFila()! + 1 +5); track $index) {
+            @for (n of arrayFila(); track $index) {
             @let fila = buscarFila($index);
             <tr app-fila [fila]="carga()?functions():(fila?.columnas ?? functions())" [disabled]="modoSeleccion()"
                 (selecionado)="onSelect($event)" [tamColumna]="tamColumna()"
-                (click)="$index > (tamFila()! + 1) && ampliarFila()" (ampliar)="ampliarColum()">
+                (click)="!modoSeleccion() && $index > (tamFila()! + 1) && ampliarFila()" (ampliar)="ampliarColum()"
+                [car]="carga()">
             </tr>
             }
         </tbody>
         <tfoot>
             <tr app-fila [fila]="footerColumnas()" [parte]="'footer'" [tamColumna]="tamColumna()"
-                (ampliar)="ampliarColum()">
+                (ampliar)="ampliarColum()" [car]="carga()">
             </tr>
         </tfoot>
     </table>
