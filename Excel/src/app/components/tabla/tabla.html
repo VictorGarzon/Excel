@@ -1,6 +1,6 @@
 <header>
     <button (click)="exportar()">Exportar</button>
-    <button (click)="impo()">Importar</button>
+    <input type="file" accept=".json" (change)="onFileSelected($event)">
     <button (click)="aplicarFuncion('sumar')">Sumar</button>
     <button (click)="aplicarFuncion('restar')">restar</button>
     <button (click)="aplicarFuncionColumna('sumar')">sumar columna</button>
@@ -11,36 +11,24 @@
 <main>
     <table>
         <thead>
-            <tr app-fila [fila]="carga()?functions():headers()" [disabled]="modoSeleccion()"
-                (selecionado)="onSelect($event)" [parte]="'head'" [tamColumna]="tamColumna()" (ampliar)="ampliarColum()"
-                [car]="carga()">
+            <tr app-fila [data]="{head:cargado()?(functions()):(headers())}" [disabled]="modoSeleccion()"
+                (selecionado)="onSelect($event)" [tamColumna]="tamColumna()" (ampliar)="ampliarColum()"
+                [cargado]="cargado()">
             </tr>
         </thead>
         <tbody>
-            <!--
-            @for (fila of rows(); track fila.fila;let primero= $first) {
-            @let inicio = ((primero && fila.fila == 0) || !primero )?fila.fila:0;
-            @let fin = rows()[$index+1]?.fila ?? (tamFila() + 1);
-            @for (n of [].constructor(fin - inicio); track $index) {
-            <tr app-fila
-                [fila]="(($first && inicio == fila.fila) || (primero && fila.fila == $index ))? fila.columnas:functions()"
-                [disabled]="modoSeleccion()" (selecionado)="onSelect($event)" [tamColumna]="tamColumna()">
-            </tr>
-            }
-            }
-        -->
             @for (n of arrayFila(); track $index) {
             @let fila = buscarFila($index);
-            <tr app-fila [fila]="carga()?functions():(fila?.columnas ?? functions())" [disabled]="modoSeleccion()"
+            <tr app-fila [data]="{body:cargado()?functions():(fila?.columnas ?? functions())}" [disabled]="modoSeleccion()"
                 (selecionado)="onSelect($event)" [tamColumna]="tamColumna()"
-                (click)="!modoSeleccion() && $index > (tamFila()! + 1) && ampliarFila()" (ampliar)="ampliarColum()"
-                [car]="carga()">
+                (click)="!modoSeleccion() && $index >= (tamFila()! + 1) && ampliarFila()" (ampliar)="ampliarColum()"
+                [cargado]="cargado()" [ultimo]="!cargado() && $last" (carout)="bodyCargado()">
             </tr>
             }
         </tbody>
         <tfoot>
-            <tr app-fila [fila]="footerColumnas()" [parte]="'footer'" [tamColumna]="tamColumna()"
-                (ampliar)="ampliarColum()" [car]="carga()">
+            <tr app-fila [data]="{footer:footerColumnas()}" [tamColumna]="tamColumna()" (ampliar)="ampliarColum()"
+                [cargado]="cargado()">
             </tr>
         </tfoot>
     </table>

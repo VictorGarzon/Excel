@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, computed, effect, signal, untracked, viewChildren } from '@angular/core';
+import { afterNextRender, AfterViewChecked, AfterViewInit, Component, computed, effect, signal, untracked, viewChildren } from '@angular/core';
 import { Fila } from "../fila/fila";
 
 interface tablaFuncion {
@@ -31,7 +31,7 @@ interface tabla {
   templateUrl: './tabla.html',
   styleUrl: './tabla.css',
 })
-export class Tabla implements AfterViewInit, AfterViewChecked {
+export class Tabla {
 
   filas = viewChildren<Fila>(Fila)
   modoSeleccion = signal(false);
@@ -48,26 +48,48 @@ export class Tabla implements AfterViewInit, AfterViewChecked {
   rows = signal<Array<tablaFila>>([]);
   footers = signal<Array<tablaFuncion>>([]);
 
-  carga = signal(false)
+  cargado = signal(false)
 
   posicionFila = 0;
 
+  altoPantalla = 0;
+  anchoPantalla = 0;
+
   constructor() {
-    this.organizarFunctions(this.tabla().functions);
-    this.organizarHeaders(this.tabla().headers);
-    this.organizarRows(this.tabla().rows);
-    this.organizarFooter(this.tabla().footers);
+    afterNextRender(() => {
+      let alto = Math.ceil(window.innerHeight / 50);
+      let ancho = Math.ceil(window.innerWidth / 100);
 
+      this.tamFila.update(tam => alto > tam ? alto : tam)
+      this.tamColumna.update(tam => ancho > tam ? ancho : tam)
+
+      this.altoPantalla = alto
+      this.anchoPantalla = ancho
+    })
+    let data
+    if (data) {
+      this.reinicio(data)
+    }
   }
 
-  ngAfterViewInit(): void {
-    //this.carga.set(true)
+  reinicio(jsonData: tabla) {
+
+    this.cargado.set(false)
+
+    this.tamFila.set(this.altoPantalla)
+    this.tamColumna.set(this.anchoPantalla)
+
+    this.organizarHeaders(jsonData.headers ?? null);
+    this.organizarRows(jsonData.rows ?? null);
+    this.organizarFooter(jsonData.footers ?? null);
+    this.organizarFunctions(jsonData.functions ?? null);
   }
 
-  ngAfterViewChecked(): void {
-    this.carga.set(true)
+  bodyCargado() {
+    this.cargado.set(true)
   }
 
+  //recorrer las filas
   buscarFila(n: number) {
     let fila = this.rows()[this.posicionFila]?.fila == n ? this.rows()[this.posicionFila] : null
     if (fila) {
@@ -80,43 +102,19 @@ export class Tabla implements AfterViewInit, AfterViewChecked {
     return null;
   }
 
+  //cuanto amplio
   ampliarFila() {
-    this.tamFila.update(tam => tam + 5)
+    this.tamFila.update(tam => tam + 2)
   }
 
   ampliarColum() {
-    this.tamColumna.update(tam => tam + 5)
+    this.tamColumna.update(tam => tam + 2)
   }
 
-  filaHeader = computed(() => this.filas()[0])
+  //array de las filas
+  arrayFila = computed(() => [].constructor(this.tamFila() + 1 + 2))
 
-  filasBody = computed(() => this.filas().slice(1).slice(0, -1))
-
-  filaFooter = computed(() => this.filas()[this.filas().length - 1])
-
-  arrayFila = computed(() => [].constructor(this.tamFila() + 1 + 5))
-
-  organizarFunctions(obj: any) {
-    if (obj) {
-      let datos: Array<tablaFuncion> = Object.values(
-        obj.reduce((conjunto: any, elemeto: any) => {
-          const columna = elemeto.columna
-          conjunto[columna] = { ...conjunto[columna], ...elemeto };
-          if (!conjunto[columna].funcion) delete conjunto[columna];
-          return conjunto;
-        }, {} as Record<number, any>)
-      )
-      if (!this.carga()) {
-        let ultimaColumna = datos[datos.length - 1].columna;
-        this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
-      }
-
-      this.functions.set(datos)
-    } else {
-      this.functions.set([])
-    }
-  }
-
+  //organidar para evitar repetidos y otros errores al importar la tabla
   organizarHeaders(obj: any) {
     if (obj) {
       let datos: Array<tablaColumna> = Object.values(
@@ -148,7 +146,8 @@ export class Tabla implements AfterViewInit, AfterViewChecked {
           return conjunto;
         }, {} as Record<number, any>)
       )
-      this.tamFila.set(datos[datos.length - 1].fila)
+      let ultimaFila = datos[datos.length - 1].fila
+      this.tamFila.update(tam => ultimaFila > tam ? ultimaFila : tam)
 
       let ultimaColumna = Math.max(...datos.map(f => Math.max(...f.columnas.map(c => c.columna))));
       this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
@@ -169,6 +168,27 @@ export class Tabla implements AfterViewInit, AfterViewChecked {
     )
   }
 
+  organizarFunctions(obj: any) {
+    if (obj) {
+      let datos: Array<tablaFuncion> = Object.values(
+        obj.reduce((conjunto: any, elemeto: any) => {
+          const columna = elemeto.columna
+          conjunto[columna] = { ...conjunto[columna], ...elemeto };
+          if (!conjunto[columna].funcion) delete conjunto[columna];
+          return conjunto;
+        }, {} as Record<number, any>)
+      )
+      if (!this.cargado()) {
+        let ultimaColumna = datos[datos.length - 1].columna;
+        this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
+      }
+
+      this.functions.set(datos)
+    } else {
+      this.functions.set([])
+    }
+  }
+
   organizarFooter(obj: any) {
     if (obj) {
       let datos: Array<tablaFuncion> = Object.values(
@@ -180,7 +200,7 @@ export class Tabla implements AfterViewInit, AfterViewChecked {
         }, {} as Record<number, any>)
       )
 
-      if (!this.carga()) {
+      if (!this.cargado()) {
         let ultimaColumna = datos[datos.length - 1].columna;
         this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
       }
@@ -195,10 +215,14 @@ export class Tabla implements AfterViewInit, AfterViewChecked {
     this.footers().map((col: any) => ({ ...col, columnas: this.buscarColumnas(col.columna) }))
   )
 
+  //sacar las celdas de una columna
   buscarColumnas(columna: number) {
-    let celdas = this.filasBody().map((fila) => fila.celdas()[columna])
+    let body = this.filas().slice(1).slice(0, -1)
+    let celdas = body.map((fila) => fila.celdas()[columna])
     return celdas;
   }
+
+  // Aplicar funciones
 
   aplicarFuncion(funcion: string) {
     this.modoSeleccion.set(true)
@@ -290,7 +314,27 @@ export class Tabla implements AfterViewInit, AfterViewChecked {
 
   exportar() {
 
-    const dataStr = JSON.stringify({}, null, 2);
+    let head: Array<tablaColumna> = [];
+    this.filas()[0].celdas().forEach((c, cn) => c.valor() && head.push({
+      columna: cn,
+      valor: c.valor()
+    }))
+
+    let body: Array<tablaFila> = [];
+    this.filas().slice(1).slice(0, -1).forEach((f, fn) => {
+      let rows: Array<tablaColumna> = [];
+      f.celdas().forEach((c, cn) => c.valor() && !c.funcion() && rows.push({
+        columna: cn,
+        valor: c.valor()
+      }))
+
+      rows.length && body.push({
+        fila: fn,
+        columnas: rows
+      })
+    })
+
+    const dataStr = JSON.stringify({ headers: head, rows: body, functions: this.functions(), footers: this.footers() }, null, 2);
 
     const blob = new Blob([dataStr], { type: 'application/json' });
 
@@ -302,122 +346,108 @@ export class Tabla implements AfterViewInit, AfterViewChecked {
     link.click();
 
     window.URL.revokeObjectURL(url);
-
-
   }
 
-  impo() {
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    const reader = new FileReader();
 
-    this.carga.set(false)
+    reader.onload = (e: any) => {
+      try {
+        const content = e.target.result;
+        const jsonData = JSON.parse(content);
+        this.reinicio(jsonData)
+      } catch (error) {
+        console.error('Error: El archivo no tiene un formato JSON válido', error);
+      }
+    };
 
-    let tabla = {
+    reader.readAsText(file);
+    event.target.value = ""
+  }
+  /*
+    tabla = signal<tabla>({
       functions: [
         {
           columna: 2,
+          funcion: 'sumar',
+          columnas: [0, 1],
+        },
+        {
+          columna: 3,
           funcion: 'restar',
           columnas: [0, 1],
-        }
+        },
       ],
       headers: [
         {
+          columna: 0,
+          valor: "dato1"
+        },
+        {
           columna: 1,
-          valor: "mul"
+          valor: "dato2"
+        },
+        {
+          columna: 2,
+          valor: "sumar1"
+        },
+        {
+          columna: 3,
+          valor: "restar2"
+        },
+      ],
+      rows: [
+        {
+          fila: 5,
+          columnas: [
+            {
+              columna: 1,
+              valor: 1
+            },
+            {
+              columna: 6,
+              valor: 1
+            },
+            {
+              columna: 0,
+              valor: 2
+            }
+          ]
+        },
+        {
+          fila: 1,
+          columnas: [
+            {
+              columna: 1,
+              valor: 2
+            }
+          ]
+        },
+        {
+          fila: 3,
+          columnas: [
+            {
+              columna: 1,
+              valor: 2
+            }
+          ]
+        }
+      ],
+      footers: [
+        {
+          columna: 4,
+          funcion: 'sumar',
+        },
+        {
+          columna: 1,
+          funcion: 'restar',
+        },
+        {
+          columna: 2,
+          funcion: 'sumar',
         },
       ]
-    }
-
-    this.tamFila.set(0)
-    this.tamColumna.set(0)
-
-    this.organizarFunctions(tabla.functions);
-    this.organizarHeaders(tabla.headers);
-    this.organizarRows(null);
-    this.organizarFooter(null);
-
-  }
-
-  tabla = signal<tabla>({
-    functions: [
-      {
-        columna: 2,
-        funcion: 'sumar',
-        columnas: [0, 1],
-      },
-      {
-        columna: 3,
-        funcion: 'restar',
-        columnas: [0, 1],
-      },
-    ],
-    headers: [
-      {
-        columna: 0,
-        valor: "dato1"
-      },
-      {
-        columna: 1,
-        valor: "dato2"
-      },
-      {
-        columna: 2,
-        valor: "sumar1"
-      },
-      {
-        columna: 3,
-        valor: "restar2"
-      },
-    ],
-    rows: [
-      {
-        fila: 5,
-        columnas: [
-          {
-            columna: 1,
-            valor: 1
-          },
-          {
-            columna: 6,
-            valor: 1
-          },
-          {
-            columna: 0,
-            valor: 2
-          }
-        ]
-      },
-      {
-        fila: 1,
-        columnas: [
-          {
-            columna: 1,
-            valor: 2
-          }
-        ]
-      },
-      {
-        fila: 3,
-        columnas: [
-          {
-            columna: 1,
-            valor: 2
-          }
-        ]
-      }
-    ],
-    footers: [
-      {
-        columna: 4,
-        funcion: 'sumar',
-      },
-      {
-        columna: 1,
-        funcion: 'restar',
-      },
-      {
-        columna: 2,
-        funcion: 'sumar',
-      },
-    ]
-  })
-
+    })
+  */
 }

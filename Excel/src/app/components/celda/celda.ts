@@ -5,28 +5,22 @@ import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewIni
   templateUrl: './celda.html',
   styleUrl: './celda.css',
 })
-export class Celda implements AfterViewInit {
+export class Celda {
   valoresIniales = input<any>();
   buscarCeldas = input<(columnas: Array<number>) => Array<Celda>>()
   disabled = input<boolean>();
   parte = input();
 
-  car = input();
+  cargado = input();
 
   valorCelda = input<string>("");
   funcion = input<string>("");
   columnas = input([]);
 
   valorCambio = signal<string>("");
-  carga = signal(false)
+  cargaElemento = signal(false)
 
   constructor(private el: ElementRef, private renderer: Renderer2) { }
-
-  //cargar
-  ngAfterViewInit(): void {
-    this.valorCambio.set(this.valorCelda() ?? '')
-    this.carga.set(true)
-  }
 
   //celdas asoscidas
   celdas = computed<Celda[]>(() => {
@@ -40,20 +34,16 @@ export class Celda implements AfterViewInit {
 
   //valor de campo
   valor: any = computed(() => {
-    if (!this.carga()) return "";
+    if (!this.cargado()) {
+      untracked(() => this.valorCambio.set(this.valorCelda() ?? ''))
+      return "";
+    }
     try {
       if (this.funcion() && this.columnas() && this.parte() !== "head") {
         let accion = this.funcion() as keyof typeof this.acciones
         let resultado = this.acciones[accion](this.datos());
         return resultado == 0 ? "" : resultado
       } else {
-        if (!this.car()) {
-          untracked(() => this.valorCambio.set(this.valorCelda() ?? ''))
-        } else {
-          if (this.valorCelda()) {
-            untracked(() => this.valorCambio.set(this.valorCelda()))
-          }
-        }
         return this.valorCambio();
       }
     } catch (error) {
