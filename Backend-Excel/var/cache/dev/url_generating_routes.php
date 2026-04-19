@@ -4,4 +4,7 @@
 
 return [
     '_preview_error' => [['code', '_format'], ['_controller' => 'error_controller::preview', '_format' => 'html'], ['code' => '\\d+'], [['variable', '.', '[^/]++', '_format', true], ['variable', '/', '\\d+', 'code', true], ['text', '/_error']], [], [], []],
+    'api_registerregister' => [[], ['_controller' => 'App\\Controller\\RegistrationController::index'], [], [['text', '/api/register']], [], [], []],
+    'api_login_check' => [[], [], [], [['text', '/api/login_check']], [], [], []],
+    'App\Controller\RegistrationController::index' => [[], ['_controller' => 'App\\Controller\\RegistrationController::index'], [], [['text', '/api/register']], [], [], []],
 ];
