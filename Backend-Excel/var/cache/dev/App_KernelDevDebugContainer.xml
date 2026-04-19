@@ -253,7 +253,24 @@
     <parameter key="lexik_jwt_authentication.user_id_claim">username</parameter>
     <parameter key="lexik_jwt_authentication.encoder.signature_algorithm">RS256</parameter>
     <parameter key="nelmio_cors.map" type="collection">
-      <parameter key="^/" type="collection"/>
+      <parameter key="^/api/" type="collection">
+        <parameter key="allow_origin" type="collection">
+          <parameter>%env(CORS_ALLOW_ORIGIN)%</parameter>
+        </parameter>
+        <parameter key="allow_headers" type="collection">
+          <parameter>content-type</parameter>
+          <parameter>authorization</parameter>
+        </parameter>
+        <parameter key="allow_methods" type="collection">
+          <parameter>GET</parameter>
+          <parameter>OPTIONS</parameter>
+          <parameter>POST</parameter>
+          <parameter>PUT</parameter>
+          <parameter>PATCH</parameter>
+          <parameter>DELETE</parameter>
+        </parameter>
+        <parameter key="max_age">3600</parameter>
+      </parameter>
     </parameter>
     <parameter key="nelmio_cors.defaults" type="collection">
       <parameter key="allow_origin" type="collection">
