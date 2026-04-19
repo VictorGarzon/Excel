@@ -1,0 +1,7 @@
+@for (n of arrayColumn(); track $index) {
+@let celda = buscarCelda($index);
+<td app-celda [valorCelda]="celda?.valor" [funcion]="celda?.funcion" [columnas]="celda?.columnas"
+    [buscarCeldas]="buscarColumnas" [disabled]="disabled()" (click)="disabled() && onSelect($index)" [parte]="parte()"
+    (click)="!disabled() && $index >= (tamColumna()! + 1) && ampliar.emit()" [cargado]="cargado()">
+</td>
+}
