@@ -252,6 +252,14 @@
       <tag name="controller.service_arguments"/>
       <tag name="routing.route_loader"/>
     </service>
+    <service id="App\Controller\RegistrationController" class="App\Controller\RegistrationController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\RegistrationController"/>
+      </call>
+    </service>
     <service id="App\Entity\User" class="App\Entity\User" autowire="true" autoconfigure="true">
       <tag name="container.excluded" source="because it's a Doctrine entity"/>
       <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
@@ -283,7 +291,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.8JS6QTA"/>
+      <argument type="service" id=".service_locator.aCMK6TF"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -1569,7 +1577,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.8JS6QTA"/>
+      <argument type="service" id=".service_locator.aCMK6TF"/>
     </service>
     <service id="routing.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
       <call method="addLoader">
@@ -1642,7 +1650,9 @@
     </service>
     <service id="routing.loader.attribute.services" class="Symfony\Component\Routing\Loader\AttributeServicesLoader">
       <tag name="routing.loader" priority="-10"/>
-      <argument type="collection"/>
+      <argument type="collection">
+        <argument>App\Controller\RegistrationController</argument>
+      </argument>
     </service>
     <service id="routing.loader.attribute.directory" class="Symfony\Component\Routing\Loader\AttributeDirectoryLoader">
       <tag name="routing.loader" priority="-10"/>
@@ -4512,9 +4522,9 @@
       <argument type="service" id="security.authentication.failure_handler.login.json_login"/>
       <argument type="collection">
         <argument key="check_path">/api/login_check</argument>
+        <argument key="username_path">email</argument>
         <argument key="use_forward">false</argument>
         <argument key="login_path">/login</argument>
-        <argument key="username_path">username</argument>
         <argument key="password_path">password</argument>
       </argument>
       <argument type="service" id="property_accessor" on-invalid="null"/>
@@ -4983,6 +4993,10 @@
         <argument>Generate public/private keys for use in your application.</argument>
       </call>
     </service>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\RegistrationController.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.App\Entity\User.0.App\Entity\User" class="App\Entity\User" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Entity\User" class="App\Entity\User" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" abstract="true"/>
@@ -5637,15 +5651,30 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.1vYpZ1B" method="withContext"/>
     </service>
-    <service id=".service_locator.8JS6QTA" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator..WG8ZO_" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="doctrine" type="service_closure" id="doctrine"/>
+        <argument key="passwordHasher" type="service_closure" id="security.user_password_hasher"/>
+      </argument>
+    </service>
+    <service id=".service_locator..WG8ZO_.App\Controller\RegistrationController::index()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\RegistrationController::index()"/>
+      <argument>App\Controller\RegistrationController::index()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator..WG8ZO_" method="withContext"/>
+    </service>
+    <service id=".service_locator.aCMK6TF" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
         <argument key="App\Kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
         <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.1vYpZ1B.kernel::loadRoutes()"/>
         <argument key="App\Kernel::loadRoutes" type="service_closure" id=".service_locator.1vYpZ1B.kernel::loadRoutes()"/>
+        <argument key="App\Controller\RegistrationController::index" type="service_closure" id=".service_locator..WG8ZO_.App\Controller\RegistrationController::index()"/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.1vYpZ1B.kernel::loadRoutes()"/>
+        <argument key="App\Controller\RegistrationController:index" type="service_closure" id=".service_locator..WG8ZO_.App\Controller\RegistrationController::index()"/>
       </argument>
     </service>
     <service id=".service_locator.nqEKT7G" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -5822,6 +5851,12 @@
         <argument key="parameter_bag" type="service_closure" id="parameter_bag" on-invalid="ignore"/>
       </argument>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\RegistrationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\RegistrationController"/>
+      <argument>App\Controller\RegistrationController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.controller.helper" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="controller.helper"/>
       <argument>controller.helper</argument>
@@ -5954,6 +5989,7 @@
       <call method="allowControllers">
         <argument type="collection">
           <argument>App\Kernel</argument>
+          <argument>App\Controller\RegistrationController</argument>
           <argument>Doctrine\Bundle\DoctrineBundle\Controller\ProfilerController</argument>
         </argument>
       </call>
@@ -6957,7 +6993,7 @@
     <service id="Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface" alias="lexik_jwt_authentication.encoder.lcobucci"/>
     <service id="lexik_jwt_authentication.key_loader" alias="lexik_jwt_authentication.key_loader.raw" public="true"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.8JS6QTA"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.aCMK6TF"/>
     <service id="jms_serializer.authorization_checker" alias="security.authorization_checker" public="true"/>
     <service id="fos_rest.serializer" alias="fos_rest.serializer.jms"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
@@ -6984,6 +7020,7 @@
     <service id="jms_serializer.handler_registry" alias="jms_serializer.traceable_handler_registry"/>
     <service id="jms_serializer.metadata.file_locator" alias="jms_serializer.metadata.traceable_file_locator"/>
     <service id=".service_locator.c0wzfI4" alias=".service_locator.1vYpZ1B"/>
+    <service id=".service_locator.618p4vZ" alias=".service_locator..WG8ZO_"/>
     <service id=".service_locator.rNoQPCZ" alias=".service_locator.TJNRSaV"/>
   </services>
 </container>
