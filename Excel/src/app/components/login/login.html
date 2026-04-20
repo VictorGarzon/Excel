@@ -14,5 +14,20 @@
             </div>
             <button type="submit">Iniciar Session</button>
         </form>
+        <form [formGroup]="userForm" (ngSubmit)="submitForm2()">
+            <h2>Register</h2>
+            <div>
+                <label>Email:</label>
+                <input type="text" formControlName="email"
+                    [style.border-color]=" email?.touched && email?.invalid ? 'red':''">
+            </div>
+            <div>
+                <label>Contraseña:</label>
+                <input type="text" formControlName="password"
+                    [style.border-color]=" password?.touched && password?.invalid ? 'red':''">
+            </div>
+            <button type="submit">Iniciar Session</button>
+        </form>
+        <button (click)="verusers()">ver</button>
     </section>
 </main>

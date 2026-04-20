@@ -1,28 +1,50 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { error } from 'console';
-import { empty, Observable } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { firstValueFrom, Observable, timeout, toArray } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  constructor(private http: HttpClient) { }
   private url = "http://localhost:8000/api/";
+  auth = inject(AuthService);
+  constructor(private http: HttpClient) { }
 
-  getTokenUser(user: any) {
-    this.token(this.http.post<any>(this.url + "login_check", user))
+  async buscar(observable: Observable<any>) {
+    try {
+      return await firstValueFrom(
+        observable.pipe(timeout(10000))
+      );
+    } catch (err: any) {
+      if (err.status === 406) {
+        throw new Error("No es posible conectarse");
+      }
+      if (err.name === "TimeoutError") {
+        throw new Error("No es posible conectarse");
+      }
+      throw err;
+    }
   }
 
-  async token(observable: Observable<any>) {
-    await new Promise((resolve, reject) => {
-      observable.subscribe({
-        next: (data) => {
-          console.log(data);
-        },
-        error: (err) => reject(err),
-        complete: () => resolve(true) 
-      });
-    });
+  async postLogin(user: any) {
+    let resul = await this.buscar(this.http.post<any>(this.url + "login_check", user))
+    if (resul.token) {
+      this.auth.setToken(resul.token)
+      return true
+    } else {
+      return false
+    }
+  }
+
+  async postRegister(user: any) {
+    let resul = await this.buscar(this.http.post<any>(this.url + "register", user))
+    if (resul.status === 201) {
+      await this.postLogin(user)
+    }
+  }
+
+  async getAllUsers() {
+    return await this.buscar(this.http.get<any>(this.url + "user"))
   }
 }
