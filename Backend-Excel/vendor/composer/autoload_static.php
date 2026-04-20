@@ -78,6 +78,7 @@ class ComposerStaticInit75e7f8d848176580e9902a32f6f14640
         ),
         'N' =>
         array (
+            'Nelmio\\CorsBundle\\' => 18,
             'Negotiation\\' => 12,
         ),
         'M' =>
@@ -321,6 +322,10 @@ class ComposerStaticInit75e7f8d848176580e9902a32f6f14640
         'PHPStan\\PhpDocParser\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
+        ),
+        'Nelmio\\CorsBundle\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/nelmio/cors-bundle',
         ),
         'Negotiation\\' =>
         array (

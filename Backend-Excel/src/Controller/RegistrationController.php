@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\User;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Exception;
+use PDOException;
 
 #[Route('/api', name: 'api_register')]
 class RegistrationController extends AbstractController
@@ -19,19 +22,24 @@ class RegistrationController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $passwordHasher
     ): JsonResponse {
-        $em = $doctrine->getManager();
-        $decoded = json_decode($request->getContent());
-        $email = $decoded->email;
-        $plaintextPassword = $decoded->password;
-        $user = new User();
-        $user->setEmail($email);
-        $hashedPassword = $passwordHasher->hashPassword(
-            $user,
-            $plaintextPassword
-        );
-        $user->setPassword($hashedPassword);
-        $em->persist($user);
-        $em->flush();
-        return $this->json(['message' => 'Registered Successfully']);
+        try {
+            $em = $doctrine->getManager();
+            $decoded = json_decode($request->getContent());
+            $email = $decoded->email;
+            $plaintextPassword = $decoded->password;
+            $user = new User();
+            $user->setEmail($email);
+            $hashedPassword = $passwordHasher->hashPassword(
+                $user,
+                $plaintextPassword
+            );
+            $user->setPassword($hashedPassword);
+            $user->setRoles(['ROLE_USER']);
+            $em->persist($user);
+            $em->flush();
+            return new JsonResponse(status: 201);
+        } catch (UniqueConstraintViolationException $err) {
+            return new JsonResponse(status: 409);
+        }
     }
 }
