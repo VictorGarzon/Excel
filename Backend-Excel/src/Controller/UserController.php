@@ -23,9 +23,9 @@ class UserController extends AbstractController
                 'id' => $user->getId(),
                 'email' => $user->getEmail(),
                 'password' => $user->getPassword(),
-                "roles"=>$user->getRoles(),
+                "roles" => $user->getRol()->getNombre(),
             ];
         }
-        return $this->json($data);
+        return new JsonResponse(data: $data, status: 201);
     }
 }

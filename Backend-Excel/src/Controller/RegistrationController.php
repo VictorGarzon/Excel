@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Rol;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -34,12 +35,15 @@ class RegistrationController extends AbstractController
                 $plaintextPassword
             );
             $user->setPassword($hashedPassword);
-            $user->setRoles(['ROLE_USER']);
+            $rol = $em->getRepository(Rol::class)->findOneBy(['nombre' => 'ROLE_USER']);
+            $user->setRol($rol);
             $em->persist($user);
             $em->flush();
             return new JsonResponse(status: 201);
         } catch (UniqueConstraintViolationException $err) {
             return new JsonResponse(status: 409);
+        } catch (Exception $err) {
+            return new JsonResponse(status: 500);
         }
     }
 }

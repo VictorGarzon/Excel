@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,7 +24,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var list<string> The user roles
      */
-    #[ORM\Column]
     private array $roles = [];
 
     /**
@@ -30,6 +31,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Rol $rol = null;
+
+    /**
+     * @var Collection<int, Fichero>
+     */
+    #[ORM\OneToMany(targetEntity: Fichero::class, mappedBy: 'ultima_subida')]
+    private Collection $ficheros;
+
+    /**
+     * @var Collection<int, Acceso>
+     */
+    #[ORM\OneToMany(targetEntity: Acceso::class, mappedBy: 'user')]
+    private Collection $accesos;
+
+    public function __construct()
+    {
+        $this->ficheros = new ArrayCollection();
+        $this->accesos = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -63,7 +86,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        $roles[] = $this->rol->getNombre();
+        return array_unique($roles);
     }
 
     /**
@@ -73,6 +98,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->roles = $roles;
 
+        return $this;
+    }
+
+
+    public function getRol(): ?Rol
+    {
+        return $this->rol;
+    }
+
+    public function setRol(?Rol $rol): static
+    {
+        $this->rol = $rol;
+        $this->setRoles([$rol->getNombre()]);
         return $this;
     }
 
@@ -97,7 +135,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
 
         return $data;
     }
@@ -106,5 +144,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    /**
+     * @return Collection<int, Fichero>
+     */
+    public function getFicheros(): Collection
+    {
+        return $this->ficheros;
+    }
+
+    public function addFichero(Fichero $fichero): static
+    {
+        if (!$this->ficheros->contains($fichero)) {
+            $this->ficheros->add($fichero);
+            $fichero->setUltimaSubida($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFichero(Fichero $fichero): static
+    {
+        if ($this->ficheros->removeElement($fichero)) {
+            // set the owning side to null (unless already changed)
+            if ($fichero->getUltimaSubida() === $this) {
+                $fichero->setUltimaSubida(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Acceso>
+     */
+    public function getAccesos(): Collection
+    {
+        return $this->accesos;
+    }
+
+    public function addAcceso(Acceso $acceso): static
+    {
+        if (!$this->accesos->contains($acceso)) {
+            $this->accesos->add($acceso);
+            $acceso->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAcceso(Acceso $acceso): static
+    {
+        if ($this->accesos->removeElement($acceso)) {
+            // set the owning side to null (unless already changed)
+            if ($acceso->getUser() === $this) {
+                $acceso->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

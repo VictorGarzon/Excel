@@ -20,6 +20,9 @@ export class ApiService {
       if (err.status === 406) {
         throw new Error("No es posible conectarse");
       }
+      if (err.status === 403) {
+        throw new Error("No tienes la autorización");
+      }
       if (err.name === "TimeoutError") {
         throw new Error("No es posible conectarse");
       }
