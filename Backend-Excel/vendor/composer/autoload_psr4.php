@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Twig\\' => array($vendorDir . '/twig/twig/src'),
     'Symfony\\Runtime\\Symfony\\Component\\' => array($vendorDir . '/symfony/runtime/Internal'),
     'Symfony\\Polyfill\\Php85\\' => array($vendorDir . '/symfony/polyfill-php85'),
     'Symfony\\Polyfill\\Php84\\' => array($vendorDir . '/symfony/polyfill-php84'),
@@ -45,9 +46,15 @@ return array(
     'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
     'Symfony\\Component\\Clock\\' => array($vendorDir . '/symfony/clock'),
     'Symfony\\Component\\Cache\\' => array($vendorDir . '/symfony/cache'),
+    'Symfony\\Bundle\\WebProfilerBundle\\' => array($vendorDir . '/symfony/web-profiler-bundle'),
+    'Symfony\\Bundle\\TwigBundle\\' => array($vendorDir . '/symfony/twig-bundle'),
     'Symfony\\Bundle\\SecurityBundle\\' => array($vendorDir . '/symfony/security-bundle'),
+    'Symfony\\Bundle\\MonologBundle\\' => array($vendorDir . '/symfony/monolog-bundle/src'),
     'Symfony\\Bundle\\MakerBundle\\' => array($vendorDir . '/symfony/maker-bundle/src'),
     'Symfony\\Bundle\\FrameworkBundle\\' => array($vendorDir . '/symfony/framework-bundle'),
+    'Symfony\\Bundle\\DebugBundle\\' => array($vendorDir . '/symfony/debug-bundle'),
+    'Symfony\\Bridge\\Twig\\' => array($vendorDir . '/symfony/twig-bridge'),
+    'Symfony\\Bridge\\Monolog\\' => array($vendorDir . '/symfony/monolog-bridge'),
     'Symfony\\Bridge\\Doctrine\\' => array($vendorDir . '/symfony/doctrine-bridge'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
     'Psr\\EventDispatcher\\' => array($vendorDir . '/psr/event-dispatcher/src'),
@@ -58,6 +65,7 @@ return array(
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
     'Nelmio\\CorsBundle\\' => array($vendorDir . '/nelmio/cors-bundle'),
     'Negotiation\\' => array($vendorDir . '/willdurand/negotiation/src/Negotiation'),
+    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'Metadata\\' => array($vendorDir . '/jms/metadata/src'),
     'Lexik\\Bundle\\JWTAuthenticationBundle\\' => array($vendorDir . '/lexik/jwt-authentication-bundle'),
     'Lcobucci\\JWT\\' => array($vendorDir . '/lcobucci/jwt/src'),

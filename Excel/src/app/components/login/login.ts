@@ -1,7 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -59,7 +60,7 @@ export class Login {
         if (err.status === 409) {
           this.mensajeClass.set("error");
           this.mensaje.set("Email en uso")
-          console.log("mal");
+          console.log("conficto");
         } else {
           console.log(err.message);
         }
@@ -76,5 +77,9 @@ export class Login {
 
   async verusers() {
     console.log(await this.api.getAllUsers());
+  }
+  auth = inject(AuthService);
+  logout(){
+    this.auth.clearToken()
   }
 }
