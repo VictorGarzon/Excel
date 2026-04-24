@@ -29,6 +29,8 @@
             <button type="submit">Iniciar Session</button>
         </form>
         <button (click)="verusers()">ver</button>
-         <button (click)="logout()">cerrar</button>
+        <button (click)="verme()">me</button>
+        <button (click)="logout()">cerrar</button>
+        <p>{{user()?.email}}</p> 
     </section>
 </main>

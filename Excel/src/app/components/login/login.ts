@@ -1,8 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { firstValueFrom } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +15,7 @@ import { AuthService } from '../../services/auth.service';
 export class Login {
   userForm: FormGroup;
 
+  auth = inject(AuthService);
   mensaje = signal("")
   mensajeClass = signal("");
 
@@ -23,13 +26,17 @@ export class Login {
     })
   }
 
+  user = toSignal(this.auth.user$)
+
   async submitForm() {
     if (this.userForm.valid) {
       try {
         let user = this.userForm.value;
         this.mensaje.set("")
         this.mensajeClass.set("loader");
-        await this.api.postLogin(user)
+        await firstValueFrom(
+          this.auth.login(user)
+        )
         console.log("bien");
       } catch (err: any) {
         if (err.status === 401) {
@@ -54,7 +61,9 @@ export class Login {
         this.mensaje.set("")
         this.mensajeClass.set("loader");
         console.log(user);
-        await this.api.postRegister(user)
+        await firstValueFrom(
+          this.auth.register(user)
+        )
         console.log("bien");
       } catch (err: any) {
         if (err.status === 409) {
@@ -76,10 +85,20 @@ export class Login {
   get password() { return this.userForm.get("password") }
 
   async verusers() {
-    console.log(await this.api.getAllUsers());
+    let result = await firstValueFrom(
+      this.api.getAllUsers()
+    )
+    console.log(result);
   }
-  auth = inject(AuthService);
-  logout(){
-    this.auth.clearToken()
+
+  async verme() {
+    let result = await firstValueFrom(
+      this.api.getme()
+    )
+    console.log(result);
+  }
+
+  logout() {
+    this.auth.logout()
   }
 }

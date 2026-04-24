@@ -18,9 +18,11 @@ return [
     '_profiler_router' => [['token'], ['_controller' => 'web_profiler.controller.router::panelAction'], [], [['text', '/router'], ['variable', '/', '[^/]++', 'token', true], ['text', '/_profiler']], [], [], []],
     '_profiler_exception' => [['token'], ['_controller' => 'web_profiler.controller.exception_panel::body'], [], [['text', '/exception'], ['variable', '/', '[^/]++', 'token', true], ['text', '/_profiler']], [], [], []],
     '_profiler_exception_css' => [['token'], ['_controller' => 'web_profiler.controller.exception_panel::stylesheet'], [], [['text', '/exception.css'], ['variable', '/', '[^/]++', 'token', true], ['text', '/_profiler']], [], [], []],
+    'api_meme_index' => [[], ['_controller' => 'App\\Controller\\MeController::index'], [], [['text', '/api/me']], [], [], []],
     'api_registerregister' => [[], ['_controller' => 'App\\Controller\\RegistrationController::index'], [], [['text', '/api/register']], [], [], []],
     'api_useruser_index' => [[], ['_controller' => 'App\\Controller\\UserController::index'], [], [['text', '/api/user']], [], [], []],
     'api_login_check' => [[], [], [], [['text', '/api/login_check']], [], [], []],
+    'App\Controller\MeController::index' => [[], ['_controller' => 'App\\Controller\\MeController::index'], [], [['text', '/api/me']], [], [], []],
     'App\Controller\RegistrationController::index' => [[], ['_controller' => 'App\\Controller\\RegistrationController::index'], [], [['text', '/api/register']], [], [], []],
     'App\Controller\UserController::index' => [[], ['_controller' => 'App\\Controller\\UserController::index'], [], [['text', '/api/user']], [], [], []],
 ];
