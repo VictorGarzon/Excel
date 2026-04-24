@@ -1,10 +1,9 @@
 import { Routes } from '@angular/router';
-import { Tabla } from './components/tabla/tabla';
-import { Login } from './components/login/login';
 
 export const routes: Routes = [
-
-    { path: '', redirectTo: "tabla", pathMatch: "full" },
-    { path: 'tabla', component: Tabla },
-    { path: 'login', component: Login },
+  { path: '', pathMatch: 'full', redirectTo: '/welcome' },
+  {
+    path: 'welcome',
+    loadChildren: () => import('./pages/welcome/welcome.routes').then((m) => m.WELCOME_ROUTES),
+  },
 ];

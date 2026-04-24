@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { inject } from '@angular/core';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  /*
   const token = inject(AuthService).getToken();
 
   if (token) {
@@ -11,6 +12,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     });
     return next(clonedReq);
   }
-
+  */
   return next(req);
 };
