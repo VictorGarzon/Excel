@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+}
+
+.top-nav {
+  line-height: 64px;
+}
+
+nz-content {
+  padding: 24px 50px;
+}
+
+.inner-content {
+  background: #fff;
+  overflow: auto;
+  width: 95vw;
+  height: 80vh;
+}

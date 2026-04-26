@@ -1,0 +1,57 @@
+<button nz-button nzType="link" (click)="showModal()">
+    <span>Registarse</span>
+</button>
+<nz-modal [(nzVisible)]="visible" nzTitle="Registarse" (nzOnCancel)="handleCancel()">
+    <form *nzModalContent nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+        <nz-form-item>
+            <nz-form-label nzRequired>E-mail</nz-form-label>
+            <nz-form-control nzHasFeedback [nzErrorTip]="emailError">
+                <input nz-input formControlName="email" type="email" />
+                <ng-template #emailError let-control>
+                    @if (control.errors?.['email']) {
+                    Tiene que ser un Email
+                    }
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired>Contraseña</nz-form-label>
+            <nz-form-control nzHasFeedback [nzErrorTip]="passError">
+                <nz-input-password>
+                    <nz-icon nzInputPrefix nzType="lock" />
+                    <input nz-input type="password" formControlName="password" />
+                </nz-input-password>
+            </nz-form-control>
+            <ng-template #passError let-control>
+                @if (control.errors?.['minlength']) {
+                Tiene que tener 8 caracteres
+                }@else if (control.errors?.['pattern']) {
+                Tiene que tener una mayuscula, una miniscula, un numero y un caracter especial
+                }
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired>Comfirmar Contraseña</nz-form-label>
+            <nz-form-control nzHasFeedback [nzErrorTip]="passwordConfirm">
+                <nz-input-password>
+                    <nz-icon nzInputPrefix nzType="lock" />
+                    <input nz-input type="password" formControlName="confirm" />
+                </nz-input-password>
+                <ng-template #passwordConfirm let-control>
+                    @if (control.errors?.['required']) {
+                    Please confirm your password!
+                    }
+                    @if (control.errors?.['confirm']) {
+                    Password is inconsistent!
+                    }
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <div *nzModalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
+        <button nz-button nzType="primary" (click)="submitForm()" [nzLoading]="loading()"
+            [disabled]="!validateForm.valid">
+            Registarse</button>
+    </div>
+</nz-modal>

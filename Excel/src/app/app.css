@@ -41,11 +41,13 @@
 }
 
 nz-content {
-  padding: 24px 50px;
+  /*padding: 24px 50px;*/
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
 }
 
 .inner-content {
-  padding: 24px;
+  /*padding: 24px;*/
   background: #fff;
-  height: 100%;
 }

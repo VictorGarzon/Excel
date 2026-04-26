@@ -1,33 +1,14 @@
 import { afterNextRender, AfterViewChecked, AfterViewInit, Component, computed, effect, signal, untracked, viewChildren } from '@angular/core';
 import { Fila } from "../fila/fila";
-
-interface tablaFuncion {
-  columna: number,
-  funcion: string,
-  columnas?: Array<any>
-}
-
-interface tablaColumna {
-  columna: number,
-  valor: any
-}
-
-interface tablaFila {
-  fila: number,
-  columnas: Array<tablaColumna>
-}
-
-interface tabla {
-  functions: Array<tablaFuncion>,
-  headers: Array<tablaColumna>,
-  rows: Array<tablaFila>,
-  footers: Array<tablaFuncion>
-}
+import { tabla, tablaColumna, tablaFila, tablaFuncion } from '../../models/tabla';
+import { NzLayoutComponent, NzHeaderComponent, NzContentComponent } from "ng-zorro-antd/layout";
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzButtonComponent } from "ng-zorro-antd/button";
 
 
 @Component({
   selector: 'app-tabla',
-  imports: [Fila],
+  imports: [Fila, NzLayoutComponent, NzHeaderComponent, NzContentComponent, NzGridModule, NzButtonComponent],
   templateUrl: './tabla.html',
   styleUrl: './tabla.css',
 })
@@ -243,6 +224,14 @@ export class Tabla {
     this.modo = 2;
   }
 
+  valoresPredeterminados() {
+    this.modoSeleccion.set(false)
+    this.modo = 0;
+    this.funcion = "";
+    this.seleccion = [];
+    this.columnasSelecionadas = [];
+  }
+
   onSelect(n: number) {
     if (this.modo != 1) {
       this.removeSeleccion()
@@ -302,14 +291,6 @@ export class Tabla {
   removeSeleccion() {
     let columnas = document.querySelectorAll(".seleccionado")
     columnas.forEach(c => c.classList.remove("seleccionado"))
-  }
-
-  valoresPredeterminados() {
-    this.modoSeleccion.set(false)
-    this.modo = 0;
-    this.funcion = "";
-    this.seleccion = [];
-    this.columnasSelecionadas = [];
   }
 
   exportar() {
