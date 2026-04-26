@@ -1,11 +1,23 @@
-:root {
-    --tamHeader: 5vh;
+:host {
+  display: flex;
 }
 
-header {
-    position: sticky;
-    top: 0;
+.top-nav {
+  line-height: 64px;
 }
+
+nz-content {
+  padding: 24px 50px;
+}
+
+.inner-content {
+  background: #fff;
+  overflow: auto;
+  width: 95vw;
+  height: 80vh;
+}
+
+
 
 table {
     position: relative;
@@ -42,7 +54,7 @@ tfoot ::ng-deep td {
 }
 
 
-::ng-deep input {
+table ::ng-deep input {
     field-sizing: content;
     width: 100%;
     height: 100%;
@@ -53,21 +65,21 @@ tfoot ::ng-deep td {
     background-color: transparent;
 }
 
-::ng-deep input[type='number']::-webkit-inner-spin-button {
+table ::ng-deep input[type='number']::-webkit-inner-spin-button {
     position: absolute;
     right: 0;
     top: 25%;
     height: 50%;
 }
 
-::ng-deep input:disabled[type='date']::-webkit-calendar-picker-indicator {
+table ::ng-deep input:disabled[type='date']::-webkit-calendar-picker-indicator {
     position: absolute;
     right: 0;
     top: 25%;
     height: 50%;
 }
 
-::ng-deep .seleccionado {
+table ::ng-deep .seleccionado {
     background-color: aqua;
 }
 

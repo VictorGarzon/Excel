@@ -1,35 +1,40 @@
-<header>
-    <button (click)="exportar()">Exportar</button>
-    <input type="file" accept=".json" (change)="onFileSelected($event)">
-    <button (click)="aplicarFuncion('sumar')">Sumar</button>
-    <button (click)="aplicarFuncion('restar')">restar</button>
-    <button (click)="aplicarFuncionColumna('sumar')">sumar columna</button>
-    <button (click)="confirmarColumnas()">Confirmar</button>
-    <button (click)="eliminarFuncion()">quitar</button>
-    <button (click)="aplicarFuncionColumna('')">quitar columna</button>
-</header>
-<main>
-    <table>
-        <thead>
-            <tr app-fila [data]="{head:cargado()?(functions()):(headers())}" [disabled]="modoSeleccion()"
-                (selecionado)="onSelect($event)" [tamColumna]="tamColumna()" (ampliar)="ampliarColum()"
-                [cargado]="cargado()">
-            </tr>
-        </thead>
-        <tbody>
-            @for (n of arrayFila(); track $index) {
-            @let fila = buscarFila($index);
-            <tr app-fila [data]="{body:cargado()?functions():(fila?.columnas ?? functions())}" [disabled]="modoSeleccion()"
-                (selecionado)="onSelect($event)" [tamColumna]="tamColumna()"
-                (click)="!modoSeleccion() && $index >= (tamFila()! + 1) && ampliarFila()" (ampliar)="ampliarColum()"
-                [cargado]="cargado()" [ultimo]="!cargado() && $last" (carout)="bodyCargado()">
-            </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr app-fila [data]="{footer:footerColumnas()}" [tamColumna]="tamColumna()" (ampliar)="ampliarColum()"
-                [cargado]="cargado()">
-            </tr>
-        </tfoot>
-    </table>
-</main>
+<nz-layout>
+    <nz-header nz-row nzJustify="center">
+        <button nz-button nzType="default" (click)="exportar()">Exportar</button>
+        <input type="file" accept=".json" (change)="onFileSelected($event)">
+        <button nz-button nzType="default" (click)="aplicarFuncion('sumar')">Sumar</button>
+        <button nz-button nzType="default" (click)="aplicarFuncion('restar')">restar</button>
+        <button nz-button nzType="default" (click)="aplicarFuncionColumna('sumar')">sumar columna</button>
+        <button nz-button nzType="default" (click)="confirmarColumnas()">Confirmar</button>
+        <button nz-button nzType="default" (click)="eliminarFuncion()">quitar</button>
+        <button nz-button nzType="default" (click)="aplicarFuncionColumna('')">quitar columna</button>
+    </nz-header>
+    <nz-content>
+        <div class="inner-content">
+            <table>
+                <thead>
+                    <tr app-fila [data]="{head:cargado()?(functions()):(headers())}" [disabled]="modoSeleccion()"
+                        (selecionado)="onSelect($event)" [tamColumna]="tamColumna()" (ampliar)="ampliarColum()"
+                        [cargado]="cargado()">
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (n of arrayFila(); track $index) {
+                    @let fila = buscarFila($index);
+                    <tr app-fila [data]="{body:cargado()?functions():(fila?.columnas ?? functions())}"
+                        [disabled]="modoSeleccion()" (selecionado)="onSelect($event)" [tamColumna]="tamColumna()"
+                        (click)="!modoSeleccion() && $index >= (tamFila()! + 1) && ampliarFila()"
+                        (ampliar)="ampliarColum()" [cargado]="cargado()" [ultimo]="!cargado() && $last"
+                        (carout)="bodyCargado()">
+                    </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr app-fila [data]="{footer:footerColumnas()}" [tamColumna]="tamColumna()"
+                        (ampliar)="ampliarColum()" [cargado]="cargado()">
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </nz-content>
+</nz-layout>

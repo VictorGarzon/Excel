@@ -9,10 +9,8 @@ import { User, LoginResponse } from '../models/user';
 })
 export class AuthService {
   private readonly platformId = inject(PLATFORM_ID);
-  // THE PRIVATE BOARD (Only the service can write here)
   private userSubject = new BehaviorSubject<User | null>(null);
 
-  // THE PUBLIC VIEW (Read-only for components)
   user$: Observable<User | null> = this.userSubject.asObservable();
   api = inject(ApiService);
 
@@ -21,7 +19,9 @@ export class AuthService {
   }
 
   register(userData: any): Observable<User> {
-    return this.api.post("register", userData)
+    return this.api.post("register", userData).pipe(
+      switchMap(() => this.login(userData)),
+    )
   }
 
   login(credentials: any): Observable<User> {

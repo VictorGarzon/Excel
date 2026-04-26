@@ -34,25 +34,4 @@ export class ApiService {
   post(url: string, obj: object): Observable<any> {
     return this.buscar(this.http.post<any>(this.url + url, obj))
   }
-
-  /*
-  async postLogin(user: any) {
-    let resul = await this.buscar(this.http.post<any>(this.url + "login_check", user))
-  }
-
-  async postRegister(user: any) {
-    let resul = await this.buscar(this.http.post<any>(this.url + "register", user))
-    // if (resul.status === 201) {
-    //  await this.postLogin(user)
-    //}
-  }
-    */
-
-  getAllUsers() {
-    return this.get("user")
-  }
-
-  getme() {
-    return this.get("me")
-  }
 }
