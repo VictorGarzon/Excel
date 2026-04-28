@@ -2,18 +2,18 @@
   <nz-header nz-row nzJustify="space-between">
     <div nz-col class="logo">
       <a>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Microsoft_Office_Excel_%282019%E2%80%932025%29.svg/1280px-Microsoft_Office_Excel_%282019%E2%80%932025%29.svg.png"
-          alt="logo" />
-        <h1>Excel</h1>
+        <img src="images/logo.png" alt="logo" /> 
       </a>
     </div>
     <ul nz-menu nz-col class="top-nav" nzTheme="dark" nzMode="horizontal">
       @if (user()) {
-      <button nz-button nzType="link">
-        <nz-icon nzType="home" nzTheme="outline" />
+      <button nz-button nzType="link" nzMatchRouter [routerLink]="['/', 'main']">
+        <span>Tabla</span>
       </button>
-      <button nz-button nzType="link" (click)="auth.logout()">
+      <button nz-button nzType="link" nzMatchRouter [routerLink]="['/', 'home']">
+        <nz-icon nzType="home" nzTheme="outline" routerLink="/home" />
+      </button>
+      <button nz-button nzType="link" (click)="logout()">
         Cerrar Sesion
       </button>
       }@else {

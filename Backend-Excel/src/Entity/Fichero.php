@@ -22,7 +22,7 @@ class Fichero
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $descripcion = null;
 
-    #[ORM\Column(type: Types::JSONB)]
+    #[ORM\Column(type: Types::JSONB, nullable: true)]
     private mixed $data = null;
 
     #[ORM\Column]

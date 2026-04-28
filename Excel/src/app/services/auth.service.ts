@@ -1,8 +1,8 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject, concatMap, from, map, Observable, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
 import { ApiService } from './api.service';
-import { User, LoginResponse } from '../models/user';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root',

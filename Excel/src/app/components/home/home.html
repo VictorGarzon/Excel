@@ -1,0 +1,74 @@
+<nz-layout class="layout">
+    <nz-sider nzTheme="light">
+        <nz-header>
+            <span class="ant-primary-color">Filtros</span>
+        </nz-header>
+        <ul nz-menu class="sider-menu" nzMode="inline">
+            <li nz-menu-item nzSelected (click)="aplicarFiltro('')">
+                <span>Todos</span>
+            </li>
+            <li nz-submenu nzTitle="Permisos" nzIcon="user" nzOpen>
+                <ul>
+                    <li nz-menu-item (click)="aplicarFiltro('?permiso=3')">
+                        <span>Dueño</span>
+                    </li>
+                    <li nz-menu-item (click)="aplicarFiltro('?permiso=2')">
+                        <span>Escribir</span>
+                    </li>
+                    <li nz-menu-item (click)="aplicarFiltro('?permiso=1')">
+                        <span>Ver</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nz-sider>
+    <nz-layout class="inner-layout">
+        <nz-content>
+            <nz-header nz-row nzJustify="space-between">
+                <ul nz-menu nz-col class="top-nav" nzTheme="dark" nzMode="horizontal">
+                    <app-modal-create-fichero (cargar)="buscar()" />
+                </ul>
+            </nz-header>
+            <nz-table #basicTable [nzData]="ficheros()">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Abrir</th>
+                        <th>Descripcion</th>
+                        <th>Permiso</th>
+                        <th>Fecha Creacion</th>
+                        <th>Fecha Modificacion</th>
+                        <th>Ultima Subida</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (data of basicTable.data; track data.id) {
+                    <tr>
+                        <td>{{ data.nombre }}</td>
+                        <td>
+                            <a (click)="abrir(data)">Abrir</a>
+                        </td>
+                        <td>{{ data.descripcion }}</td>
+                        @switch (data.permiso) {
+                        @case (1) {
+                        <td>Ver</td>
+                        }
+                        @case (2) {
+                        <td>Escribir</td>
+                        }
+                        @case (3) {
+                        <td>Dueño</td>
+                        }
+                        }
+                        <td>{{ data.fecha_creacion }}</td>
+                        <td>{{ data.fecha_mod }}</td>
+                        <td>{{ data.ultima_subida }}</td>
+                        <td>{{ data.tipo }}</td>
+                    </tr>
+                    }
+                </tbody>
+            </nz-table>
+        </nz-content>
+    </nz-layout>
+</nz-layout>

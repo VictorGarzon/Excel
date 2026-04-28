@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, firstValueFrom, from, Observable, throwError, timeout } from 'rxjs';
+import { catchError, Observable, throwError, timeout } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +13,11 @@ export class ApiService {
     return observable.pipe(
       timeout(10000),
       catchError(err => {
-        if (err.name === 'TimeoutError') {
+        if (err.status === 0) {
           return throwError(() => new Error('No es posible conectarse'));
+        }
+        if (err.name === 'TimeoutError') {
+          return throwError(() => new Error('No es posible conectarse por tiempo'));
         }
         if (err.status === 406) {
           return throwError(() => new Error('No es posible conectarse'));

@@ -12,16 +12,12 @@
 
 .logo {
   float: left;
-  height: 64px;
-  padding-right: 24px;
-  line-height: 64px;
-  background: #001529;
+  height: 100%;
 }
 
 .logo img {
   display: inline-block;
-  height: 32px;
-  width: 32px;
+  height: 100%;
   vertical-align: middle;
 }
 

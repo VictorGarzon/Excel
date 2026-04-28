@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -10,13 +10,24 @@ import { ModalLogin } from "./components/modal-login/modal-login";
 import { ModalRegister } from "./components/modal-register/modal-register";
 import { AuthService } from './services/auth.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import {Router} from '@angular/router'
+import { MessageService } from './services/message.service';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NzLayoutModule, NzMenuModule, NzGridModule, NzIconModule, NzButtonModule, NzDrawerModule, ModalLogin, ModalRegister],
+  imports: [RouterOutlet, NzLayoutModule, NzMenuModule, NzGridModule, NzIconModule, NzButtonModule, NzDrawerModule, ModalLogin, ModalRegister, RouterLinkWithHref],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
-  auth = inject(AuthService);
+  private auth = inject(AuthService);
   user = toSignal(this.auth.user$)
+  private router = inject(Router);
+  private message = inject(MessageService)
+
+  logout() {
+    this.auth.logout()
+    this.router.navigate(['/main']);
+    this.message.createBasicMessage('success',"Sesion Cerrada con exito")
+  }
+
 }

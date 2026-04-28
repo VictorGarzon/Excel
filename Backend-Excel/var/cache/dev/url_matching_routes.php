@@ -15,8 +15,11 @@ return [
         '/_profiler/phpinfo' => [[['_route' => '_profiler_phpinfo', '_controller' => 'web_profiler.controller.profiler::phpinfoAction'], null, null, null, false, false, null]],
         '/_profiler/xdebug' => [[['_route' => '_profiler_xdebug', '_controller' => 'web_profiler.controller.profiler::xdebugAction'], null, null, null, false, false, null]],
         '/_profiler/open' => [[['_route' => '_profiler_open_file', '_controller' => 'web_profiler.controller.profiler::openAction'], null, null, null, false, false, null]],
+        '/api/fichero' => [[['_route' => 'api_ficherohome_fichero', '_controller' => 'App\\Controller\\FicheroController::index'], null, ['GET' => 0], null, false, false, null]],
+        '/api/home' => [[['_route' => 'api_homehome_index', '_controller' => 'App\\Controller\\HomeController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/me' => [[['_route' => 'api_meme_index', '_controller' => 'App\\Controller\\MeController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/register' => [[['_route' => 'api_registerregister', '_controller' => 'App\\Controller\\RegistrationController::index'], null, ['POST' => 0], null, false, false, null]],
+        '/api/tipos' => [[['_route' => 'api_tipostipos_index', '_controller' => 'App\\Controller\\TiposFicheroController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/user' => [[['_route' => 'api_useruser_index', '_controller' => 'App\\Controller\\UserController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/login_check' => [[['_route' => 'api_login_check'], null, null, null, false, false, null]],
     ],
@@ -40,6 +43,13 @@ return [
                         .')'
                     .')'
                 .')'
+                .'|/api/fichero/(?'
+                    .'|([^/]++)(?'
+                        .'|(*:229)'
+                        .'|/data(*:242)'
+                    .')'
+                    .'|create(*:257)'
+                .')'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
@@ -50,8 +60,11 @@ return [
         148 => [[['_route' => '_profiler_router', '_controller' => 'web_profiler.controller.router::panelAction'], ['token'], null, null, false, false, null]],
         168 => [[['_route' => '_profiler_exception', '_controller' => 'web_profiler.controller.exception_panel::body'], ['token'], null, null, false, false, null]],
         181 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
-        191 => [
-            [['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null],
+        191 => [[['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null]],
+        229 => [[['_route' => 'api_ficherofichero_id', '_controller' => 'App\\Controller\\FicheroController::getId'], ['id'], ['GET' => 0], null, false, true, null]],
+        242 => [[['_route' => 'api_ficherofichero_id_data', '_controller' => 'App\\Controller\\FicheroController::getIdData'], ['id'], ['GET' => 0], null, false, false, null]],
+        257 => [
+            [['_route' => 'api_ficherocrear_fichero', '_controller' => 'App\\Controller\\FicheroController::create'], [], ['POST' => 0], null, false, false, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

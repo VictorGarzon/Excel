@@ -4,7 +4,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 @Injectable({
   providedIn: 'root',
 })
-export class Message {
+export class MessageService {
   constructor(private message: NzMessageService) { }
 
   createBasicMessage(type: string, message: string): void {

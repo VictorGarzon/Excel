@@ -8,26 +8,18 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AccesoRepository::class)]
 class Acceso
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     #[ORM\Column]
     private ?int $permiso = null;
 
+    #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'accesos')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'accesos')]
     #[ORM\JoinColumn(nullable: false)]
     private ?fichero $fichero = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getPermiso(): ?int
     {
