@@ -6,10 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/api', name: 'api_me')]
-class MeController extends AbstractController
+#[Route('/api', name: 'api_home')]
+class HomeController extends AbstractController
 {
-    #[Route('/me', name: 'me_index', methods: ['get'])]
+    #[Route('/home', name: 'home_index', methods: ['get'])]
     public function index(): JsonResponse
     {
         $email = $this->getUser()->getUserIdentifier();
@@ -17,7 +17,7 @@ class MeController extends AbstractController
 
         return new JsonResponse(data: [
             "email" => $email,
-            "rol"=>$rol[0]
+            "rol" => $rol[0]
         ], status: 201);
     }
 }

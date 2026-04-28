@@ -1,0 +1,37 @@
+<button nz-button nzType="primary" (click)="showModal()">
+    <span>Crear Fichero</span>
+</button>
+<nz-modal [(nzVisible)]="visible" nzTitle="Crear Fichero" (nzOnCancel)="handleCancel()">
+    <form *nzModalContent nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+        <nz-form-item>
+            <nz-form-label nzRequired>Nombre</nz-form-label>
+            <nz-form-control nzHasFeedback nzErrorTip="El nombre es necesario">
+                <input nz-input formControlName="nombre" type="text" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label>Comment</nz-form-label>
+            <nz-form-control nzErrorTip="Please write something here!">
+                <nz-textarea-count [nzMaxCharacterCount]="2000">
+                    <textarea formControlName="descripcion" nz-input rows="2"></textarea>
+                </nz-textarea-count>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired>Tipo Fichero</nz-form-label>
+            <nz-form-control [nzValidateStatus]="validating()?'validating':''" nzHasFeedback>
+                <nz-select formControlName="tipo">
+                    @for (tipo of tipos(); track tipo.id) {
+                    <nz-option [nzValue]="tipo.id" [nzLabel]="tipo.nombre" />
+                    }
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <div *nzModalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
+        <button nz-button nzType="primary" (click)="submitForm()" [nzLoading]="loading()"
+            [disabled]="!validateForm.valid">
+            Crear</button>
+    </div>
+</nz-modal>

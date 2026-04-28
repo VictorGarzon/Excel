@@ -205,4 +205,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getAccesosByPermiso(int $permiso): Collection
+    {
+        return $this->accesos->filter(
+            fn($acceso) => $acceso->getPermiso() === $permiso
+        );
+    }
 }

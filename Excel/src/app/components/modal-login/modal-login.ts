@@ -9,7 +9,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { Message } from '../../services/message';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-modal-login',
@@ -20,7 +20,7 @@ import { Message } from '../../services/message';
 export class ModalLogin {
   private fb = inject(NonNullableFormBuilder);
   private auth = inject(AuthService);
-  message = inject(Message)
+  message = inject(MessageService)
 
   visible = model(false);
   loading = signal(false);
