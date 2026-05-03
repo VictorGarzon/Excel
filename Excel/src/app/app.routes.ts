@@ -3,13 +3,15 @@ import { Tabla } from './components/tabla/tabla';
 import { Main } from './pages/main/main';
 import { Home } from './components/home/home';
 import { authGuard } from './guards/auth-guard';
+import { saveGuard } from './guards/save-guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/main' },
   {
     path: 'main',
     //loadChildren: () => import('./pages/welcome/welcome.routes').then((m) => m.WELCOME_ROUTES),
-    component: Tabla
+    component: Tabla,
+    canDeactivate:[saveGuard]
   },
   {
     path: 'home',

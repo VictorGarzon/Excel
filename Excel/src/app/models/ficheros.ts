@@ -8,6 +8,6 @@ export interface Fichero {
     "fecha_mod": Date,
     "ultima_subida": string,
     "tipo": string,
-    "permiso":number
-    "data"?:tabla
+    "permiso": number
+    "data"?: tabla
 }

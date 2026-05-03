@@ -2,7 +2,29 @@ body {
     margin: 0;
 }
 
-[nz-button] {
-    margin-right: 8px;
-    margin-bottom: 12px;
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0F172A;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #38BDF8;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #7DD3FC;
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: #0EA5E9;
+}
+
+::-webkit-scrollbar-corner {
+    background: #0F172A;
 }

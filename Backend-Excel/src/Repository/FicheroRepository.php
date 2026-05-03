@@ -5,15 +5,27 @@ namespace App\Repository;
 use App\Entity\Fichero;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * @extends ServiceEntityRepository<Fichero>
  */
 class FicheroRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private UserRepository $userRepository, private AccesoRepository $accesoRepository)
     {
         parent::__construct($registry, Fichero::class);
+    }
+
+    public function getAcceso(int $id)
+    {
+        $user = $this->userRepository->getEntityUser();
+        $acceso = $this->accesoRepository->findOneBy(['user' => $user, 'fichero' => $id]);
+        if (empty($acceso)) {
+            throw new AccessDeniedHttpException("No tienes acceso a ese fichero");
+        }
+        return $acceso;
     }
 
     //    /**

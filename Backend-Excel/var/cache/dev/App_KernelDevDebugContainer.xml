@@ -439,6 +439,14 @@
       <tag name="controller.service_arguments"/>
       <tag name="routing.route_loader"/>
     </service>
+    <service id="App\Controller\AccesoController" class="App\Controller\AccesoController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\AccesoController"/>
+      </call>
+    </service>
     <service id="App\Controller\FicheroController" class="App\Controller\FicheroController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
@@ -514,6 +522,8 @@
     <service id="App\Repository\FicheroRepository" class="App\Repository\FicheroRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
+      <argument type="service" id="App\Repository\UserRepository"/>
+      <argument type="service" id="App\Repository\AccesoRepository"/>
     </service>
     <service id="App\Repository\RolRepository" class="App\Repository\RolRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
@@ -526,6 +536,7 @@
     <service id="App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
+      <argument type="service" id="security.helper"/>
     </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
@@ -550,7 +561,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.mTZpjVh"/>
+      <argument type="service" id=".service_locator.EzzNdHa"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -1978,7 +1989,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.mTZpjVh"/>
+      <argument type="service" id=".service_locator.EzzNdHa"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -2060,6 +2071,7 @@
     <service id="routing.loader.attribute.services" class="Symfony\Component\Routing\Loader\AttributeServicesLoader">
       <tag name="routing.loader" priority="-10"/>
       <argument type="collection">
+        <argument>App\Controller\AccesoController</argument>
         <argument>App\Controller\FicheroController</argument>
         <argument>App\Controller\HomeController</argument>
         <argument>App\Controller\MeController</argument>
@@ -6197,6 +6209,10 @@
         <argument>Start a log server that displays logs in real time</argument>
       </call>
     </service>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AccesoController" class="App\Controller\AccesoController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AccesoController" class="App\Controller\AccesoController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\AccesoController.0.App\Controller\AccesoController" class="App\Controller\AccesoController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\AccesoController" class="App\Controller\AccesoController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\FicheroController" class="App\Controller\FicheroController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\FicheroController" class="App\Controller\FicheroController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\FicheroController.0.App\Controller\FicheroController" class="App\Controller\FicheroController" autowire="true" abstract="true"/>
@@ -6891,41 +6907,85 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.1vYpZ1B" method="withContext"/>
     </service>
-    <service id=".service_locator.3BoFVFw" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.sYw_Iy7" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="fiRepo" type="service_closure" id="App\Repository\FicheroRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.3BoFVFw.App\Controller\FicheroController::index()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.sYw_Iy7.App\Controller\AccesoController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\AccesoController::create()"/>
+      <argument>App\Controller\AccesoController::create()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.sYw_Iy7" method="withContext"/>
+    </service>
+    <service id=".service_locator.sYw_Iy7.App\Controller\AccesoController::delete()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\AccesoController::delete()"/>
+      <argument>App\Controller\AccesoController::delete()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.sYw_Iy7" method="withContext"/>
+    </service>
+    <service id=".service_locator.sYw_Iy7.App\Controller\AccesoController::editarPermiso()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\AccesoController::editarPermiso()"/>
+      <argument>App\Controller\AccesoController::editarPermiso()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.sYw_Iy7" method="withContext"/>
+    </service>
+    <service id=".service_locator.c.Yvd3o" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="repoUser" type="service_closure" id="App\Repository\UserRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.c.Yvd3o.App\Controller\FicheroController::index()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\FicheroController::index()"/>
       <argument>App\Controller\FicheroController::index()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.3BoFVFw" method="withContext"/>
+      <factory service=".service_locator.c.Yvd3o" method="withContext"/>
     </service>
-    <service id=".service_locator.3BoFVFw.App\Controller\FicheroController::getId()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.eiiNU0L" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="fiRepo" type="service_closure" id="App\Repository\FicheroRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.eiiNU0L.App\Controller\FicheroController::getId()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\FicheroController::getId()"/>
       <argument>App\Controller\FicheroController::getId()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.3BoFVFw" method="withContext"/>
+      <factory service=".service_locator.eiiNU0L" method="withContext"/>
     </service>
-    <service id=".service_locator.3BoFVFw.App\Controller\FicheroController::getIdData()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.eiiNU0L.App\Controller\FicheroController::getIdData()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\FicheroController::getIdData()"/>
       <argument>App\Controller\FicheroController::getIdData()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.3BoFVFw" method="withContext"/>
+      <factory service=".service_locator.eiiNU0L" method="withContext"/>
     </service>
-    <service id=".service_locator.3BoFVFw.App\Controller\FicheroController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.eiiNU0L.App\Controller\FicheroController::getIdPermisos()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\FicheroController::getIdPermisos()"/>
+      <argument>App\Controller\FicheroController::getIdPermisos()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.eiiNU0L" method="withContext"/>
+    </service>
+    <service id=".service_locator.qXGSpcB" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="repoUser" type="service_closure" id="App\Repository\UserRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.qXGSpcB.App\Controller\FicheroController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\FicheroController::create()"/>
       <argument>App\Controller\FicheroController::create()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.3BoFVFw" method="withContext"/>
+      <factory service=".service_locator.qXGSpcB" method="withContext"/>
     </service>
-    <service id=".service_locator.3BoFVFw.App\Controller\FicheroController::getEntityUser()" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator_context" id="App\Controller\FicheroController::getEntityUser()"/>
-      <argument>App\Controller\FicheroController::getEntityUser()</argument>
+    <service id=".service_locator.sYw_Iy7.App\Controller\FicheroController::modificar()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\FicheroController::modificar()"/>
+      <argument>App\Controller\FicheroController::modificar()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.3BoFVFw" method="withContext"/>
+      <factory service=".service_locator.sYw_Iy7" method="withContext"/>
     </service>
     <service id=".service_locator..WG8ZO_" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -6940,6 +7000,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator..WG8ZO_" method="withContext"/>
     </service>
+    <service id=".service_locator.3BoFVFw" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+      </argument>
+    </service>
     <service id=".service_locator.3BoFVFw.App\Controller\TiposFicheroController::index()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\TiposFicheroController::index()"/>
       <argument>App\Controller\TiposFicheroController::index()</argument>
@@ -6952,28 +7018,36 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.3BoFVFw" method="withContext"/>
     </service>
-    <service id=".service_locator.mTZpjVh" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.EzzNdHa" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
         <argument key="App\Kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
         <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.1vYpZ1B.kernel::loadRoutes()"/>
         <argument key="App\Kernel::loadRoutes" type="service_closure" id=".service_locator.1vYpZ1B.kernel::loadRoutes()"/>
-        <argument key="App\Controller\FicheroController::index" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\FicheroController::index()"/>
-        <argument key="App\Controller\FicheroController::getId" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\FicheroController::getId()"/>
-        <argument key="App\Controller\FicheroController::getIdData" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\FicheroController::getIdData()"/>
-        <argument key="App\Controller\FicheroController::create" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\FicheroController::create()"/>
-        <argument key="App\Controller\FicheroController::getEntityUser" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\FicheroController::getEntityUser()"/>
+        <argument key="App\Controller\AccesoController::create" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\AccesoController::create()"/>
+        <argument key="App\Controller\AccesoController::delete" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\AccesoController::delete()"/>
+        <argument key="App\Controller\AccesoController::editarPermiso" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\AccesoController::editarPermiso()"/>
+        <argument key="App\Controller\FicheroController::index" type="service_closure" id=".service_locator.c.Yvd3o.App\Controller\FicheroController::index()"/>
+        <argument key="App\Controller\FicheroController::getId" type="service_closure" id=".service_locator.eiiNU0L.App\Controller\FicheroController::getId()"/>
+        <argument key="App\Controller\FicheroController::getIdData" type="service_closure" id=".service_locator.eiiNU0L.App\Controller\FicheroController::getIdData()"/>
+        <argument key="App\Controller\FicheroController::getIdPermisos" type="service_closure" id=".service_locator.eiiNU0L.App\Controller\FicheroController::getIdPermisos()"/>
+        <argument key="App\Controller\FicheroController::create" type="service_closure" id=".service_locator.qXGSpcB.App\Controller\FicheroController::create()"/>
+        <argument key="App\Controller\FicheroController::modificar" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\FicheroController::modificar()"/>
         <argument key="App\Controller\RegistrationController::index" type="service_closure" id=".service_locator..WG8ZO_.App\Controller\RegistrationController::index()"/>
         <argument key="App\Controller\TiposFicheroController::index" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\TiposFicheroController::index()"/>
         <argument key="App\Controller\UserController::index" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\UserController::index()"/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.1vYpZ1B.kernel::loadRoutes()"/>
-        <argument key="App\Controller\FicheroController:index" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\FicheroController::index()"/>
-        <argument key="App\Controller\FicheroController:getId" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\FicheroController::getId()"/>
-        <argument key="App\Controller\FicheroController:getIdData" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\FicheroController::getIdData()"/>
-        <argument key="App\Controller\FicheroController:create" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\FicheroController::create()"/>
-        <argument key="App\Controller\FicheroController:getEntityUser" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\FicheroController::getEntityUser()"/>
+        <argument key="App\Controller\AccesoController:create" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\AccesoController::create()"/>
+        <argument key="App\Controller\AccesoController:delete" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\AccesoController::delete()"/>
+        <argument key="App\Controller\AccesoController:editarPermiso" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\AccesoController::editarPermiso()"/>
+        <argument key="App\Controller\FicheroController:index" type="service_closure" id=".service_locator.c.Yvd3o.App\Controller\FicheroController::index()"/>
+        <argument key="App\Controller\FicheroController:getId" type="service_closure" id=".service_locator.eiiNU0L.App\Controller\FicheroController::getId()"/>
+        <argument key="App\Controller\FicheroController:getIdData" type="service_closure" id=".service_locator.eiiNU0L.App\Controller\FicheroController::getIdData()"/>
+        <argument key="App\Controller\FicheroController:getIdPermisos" type="service_closure" id=".service_locator.eiiNU0L.App\Controller\FicheroController::getIdPermisos()"/>
+        <argument key="App\Controller\FicheroController:create" type="service_closure" id=".service_locator.qXGSpcB.App\Controller\FicheroController::create()"/>
+        <argument key="App\Controller\FicheroController:modificar" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\FicheroController::modificar()"/>
         <argument key="App\Controller\RegistrationController:index" type="service_closure" id=".service_locator..WG8ZO_.App\Controller\RegistrationController::index()"/>
         <argument key="App\Controller\TiposFicheroController:index" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\TiposFicheroController::index()"/>
         <argument key="App\Controller\UserController:index" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\UserController::index()"/>
@@ -7273,6 +7347,12 @@
         <argument key="parameter_bag" type="service_closure" id="parameter_bag" on-invalid="ignore"/>
       </argument>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\AccesoController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\AccesoController"/>
+      <argument>App\Controller\AccesoController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\FicheroController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\FicheroController"/>
       <argument>App\Controller\FicheroController</argument>
@@ -7460,6 +7540,7 @@
       <call method="allowControllers">
         <argument type="collection">
           <argument>App\Kernel</argument>
+          <argument>App\Controller\AccesoController</argument>
           <argument>App\Controller\FicheroController</argument>
           <argument>App\Controller\HomeController</argument>
           <argument>App\Controller\MeController</argument>
@@ -8594,7 +8675,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.mTZpjVh"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.EzzNdHa"/>
     <service id="jms_serializer.authorization_checker" alias="security.authorization_checker" public="true"/>
     <service id="fos_rest.serializer" alias="fos_rest.serializer.jms"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
@@ -8645,8 +8726,12 @@
     <service id="jms_serializer.handler_registry" alias="jms_serializer.traceable_handler_registry"/>
     <service id="jms_serializer.metadata.file_locator" alias="jms_serializer.metadata.traceable_file_locator"/>
     <service id=".service_locator.c0wzfI4" alias=".service_locator.1vYpZ1B"/>
-    <service id=".service_locator.UOV1jy9" alias=".service_locator.3BoFVFw"/>
+    <service id=".service_locator.xza7Bt5" alias=".service_locator.sYw_Iy7"/>
+    <service id=".service_locator.d79Y9ph" alias=".service_locator.c.Yvd3o"/>
+    <service id=".service_locator.fsPfQhs" alias=".service_locator.eiiNU0L"/>
+    <service id=".service_locator.aRsM_rg" alias=".service_locator.qXGSpcB"/>
     <service id=".service_locator.618p4vZ" alias=".service_locator..WG8ZO_"/>
+    <service id=".service_locator.UOV1jy9" alias=".service_locator.3BoFVFw"/>
     <service id=".service_locator.uqiMYGk" alias=".service_locator.TJNRSaV"/>
   </services>
 </container>

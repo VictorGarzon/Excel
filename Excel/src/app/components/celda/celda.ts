@@ -1,4 +1,5 @@
-import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewInit, OnInit, effect, output, untracked, AfterViewChecked } from '@angular/core';
+import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewInit, OnInit, effect, output, untracked, AfterViewChecked, inject } from '@angular/core';
+import { FicheroService } from '../../services/fichero.service';
 @Component({
   selector: 'td[app-celda],th[app-celda]',
   imports: [],
@@ -6,6 +7,7 @@ import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewIni
   styleUrl: './celda.css',
 })
 export class Celda {
+  ficheroService = inject(FicheroService)
   valoresIniales = input<any>();
   buscarCeldas = input<(columnas: Array<number>) => Array<Celda>>()
   disabled = input<boolean>();
@@ -74,6 +76,9 @@ export class Celda {
   cambiar(event: Event) {
     const valor = (event.target as HTMLInputElement).value;
     this.valorCambio.set(valor)
+    if (!this.ficheroService.modificado) {
+      this.ficheroService.setData(null)
+    }
   }
 
   acciones = {

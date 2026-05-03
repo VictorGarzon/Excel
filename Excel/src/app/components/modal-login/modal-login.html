@@ -5,7 +5,7 @@
     <form *nzModalContent nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
         <nz-form-item>
             <nz-form-label>E-mail</nz-form-label>
-            <nz-form-control nzHasFeedback [nzErrorTip]="emailError">
+            <nz-form-control nzHasFeedback [nzErrorTip]="emailError" autocomplete="off">
                 <input nz-input formControlName="email" type="email" />
                 <ng-template #emailError let-control>
                     @if (control.errors?.['email']) {

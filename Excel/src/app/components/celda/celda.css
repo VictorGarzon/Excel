@@ -1,5 +1,6 @@
 input:read-only {
-    color: rgb(102, 102, 102)
+    background-color: var(--celda-readonly) !important;
+    color: var(--secundary-color);
 }
 
 input:focus-visible {
@@ -8,10 +9,10 @@ input:focus-visible {
 
 input:focus-visible:not([readonly]) {
     outline: none;
-    box-shadow: inset 0 -2px 0 0 black, inset 0 2px 0 0 black, inset -2px 0 0 0 black, inset 2px 0 0 0 black;
+    box-shadow: inset 0 -2px 0 0 var(--secundary-color), inset 0 2px 0 0 var(--secundary-color), inset -2px 0 0 0 var(--secundary-color), inset 2px 0 0 0 var(--secundary-color);
 }
 
-p{
+p {
     position: absolute;
     bottom: 0;
     margin: 0;

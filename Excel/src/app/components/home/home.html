@@ -10,13 +10,13 @@
             <li nz-submenu nzTitle="Permisos" nzIcon="user" nzOpen>
                 <ul>
                     <li nz-menu-item (click)="aplicarFiltro('?permiso=3')">
-                        <span>Dueño</span>
+                        <span>Creador</span>
                     </li>
                     <li nz-menu-item (click)="aplicarFiltro('?permiso=2')">
-                        <span>Escribir</span>
+                        <span>Modificar</span>
                     </li>
                     <li nz-menu-item (click)="aplicarFiltro('?permiso=1')">
-                        <span>Ver</span>
+                        <span>Solo lectura</span>
                     </li>
                 </ul>
             </li>
@@ -29,11 +29,12 @@
                     <app-modal-create-fichero (cargar)="buscar()" />
                 </ul>
             </nz-header>
-            <nz-table #basicTable [nzData]="ficheros()">
+            <nz-table #basicTable [nzData]="ficheros()" [nzLoading]="loading()" [nzPageSize]="10"
+                [nzScroll]="{ x: 'auto',y: '60vh' }">
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Abrir</th>
+                        <th>Acciones</th>
                         <th>Descripcion</th>
                         <th>Permiso</th>
                         <th>Fecha Creacion</th>
@@ -47,18 +48,22 @@
                     <tr>
                         <td>{{ data.nombre }}</td>
                         <td>
-                            <a (click)="abrir(data)">Abrir</a>
+                            <a nz-button nzType="link" (click)="abrir(data)">Abrir</a>
+                            @if (data.permiso === 3) {
+                            <app-modal-create-fichero (cargar)="buscar()" [tipo]="1" [data]="data" />
+                            <app-modal-permisos [id]="data.id" />
+                            }
                         </td>
                         <td>{{ data.descripcion }}</td>
                         @switch (data.permiso) {
                         @case (1) {
-                        <td>Ver</td>
+                        <td>Solo lectura</td>
                         }
                         @case (2) {
-                        <td>Escribir</td>
+                        <td>Modificar</td>
                         }
                         @case (3) {
-                        <td>Dueño</td>
+                        <td>Creador</td>
                         }
                         }
                         <td>{{ data.fecha_creacion }}</td>

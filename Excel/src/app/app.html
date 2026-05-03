@@ -1,28 +1,14 @@
 <nz-layout class="app-layout">
-  <nz-header nz-row nzJustify="space-between">
+  <nz-header nz-row nzJustify="space-between" nzAlign="middle">
     <div nz-col class="logo">
-      <a>
-        <img src="images/logo.png" alt="logo" /> 
-      </a>
+      <img src="images/logo.png" alt="logo" />
     </div>
-    <ul nz-menu nz-col class="top-nav" nzTheme="dark" nzMode="horizontal">
-      @if (user()) {
-      <button nz-button nzType="link" nzMatchRouter [routerLink]="['/', 'main']">
-        <span>Tabla</span>
+    <div nz-col nz-row nzAlign="middle">
+      <app-header-menu nzXs="0" nzSm="0" nzMd="24" nz-col></app-header-menu>
+      <button nz-button nzType="link" nz-col nzMd="0" (click)="openDrawer()">
+        <span nz-icon nzType="menu-fold" nzTheme="outline"></span>
       </button>
-      <button nz-button nzType="link" nzMatchRouter [routerLink]="['/', 'home']">
-        <nz-icon nzType="home" nzTheme="outline" routerLink="/home" />
-      </button>
-      <button nz-button nzType="link" (click)="logout()">
-        Cerrar Sesion
-      </button>
-      }@else {
-      <!--Iniciar Sesion-->
-      <app-modal-login />
-      <!--Registarse-->
-      <app-modal-register />
-      }
-    </ul>
+    </div>
   </nz-header>
   <nz-content>
     <div class="inner-content">
