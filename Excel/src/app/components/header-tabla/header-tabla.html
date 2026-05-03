@@ -1,0 +1,80 @@
+<nz-header nz-row nzJustify="space-evenly" nzAlign="middle">
+    @if (user() && ficheroService.permiso()) {
+    <form nz-form nzLayout="vertical" class="form-header">
+        <nz-form-item>
+            <nz-form-label class="ant-primary-color">Nombre</nz-form-label>
+            <nz-form-control>
+                <input nz-input type="text" [value]="ficheroService.fichero()?.nombre ?? ''"
+                    (input)="cambiarNombre($event)" />
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    }
+    @if (mode() == 0) {
+    <div nz-col nz-flex nzGap="middle">
+        @if (user() && ficheroService.permiso()) {
+        <button nz-button nzType="default" (click)="uploadDB.emit()">
+            <nz-icon nzType="cloud-upload" />
+            @if (ficheroService.fichero()?.id ) {
+            <span>Guardar</span>
+            }@else {
+            <span>Crear y guardar</span>
+            }
+        </button>
+        }
+        <button nz-button nzType="default" (click)="download.emit()">
+            <nz-icon nzType="download" />
+            <span>Descargar</span>
+        </button>
+        @if ( ficheroService.permiso()) {
+        <div style="line-height: 0;">
+            <button nz-button (click)="upload.emit()">
+                <nz-icon nzType="upload" />
+                <span>Subir archivo</span>
+            </button>
+        </div>
+        }
+    </div>
+    }
+    <div nz-col nz-flex nzGap="middle" nzAlign="center">
+        @if (ficheroService.permiso()) {
+        @if (mode()==0) {
+        <button nz-button nzType="default" (click)="mode.set(1)">Añadir Formula</button>
+        }@else {
+        <button nz-button nzType="link" (click)="mode.set(0)">
+            <nz-icon nzType="close" nzTheme="outline" />
+        </button>
+        <button nz-button nzType="link" (click)="mode.update(m=>m-1)">
+            <nz-icon nzType="left" nzTheme="outline" />
+        </button>
+        @if (mode()==1) {
+        <button nz-button nzType="default" (click)="setTipo('f')">En las celdas</button>
+        <button nz-button nzType="default" (click)="setTipo('c')">En el resultado</button>
+        }
+        @else if (mode()==2) {
+        <button nz-button nzType="default" (click)="setFuncion('sumar')">Sumar</button>
+        <button nz-button nzType="default" (click)="setFuncion('restar')">Restar</button>
+        <button nz-button nzType="primary" nzDanger (click)="setFuncion('')">Quitar</button>
+        }
+        @else if (this.tipo() === 'f' && this.mode() === 3) {
+        <h1>Seleciona las columnas que participen</h1>
+        }@else {
+        <h1>Seleciona la columna para poner el resultado</h1>
+        }
+        }
+        @if (mode() > 2) {
+        <button nz-button nzType="primary" class="success" nzShape="circle" (click)="confirm()">
+            <span nz-icon nzType="check"></span>
+        </button>
+        <button nz-button nzType="primary" class="danger" nzShape="circle" (click)="mode.set(2)">
+            <span nz-icon nzType="close"></span>
+        </button>
+        }
+        }
+    </div>
+</nz-header>
+
+<nz-float-button-group [style]="!isVisible()?'display: none;':''">
+    <nz-float-button nzType="primary" class="success" nzIcon="check" (nzOnClick)="confirm()" />
+    <nz-float-button nzType="primary" class="danger" nzIcon="close" (nzOnClick)="mode.set(2)" />
+</nz-float-button-group>

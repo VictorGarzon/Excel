@@ -37,4 +37,12 @@ export class ApiService {
   post(url: string, obj: object): Observable<any> {
     return this.buscar(this.http.post<any>(this.url + url, obj))
   }
+
+  delete(url: string): Observable<any> {
+    return this.buscar(this.http.delete<any>(this.url + url))
+  }
+
+  patch(url: string, obj: object): Observable<any> {
+    return this.buscar(this.http.patch<any>(this.url + url, obj))
+  }
 }

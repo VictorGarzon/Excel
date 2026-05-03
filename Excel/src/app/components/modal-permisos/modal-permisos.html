@@ -1,0 +1,40 @@
+<button nz-button  nzType="link" (click)="showModal()"><span>Permisos</span></button>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Persmisos" (nzOnCancel)="handleCancel()">
+    <ng-container *nzModalContent>
+        <nz-input-search (nzSearch)="buscarEmail()" [nzLoading]="loading()">
+            <input nz-input placeholder=" Buscar por email" [(ngModel)]="email" />
+            <nz-select nzInputAddonAfter [(ngModel)]="permiso">
+                <nz-option nzLabel="Solo lectura" nzValue="1" />
+                <nz-option nzLabel="Modificar" nzValue="2" />
+            </nz-select>
+        </nz-input-search>
+        <nz-table #basicTable [nzData]="users()" [nzLoading]="loading()" [nzPageSize]="5">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Permiso</th>
+                    <th>Borrar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (data of basicTable.data; track data.id) {
+                <tr>
+                    <td>{{ data.email }}</td>
+                    <td>
+                        <nz-select [(ngModel)]="data.permiso" (ngModelChange)="cambiarPermiso(data.id,data.permiso)">
+                            <nz-option nzLabel="Solo lectura" [nzValue]="1" />
+                            <nz-option nzLabel="Modificar" [nzValue]="2" />
+                        </nz-select>
+                    </td>
+                    <td>
+                        <button nz-button nzDanger (click)="deleteUser(data.id)">
+                            <span>Eliminar</span>
+                        </button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </nz-table>
+    </ng-container>
+    <div *nzModalFooter></div>
+</nz-modal>

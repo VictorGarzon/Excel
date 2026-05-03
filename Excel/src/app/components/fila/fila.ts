@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, ElementRef, input, output, Renderer2, signal, untracked, viewChildren } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, ElementRef, input, output, Renderer2, signal, untracked, viewChildren } from '@angular/core';
 import { Celda } from "../celda/celda";
 
 @Component({
@@ -16,6 +16,7 @@ export class Fila {
   tamColumna = input<number>();
 
   disabled = input<boolean>();
+  modoSelect = input<boolean>();
   selecionado = output<number>()
   ampliar = output()
 

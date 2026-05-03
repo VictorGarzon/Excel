@@ -168,4 +168,11 @@ class Fichero
 
         return $this;
     }
+
+    public function getAccesosExcludeUserId(int $id): Collection
+    {
+        return $this->accesos->filter(
+            fn($acceso) => $acceso->getUser()->getId() !== $id
+        );
+    }
 }

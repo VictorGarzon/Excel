@@ -3,6 +3,8 @@ import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
 import { ApiService } from './api.service';
 import { User } from '../models/user';
+import { Router } from '@angular/router';
+import { FicheroService } from './fichero.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +12,8 @@ import { User } from '../models/user';
 export class AuthService {
   private readonly platformId = inject(PLATFORM_ID);
   private userSubject = new BehaviorSubject<User | null>(null);
+  private router = inject(Router);
+  private fichero = inject(FicheroService);
 
   user$: Observable<User | null> = this.userSubject.asObservable();
   api = inject(ApiService);
@@ -35,6 +39,8 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('accessToken');
     this.userSubject.next(null);
+    this.fichero.reset()
+    this.router.navigate(['/main']);
   }
 
   private loadUserProfileOnStartup(): void {

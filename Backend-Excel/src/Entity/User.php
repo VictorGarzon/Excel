@@ -205,6 +205,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    
+    /**
+     * @see UserInterface
+     */
+    public function getUser(): User
+    {
+        return $this;
+    }
 
     public function getAccesosByPermiso(int $permiso): Collection
     {

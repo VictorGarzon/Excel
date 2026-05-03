@@ -60,7 +60,9 @@ export class ModalRegister {
         this.message.createBasicMessage('success', "Registro existoso")
         this.visible.set(false);
       } catch (err: any) {
-        if (err.status === 409) {
+        if (err.status === 400) {
+          this.message.createBasicMessage('error', err.message)
+        } else if (err.status === 409) {
           this.message.createBasicMessage('error', "Email en uso")
         } else {
           this.message.createBasicMessage('error', err.message)
