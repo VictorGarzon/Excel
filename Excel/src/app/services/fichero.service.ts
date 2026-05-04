@@ -32,8 +32,10 @@ export class FicheroService {
   })
 
   public setData(data: tabla | null) {
-    if (this.fichero() && data) {
-      this.fichero.update(f => ({ ...f!, data: data }))
+    if (this.fichero()) {
+      if (data) {
+        this.fichero.update(f => ({ ...f!, data: data }))
+      }
     } else {
       this.fichero.set({
         data: data

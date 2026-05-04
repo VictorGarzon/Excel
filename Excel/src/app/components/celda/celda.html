@@ -1,9 +1,7 @@
 <input type="text" [value]="valor() ?? ''" (input)="cambiar($event)"
-    [readOnly]="(funcion() && parte() !== 'head' ) || disabled() ?true:false">
-@if (parte() && funcion()) {
-@if (parte()=="head") {
-<p>{{valoresCeldas()}}</p>
-}@else {
+    [readOnly]="(funcion() && parte() !== 'head' ) || disabled() ?true:false" nz-popover
+    [nzPopoverTitle]="parte()=='head' && funcion()?funcion():''"
+    [nzPopoverContent]="parte()=='head' && funcion()?valoresCeldas():''">
+@if ((parte()=="head"||parte()=="footer") && funcion()) {
 <p>{{funcion()}}</p>
-}
 }

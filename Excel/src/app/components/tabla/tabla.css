@@ -23,6 +23,13 @@ nz-content {
     border-collapse: collapse;
 }
 
+#tabla-main ::ng-deep th {
+    text-align: center;
+    background-color: var(--secundary-color);
+    color: var(--primary-color);
+    min-width: 50px;
+}
+
 #tabla-main thead {
     position: sticky;
     top: 0;
@@ -101,4 +108,8 @@ nz-content {
 
 #tabla-main tfoot ::ng-deep .seleccionadofinal {
     background-color: transparent;
+}
+
+::ng-deep td.error {
+    box-shadow: inset 0 -1px 0 0 red, inset 0 1px 0 0 red, inset -1px 0 0 0 red, inset 1px 0 0 0 red !important;
 }

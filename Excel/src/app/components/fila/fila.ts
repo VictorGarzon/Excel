@@ -11,6 +11,8 @@ export class Fila {
   celdas = viewChildren<Celda>(Celda)
   data = input<any>()
 
+  num = input()
+
   cargado = input()
   //tamaño total columna
   tamColumna = input<number>();

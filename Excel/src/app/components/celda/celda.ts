@@ -1,8 +1,10 @@
 import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewInit, OnInit, effect, output, untracked, AfterViewChecked, inject } from '@angular/core';
 import { FicheroService } from '../../services/fichero.service';
+
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
 @Component({
   selector: 'td[app-celda],th[app-celda]',
-  imports: [],
+  imports: [NzPopoverModule],
   templateUrl: './celda.html',
   styleUrl: './celda.css',
 })
@@ -59,10 +61,11 @@ export class Celda {
     let datos: Array<any> = []
     this.celdas().forEach((e: Celda) => {
       let input = e?.el.nativeElement.querySelector('input');
-      //e.renderer.setAttribute(input, 'type', 'number');
       if (isNaN(e?.valor())) {
-        e?.renderer.setStyle(e.el.nativeElement, 'border', '2px solid red');
+        e?.renderer.addClass(e.el.nativeElement, 'error');
       } else {
+        e.renderer.setAttribute(input, 'type', 'number');
+        e?.renderer.removeClass(e.el.nativeElement, 'error');
         if (+e?.valor() != 0) {
           datos.push(+e.valor())
         }
@@ -71,7 +74,7 @@ export class Celda {
     return datos;
   }
 
-  valoresCeldas = computed(() => this.celdas().reduce((texto: string, objeto: Celda) => texto + " " + objeto.valor(), this.funcion() + ":"))
+  valoresCeldas = computed(() => this.celdas().reduce((texto: string, objeto: Celda) => (texto ? texto + "-" : texto) + objeto.valor(), ""))
 
   cambiar(event: Event) {
     const valor = (event.target as HTMLInputElement).value;
@@ -82,8 +85,8 @@ export class Celda {
   }
 
   acciones = {
-    sumar: (datos: Array<any>) => datos.reduce((total: number, valor: number) => valor + total, 0),
-    restar: (datos: Array<any>) => datos.reduce((total: number, valor: number, i: number) => {
+    suma: (datos: Array<any>) => datos.reduce((total: number, valor: number) => valor + total, 0),
+    resta: (datos: Array<any>) => datos.reduce((total: number, valor: number, i: number) => {
       if (i === 0) {
         return valor
       }

@@ -273,7 +273,7 @@ export class Tabla implements saveCanDeactivate {
 
   onSelect(n: number) {
     if (this.modeSelectMult()) {
-      let columnas = document.querySelectorAll("tr td:nth-child(" + (n + 1) + ")")
+      let columnas = document.querySelectorAll("tr td:nth-of-type(" + (n + 1) + ")")
       columnas.forEach(c => c.classList.toggle("seleccionado"))
       if (Array.isArray(this.seleccion)) {
         let posicion = this.seleccion.indexOf(n)
@@ -289,7 +289,7 @@ export class Tabla implements saveCanDeactivate {
       }
       if (this.columnasSelecionadas.indexOf(n) === -1) {
         this.removeSeleccionadoFinal()
-        let columnas = document.querySelectorAll("tr td:nth-child(" + (n + 1) + ")")
+        let columnas = document.querySelectorAll("tr td:nth-of-type(" + (n + 1) + ")")
         columnas.forEach(c => c.classList.toggle("seleccionadofinal"))
         this.seleccion = n;
       } else {
@@ -317,8 +317,7 @@ export class Tabla implements saveCanDeactivate {
     }
   }
 
-  //Descargar y subir
-
+  // Cargar
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     const reader = new FileReader();
@@ -338,6 +337,7 @@ export class Tabla implements saveCanDeactivate {
     event.target.value = ""
   }
 
+  // descargar 
   download() {
     const tabla = this.formatUpload();
     const data = JSON.stringify(tabla, null, 2);
@@ -354,6 +354,7 @@ export class Tabla implements saveCanDeactivate {
     this.ficheroService.modificado = false;
   }
 
+  //guardar base de datos
   async uploadDB(acept: boolean = false) {
     try {
       let fichero = this.ficheroService.fichero();
@@ -404,6 +405,7 @@ export class Tabla implements saveCanDeactivate {
     }
   }
 
+  //consegir datos
   formatUpload() {
     let head: Array<tablaColumna> = [];
     this.filas()[0].celdas().forEach((c, cn) => c.valor() && head.push({
@@ -434,5 +436,16 @@ export class Tabla implements saveCanDeactivate {
   }
   closedAlert() {
     this.visibleAlert.set(false)
+  }
+
+  numeroALetras(n:number) {
+    if (n <= 0) return '';
+    let resultado = '';
+    while (n > 0) {
+      n--;
+      resultado = String.fromCharCode(65 + (n % 26)) + resultado;
+      n = Math.floor(n / 26);
+    }
+    return resultado;
   }
 }

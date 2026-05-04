@@ -7,15 +7,24 @@
         <div nz-col class="inner-content">
             <table id="tabla-main">
                 <thead>
-                    <tr app-fila [data]="{head:cargado()?(functions()):(headers())}" [modoSelect]="modeSelect()"
-                        (selecionado)="onSelect($event)" [tamColumna]="tamColumna()" (ampliar)="ampliarColum()"
-                        [cargado]="cargado()" [disabled]="!ficheroService.permiso()">
+                    <tr>
+                        @for (n of [].constructor(this.tamColumna()! + 1 + 2 + 1); track $index) {
+                        @if (!$first) {
+                        <th>{{numeroALetras($index)}}</th>
+                        }@else {
+                        <th></th>
+                        }
+                        }
+                    </tr>
+                    <tr app-fila [data]="{head:cargado()?(functions()):(headers())}"
+                        [modoSelect]="modeSelect()" (selecionado)="onSelect($event)" [tamColumna]="tamColumna()"
+                        (ampliar)="ampliarColum()" [cargado]="cargado()" [disabled]="!ficheroService.permiso()">
                     </tr>
                 </thead>
                 <tbody>
                     @for (n of arrayFila(); track $index) {
                     @let fila = buscarFila($index);
-                    <tr app-fila [data]="{body:cargado()?functions():(fila?.columnas ?? functions())}"
+                    <tr app-fila [num]="$index +1" [data]="{body:cargado()?functions():(fila?.columnas ?? functions())}"
                         [modoSelect]="modeSelect()" (selecionado)="onSelect($event)" [tamColumna]="tamColumna()"
                         (click)="!modeSelect() && $index >= (tamFila()! + 1) && ampliarFila()"
                         (ampliar)="ampliarColum()" [cargado]="cargado()" [ultimo]="!cargado() && $last"
@@ -25,8 +34,7 @@
                 </tbody>
                 <tfoot>
                     <tr app-fila [data]="{footer:footerColumnas()}" [tamColumna]="tamColumna()"
-                        (ampliar)="ampliarColum()" [cargado]="cargado()" [modoSelect]="modeSelect()"
-                        [disabled]="true">
+                        (ampliar)="ampliarColum()" [cargado]="cargado()" [modoSelect]="modeSelect()" [disabled]="true">
                     </tr>
                 </tfoot>
             </table>
@@ -34,8 +42,9 @@
     </nz-content>
 </nz-layout>
 
-<nz-alert nzBanner nzType="warning" nzMessage="Hay una version mas actual ¿quieres sobrescribirlo?"
-    [nzAction]="action" [nzDescription]="description" [style]="visibleAlert()?'':'display: none'" style="position: absolute; width: 50%; left: 25%;z-index: 1; align-items: center;" />
+<nz-alert nzBanner nzType="warning" nzMessage="Hay una version mas actual ¿quieres sobrescribirlo?" [nzAction]="action"
+    [nzDescription]="description" [style]="visibleAlert()?'':'display: none'"
+    style="position: absolute; width: 50%; left: 25%;z-index: 1; align-items: center;" />
 <ng-template #description>
     <p>Otro ususario ha hecho cambios, si lo sobrescribirbes los cambios de ese usuario seran borrados</p>
     <p>Se recomienda descargar los cambios en el dispositivo y volver a abrir el archivo</p>
