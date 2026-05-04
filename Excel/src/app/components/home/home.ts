@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -16,10 +16,19 @@ import { MessageService } from '../../services/message.service';
 import { FicheroService } from '../../services/fichero.service';
 import { Router } from '@angular/router'
 import { ModalPermisos } from "../modal-permisos/modal-permisos";
+import { AuthService } from '../../services/auth.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { User } from '../../models/user';
+import { ModalEditUser } from "../modal-edit-user/modal-edit-user";
+
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { FormsModule } from "@angular/forms";
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzFlexModule } from 'ng-zorro-antd/flex';
 
 @Component({
   selector: 'app-home',
-  imports: [NzBreadCrumbModule, NzIconModule, NzMenuModule, NzLayoutModule, NzButtonModule, NzTableModule, NzDividerModule, NzTypographyModule, ModalCreateFichero, ModalPermisos],
+  imports: [NzBreadCrumbModule, NzIconModule, NzMenuModule, NzLayoutModule, NzButtonModule, NzTableModule, NzDividerModule, NzTypographyModule, ModalCreateFichero, ModalPermisos, ModalEditUser, NzInputModule, FormsModule, NzGridModule, NzFlexModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -27,20 +36,52 @@ export class Home {
   message = inject(MessageService)
   ficheroService = inject(FicheroService)
   router = inject(Router)
+  auth = inject(AuthService)
+  user = toSignal(this.auth.user$)
 
   ficheros = signal<[Fichero] | []>([])
+
+  users = signal<[User] | []>([])
+  roles = signal<any>([])
+
   loading = signal<boolean>(true)
-  filtro = '';
+
+  filtro = signal({});
+  params = computed(() => {
+    let params = new URLSearchParams(this.filtro()).toString()
+    return params ? '?' + params : '';
+  })
 
   constructor(private api: ApiService) {
-    this.buscar()
+    this.buscarFiltros();
+    effect(() => {
+      this.buscar();
+    })
+  }
+  isAdmin = computed(() => this.user()?.rol === "ROLE_ADMIN")
+
+  buscar() {
+    let filtro = this.params();
+    if (this.isAdmin()) {
+      this.buscarUsers(filtro)
+    } else {
+      this.buscarFicheros(filtro)
+    }
   }
 
-  async buscar() {
+  buscarFiltros() {
+    if (this.isAdmin()) {
+      this.buscarRoles()
+    } else {
+
+    }
+  }
+
+  async buscarFicheros(filtro: string) {
     this.loading.set(true)
     try {
       let ficheros = await firstValueFrom(
-        this.api.get("fichero" + this.filtro)
+        this.api.get("fichero" + filtro)
       )
       this.ficheros.set(ficheros);
     } catch (err: any) {
@@ -49,9 +90,28 @@ export class Home {
     this.loading.set(false)
   }
 
-  aplicarFiltro(filtro: string) {
-    this.filtro = filtro
-    this.buscar()
+  async buscarUsers(filtro: string) {
+    this.loading.set(true)
+    try {
+      let users = await firstValueFrom(
+        this.api.get("user" + filtro)
+      )
+      this.users.set(users);
+    } catch (err: any) {
+      this.message.createBasicMessage('error', err.message)
+    }
+    this.loading.set(false)
+  }
+
+  async buscarRoles() {
+    try {
+      let roles = await firstValueFrom(
+        this.api.get("rol")
+      )
+      this.roles.set(roles);
+    } catch (err: any) {
+      this.message.createBasicMessage('error', err.message)
+    }
   }
 
   async abrir(fichero: Fichero) {
@@ -64,6 +124,15 @@ export class Home {
       this.router.navigate(['/main'])
     } catch (err: any) {
       this.message.createBasicMessage('error', err.message)
+    }
+  }
+
+  inputBuscar(event: any) {
+    let value = event.target.value
+    if (this.isAdmin()) {
+      this.filtro.update(f => ({ ...f, email: value }))
+    } else {
+      this.filtro.update(f => ({ ...f, nombre: value }))
     }
   }
 }

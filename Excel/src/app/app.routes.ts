@@ -9,14 +9,13 @@ export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/main' },
   {
     path: 'main',
-    //loadChildren: () => import('./pages/welcome/welcome.routes').then((m) => m.WELCOME_ROUTES),
     component: Tabla,
-    canDeactivate:[saveGuard]
+    canDeactivate: [saveGuard]
   },
   {
     path: 'home',
     component: Home,
-    canActivate:[authGuard]
+    canActivate: [authGuard]
   },
-  { path: '**', pathMatch: 'full', redirectTo: '/main' },
+  { path: '**', redirectTo: '/main' },
 ];

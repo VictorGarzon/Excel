@@ -4,32 +4,75 @@
             <span class="ant-primary-color">Filtros</span>
         </nz-header>
         <ul nz-menu class="sider-menu" nzMode="inline">
-            <li nz-menu-item nzSelected (click)="aplicarFiltro('')">
+            <li nz-menu-item nzSelected (click)="filtro.set({})">
                 <span>Todos</span>
             </li>
+            @if (isAdmin()) {
+            <li nz-submenu nzTitle="Roles" nzIcon="user" nzOpen>
+                <ul>
+                    @for (rol of roles(); track $index) {
+                    <li nz-menu-item (click)="filtro.update(f=>({...f,rol:rol?.id}))">
+                        <span>{{rol?.nombre}}</span>
+                    </li>
+                    }
+                </ul>
+            </li>
+            }@else {
             <li nz-submenu nzTitle="Permisos" nzIcon="user" nzOpen>
                 <ul>
-                    <li nz-menu-item (click)="aplicarFiltro('?permiso=3')">
+                    <li nz-menu-item (click)="filtro.update(f=>({...f,permiso:3}))">
                         <span>Creador</span>
                     </li>
-                    <li nz-menu-item (click)="aplicarFiltro('?permiso=2')">
+                    <li nz-menu-item (click)="filtro.update(f=>({...f,permiso:2}))">
                         <span>Modificar</span>
                     </li>
-                    <li nz-menu-item (click)="aplicarFiltro('?permiso=1')">
+                    <li nz-menu-item (click)="filtro.update(f=>({...f,permiso:1}))">
                         <span>Solo lectura</span>
                     </li>
                 </ul>
             </li>
+            }
         </ul>
     </nz-sider>
     <nz-layout class="inner-layout">
         <nz-content>
-            <nz-header nz-row nzJustify="space-between">
-                <ul nz-menu nz-col class="top-nav" nzTheme="dark" nzMode="horizontal">
-                    <app-modal-create-fichero (cargar)="buscar()" />
-                </ul>
+            <nz-header>
+                <div nz-row>
+                    @if (isAdmin()) {
+                    }@else {
+                    <div nz-col nzSpan="12">
+                        <app-modal-create-fichero nz-col nzSpan="12" (cargar)="buscar()" />
+                    </div>
+                    }
+                    <div nz-col nzSpan="12">
+                        <input nz-input placeholder="Buscar nombre fichero" (input)="inputBuscar($event)" />
+                    </div>
+                </div>
             </nz-header>
-            <nz-table #basicTable [nzData]="ficheros()" [nzLoading]="loading()" [nzPageSize]="10"
+            @if (isAdmin()) {
+            <nz-table #usersTable [nzData]="users()" [nzLoading]="loading()" [nzPageSize]="10"
+                [nzScroll]="{ x: 'auto',y: '60vh' }">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (data of usersTable.data; track data.id) {
+                    <tr>
+                        <td>{{ data.email }}</td>
+                        <td>{{ data.rol }}</td>
+                        <td>
+                            <app-modal-edit-user [data]="data" />
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </nz-table>
+            }@else {
+            <nz-table #fichTable [nzData]="ficheros()" [nzLoading]="loading()" [nzPageSize]="10"
                 [nzScroll]="{ x: 'auto',y: '60vh' }">
                 <thead>
                     <tr>
@@ -44,7 +87,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (data of basicTable.data; track data.id) {
+                    @for (data of fichTable.data; track data.id) {
                     <tr>
                         <td>{{ data.nombre }}</td>
                         <td>
@@ -74,6 +117,7 @@
                     }
                 </tbody>
             </nz-table>
+            }
         </nz-content>
     </nz-layout>
 </nz-layout>

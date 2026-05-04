@@ -25,32 +25,38 @@ use Symfony\Component\Routing\Attribute\Route;
 class FicheroController extends AbstractController
 {
     #[Route('/fichero', name: 'home_fichero', methods: ['get'])]
-    public function index(UserRepository $repoUser, Request $request): JsonResponse
+    public function index( UserRepository $repoUser, FicheroRepository $repoFich, Request $request): JsonResponse
     {
         try {
             $user = $repoUser->getEntityUser();
+            $queryFichero = $repoFich->getFicheros($user);
             $permiso = $request->query->get('permiso');
             if ($permiso) {
-                $accesos = $user->getAccesosByPermiso($permiso);
-            } else {
-                $accesos = $user->getAccesos();
+                $queryFichero->andWhere('a.permiso = :permiso');
+                $queryFichero->setParameter('permiso', $permiso);
             }
-            $accesoFicheros = [];
-            foreach ($accesos as $acceso) {
-                $accesoFicheros[] = [
-                    "id" => $acceso->getFichero()->getId(),
-                    "nombre" => $acceso->getFichero()->getNombre(),
-                    "descripcion" => $acceso->getFichero()->getDescripcion(),
-                    "fecha_creacion" => $acceso->getFichero()->getFechaCreacion()->format("Y-m-d H:i:s"),
-                    "fecha_mod" => $acceso->getFichero()->getFechaMod()->format("Y-m-d H:i:s"),
-                    "ultima_subida" => $acceso->getFichero()->getUltimaSubida()->getEmail(),
-                    "tipo" => $acceso->getFichero()->getTipoFichero()->getNombre(),
-                    "permiso" => $acceso->getPermiso()
+            $nombre = $request->query->get('nombre');
+            if ($nombre) {
+                $queryFichero->andWhere('f.nombre like :nombre');
+                $queryFichero->setParameter('nombre', '%'.$nombre.'%');
+            }
+            $ficheros = $queryFichero->getQuery()->getResult();
+            $data = [];
+            foreach ($ficheros as $fichero) {
+                $data[] = [
+                    "id" => $fichero[0]->getId(),
+                    "nombre" => $fichero[0]->getNombre(),
+                    "descripcion" => $fichero[0]->getDescripcion(),
+                    "fecha_creacion" => $fichero[0]->getFechaCreacion()->format("Y-m-d H:i:s"),
+                    "fecha_mod" => $fichero[0]->getFechaMod()->format("Y-m-d H:i:s"),
+                    "ultima_subida" => $fichero[0]->getUltimaSubida()->getEmail(),
+                    "tipo" => $fichero[0]->getTipoFichero()->getNombre(),
+                    "permiso" => $fichero['permiso']
                 ];
             }
-            return new JsonResponse($accesoFicheros, status: 201);
+            return new JsonResponse($data, status: 201);
         } catch (Exception $err) {
-            return new JsonResponse(status: 500);
+            return new JsonResponse($err->getMessage(), status: 500);
         }
     }
 
@@ -185,7 +191,7 @@ class FicheroController extends AbstractController
             $entityManager->persist($fichero);
             $entityManager->flush();
 
-            return new JsonResponse($fichero->getFechaMod()->format("Y-m-d H:i:s"),status: 201);
+            return new JsonResponse($fichero->getFechaMod()->format("Y-m-d H:i:s"), status: 201);
         } catch (AccessDeniedHttpException $err) {
             return new JsonResponse(status: 403);
         } catch (DateException $err) {

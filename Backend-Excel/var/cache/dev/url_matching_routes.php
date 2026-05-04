@@ -26,6 +26,7 @@ return [
         '/api/home' => [[['_route' => 'api_homehome_index', '_controller' => 'App\\Controller\\HomeController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/me' => [[['_route' => 'api_meme_index', '_controller' => 'App\\Controller\\MeController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/register' => [[['_route' => 'api_registerregister', '_controller' => 'App\\Controller\\RegistrationController::index'], null, ['POST' => 0], null, false, false, null]],
+        '/api/rol' => [[['_route' => 'api_rolrol_index', '_controller' => 'App\\Controller\\RolController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/tipos' => [[['_route' => 'api_tipostipos_index', '_controller' => 'App\\Controller\\TiposFicheroController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/user' => [[['_route' => 'api_useruser_index', '_controller' => 'App\\Controller\\UserController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/login_check' => [[['_route' => 'api_login_check'], null, null, null, false, false, null]],
@@ -60,6 +61,7 @@ return [
                         .')'
                         .'|(*:302)'
                     .')'
+                    .'|user/([^/]++)(*:324)'
                 .')'
             .')/?$}sDu',
     ],
@@ -76,8 +78,9 @@ return [
         261 => [[['_route' => 'api_ficherofichero_id', '_controller' => 'App\\Controller\\FicheroController::getId'], ['id'], ['GET' => 0], null, false, true, null]],
         277 => [[['_route' => 'api_ficherofichero_id_data', '_controller' => 'App\\Controller\\FicheroController::getIdData'], ['id'], ['GET' => 0], null, false, false, null]],
         293 => [[['_route' => 'api_ficherofichero_id_permisos', '_controller' => 'App\\Controller\\FicheroController::getIdPermisos'], ['id'], ['GET' => 0], null, false, false, null]],
-        302 => [
-            [['_route' => 'api_ficherofichero_modificar', '_controller' => 'App\\Controller\\FicheroController::modificar'], ['id'], ['PATCH' => 0], null, false, true, null],
+        302 => [[['_route' => 'api_ficherofichero_modificar', '_controller' => 'App\\Controller\\FicheroController::modificar'], ['id'], ['PATCH' => 0], null, false, true, null]],
+        324 => [
+            [['_route' => 'api_useruser_patch_pass', '_controller' => 'App\\Controller\\UserController::updatePass'], ['id'], ['PATCH' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

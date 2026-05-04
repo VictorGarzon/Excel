@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Fichero;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
@@ -27,6 +28,16 @@ class FicheroRepository extends ServiceEntityRepository
         }
         return $acceso;
     }
+    public function getFicheros(User $user)
+    {
+        return $this
+            ->createQueryBuilder('f')
+            ->select('f', 'a.permiso')
+            ->join('f.accesos', 'a')
+            ->where('a.user = :user')
+            ->setParameter('user', $user);
+    }
+
 
     //    /**
     //     * @return Fichero[] Returns an array of Fichero objects
