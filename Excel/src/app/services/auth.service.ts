@@ -58,4 +58,8 @@ export class AuthService {
   get isAuthenticated(): boolean {
     return !!this.userSubject.value;
   }
+
+  public setUser(user: any) {
+    this.userSubject.next(user)
+  }
 }

@@ -77,7 +77,7 @@ class AccesoController extends AbstractController
         }
     }
 
-    #[Route('/acceso/{id_f}/{id_u}', name: 'acceso_delete', methods: ['patch'])]
+    #[Route('/acceso/{id_f}/{id_u}', name: 'acceso_edicion', methods: ['patch'])]
     public function editarPermiso(EntityManagerInterface $entityManager, FicheroRepository $fiRepo, Request $request, int $id_f, int $id_u): JsonResponse
     {
         try {

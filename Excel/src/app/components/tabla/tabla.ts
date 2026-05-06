@@ -71,11 +71,7 @@ export class Tabla implements saveCanDeactivate {
 
   canDeactivate(): boolean {
     if (this.ficheroService.modificado) {
-      let salir = confirm('Tienes cambios sin guardar ¿Quieres salir?');
-      if (salir) {
-        this.ficheroService.reset()
-      }
-      return salir;
+      return confirm('Tienes cambios sin guardar ¿Quieres salir?');
     }
     return true;
   }
@@ -438,7 +434,7 @@ export class Tabla implements saveCanDeactivate {
     this.visibleAlert.set(false)
   }
 
-  numeroALetras(n:number) {
+  numeroALetras(n: number) {
     if (n <= 0) return '';
     let resultado = '';
     while (n > 0) {

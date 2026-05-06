@@ -1,0 +1,10 @@
+nz-content {
+    height: 100%;
+    margin: 2em;
+}
+
+.inner-content {
+    padding: 5em;
+    background: #fff;
+    width: 50%;
+}

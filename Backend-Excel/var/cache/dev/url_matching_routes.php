@@ -24,7 +24,10 @@ return [
             [['_route' => 'api_ficherocrear_fichero', '_controller' => 'App\\Controller\\FicheroController::create'], null, ['POST' => 0], null, false, false, null],
         ],
         '/api/home' => [[['_route' => 'api_homehome_index', '_controller' => 'App\\Controller\\HomeController::index'], null, ['GET' => 0], null, false, false, null]],
-        '/api/me' => [[['_route' => 'api_meme_index', '_controller' => 'App\\Controller\\MeController::index'], null, ['GET' => 0], null, false, false, null]],
+        '/api/me' => [
+            [['_route' => 'api_meme_index', '_controller' => 'App\\Controller\\MeController::index'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'api_meme_edicion', '_controller' => 'App\\Controller\\MeController::edit'], null, ['PATCH' => 0], null, false, false, null],
+        ],
         '/api/register' => [[['_route' => 'api_registerregister', '_controller' => 'App\\Controller\\RegistrationController::index'], null, ['POST' => 0], null, false, false, null]],
         '/api/rol' => [[['_route' => 'api_rolrol_index', '_controller' => 'App\\Controller\\RolController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/tipos' => [[['_route' => 'api_tipostipos_index', '_controller' => 'App\\Controller\\TiposFicheroController::index'], null, ['GET' => 0], null, false, false, null]],
@@ -52,16 +55,18 @@ return [
                     .')'
                 .')'
                 .'|/api/(?'
-                    .'|acceso/([^/]++)/([^/]++)(*:234)'
-                    .'|fichero/([^/]++)(?'
-                        .'|(*:261)'
-                        .'|/(?'
-                            .'|data(*:277)'
-                            .'|permisos(*:293)'
-                        .')'
-                        .'|(*:302)'
+                    .'|acceso/([^/]++)/([^/]++)(?'
+                        .'|(*:237)'
                     .')'
-                    .'|user/([^/]++)(*:324)'
+                    .'|fichero/([^/]++)(?'
+                        .'|(*:265)'
+                        .'|/(?'
+                            .'|data(*:281)'
+                            .'|permisos(*:297)'
+                        .')'
+                        .'|(*:306)'
+                    .')'
+                    .'|user/([^/]++)(*:328)'
                 .')'
             .')/?$}sDu',
     ],
@@ -74,12 +79,15 @@ return [
         168 => [[['_route' => '_profiler_exception', '_controller' => 'web_profiler.controller.exception_panel::body'], ['token'], null, null, false, false, null]],
         181 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
         191 => [[['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null]],
-        234 => [[['_route' => 'api_accesoacceso_delete', '_controller' => 'App\\Controller\\AccesoController::editarPermiso'], ['id_f', 'id_u'], ['PATCH' => 0], null, false, true, null]],
-        261 => [[['_route' => 'api_ficherofichero_id', '_controller' => 'App\\Controller\\FicheroController::getId'], ['id'], ['GET' => 0], null, false, true, null]],
-        277 => [[['_route' => 'api_ficherofichero_id_data', '_controller' => 'App\\Controller\\FicheroController::getIdData'], ['id'], ['GET' => 0], null, false, false, null]],
-        293 => [[['_route' => 'api_ficherofichero_id_permisos', '_controller' => 'App\\Controller\\FicheroController::getIdPermisos'], ['id'], ['GET' => 0], null, false, false, null]],
-        302 => [[['_route' => 'api_ficherofichero_modificar', '_controller' => 'App\\Controller\\FicheroController::modificar'], ['id'], ['PATCH' => 0], null, false, true, null]],
-        324 => [
+        237 => [
+            [['_route' => 'api_accesoacceso_delete', '_controller' => 'App\\Controller\\AccesoController::delete'], ['id_f', 'id_u'], ['DELETE' => 0], null, false, true, null],
+            [['_route' => 'api_accesoacceso_edicion', '_controller' => 'App\\Controller\\AccesoController::editarPermiso'], ['id_f', 'id_u'], ['PATCH' => 0], null, false, true, null],
+        ],
+        265 => [[['_route' => 'api_ficherofichero_id', '_controller' => 'App\\Controller\\FicheroController::getId'], ['id'], ['GET' => 0], null, false, true, null]],
+        281 => [[['_route' => 'api_ficherofichero_id_data', '_controller' => 'App\\Controller\\FicheroController::getIdData'], ['id'], ['GET' => 0], null, false, false, null]],
+        297 => [[['_route' => 'api_ficherofichero_id_permisos', '_controller' => 'App\\Controller\\FicheroController::getIdPermisos'], ['id'], ['GET' => 0], null, false, false, null]],
+        306 => [[['_route' => 'api_ficherofichero_modificar', '_controller' => 'App\\Controller\\FicheroController::modificar'], ['id'], ['PATCH' => 0], null, false, true, null]],
+        328 => [
             [['_route' => 'api_useruser_patch_pass', '_controller' => 'App\\Controller\\UserController::updatePass'], ['id'], ['PATCH' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

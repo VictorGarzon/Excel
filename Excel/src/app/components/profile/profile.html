@@ -1,0 +1,74 @@
+<nz-layout class="layout">
+    <nz-content nz-flex nzJustify="center" nzAlign="center">
+        <div class="inner-content" nz-flex [nzVertical]="true" [nzGap]="50">
+            <h1>Hola: {{user()?.email}}</h1>
+            <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+                <h2>Editar datos</h2>
+                <nz-form-item>
+                    <nz-form-label [nzRequired]="isRequiredEmail()">E-mail</nz-form-label>
+                    <nz-form-control nzHasFeedback [nzErrorTip]="emailError">
+                        <input nz-input formControlName="email" type="email" />
+                        <ng-template #emailError let-control>
+                            @if (control.errors?.['email']) {
+                            Tiene que ser un Email
+                            }
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzRequired]="isRequired()">Contraseña</nz-form-label>
+                    <nz-form-control nzHasFeedback [nzErrorTip]="passError">
+                        <nz-input-password>
+                            <nz-icon nzInputPrefix nzType="lock" />
+                            <input nz-input type="password" formControlName="password" />
+                        </nz-input-password>
+                    </nz-form-control>
+                    <ng-template #passError let-control>
+                        @if (control.errors?.['minlength']) {
+                        Tiene que tener 8 caracteres
+                        }@else if (control.errors?.['pattern']) {
+                        Tiene que tener una mayuscula, una miniscula, un numero y un caracter especial
+                        }
+                    </ng-template>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzRequired]="isRequired()">Nueva Contraseña</nz-form-label>
+                    <nz-form-control nzHasFeedback [nzErrorTip]="newpassError">
+                        <nz-input-password>
+                            <nz-icon nzInputPrefix nzType="lock" />
+                            <input nz-input type="password" formControlName="newpassword" />
+                        </nz-input-password>
+                    </nz-form-control>
+                    <ng-template #newpassError let-control>
+                        @if (control.errors?.['minlength']) {
+                        Tiene que tener 8 caracteres
+                        }@else if (control.errors?.['pattern']) {
+                        Tiene que tener una mayuscula, una miniscula, un numero y un caracter especial
+                        }
+                    </ng-template>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzRequired]="isRequired()">Comfirmar Nueva Contraseña</nz-form-label>
+                    <nz-form-control nzHasFeedback [nzErrorTip]="passwordConfirm">
+                        <nz-input-password>
+                            <nz-icon nzInputPrefix nzType="lock" />
+                            <input nz-input type="password" formControlName="confirm" />
+                        </nz-input-password>
+                        <ng-template #passwordConfirm let-control>
+                            @if (control.errors?.['required']) {
+                            Please confirm your password!
+                            }
+                            @if (control.errors?.['confirm']) {
+                            Password is inconsistent!
+                            }
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+            <button nz-button nzType="primary" (click)="submitForm()" [nzLoading]="loading()"
+                [disabled]="!validateForm.valid">
+                Editar
+            </button>
+        </div>
+    </nz-content>
+</nz-layout>

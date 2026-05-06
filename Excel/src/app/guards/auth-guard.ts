@@ -12,9 +12,9 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (authService.isAuthenticated) {
     return true;
   } else {
+    message.createBasicMessage("error","No puedes acceder")
     authService.logout
     router.navigate(['/main']);
-    message.createBasicMessage("error","No puedes acceder")
     return false
   }
 };
