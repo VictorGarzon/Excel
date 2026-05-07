@@ -2,6 +2,8 @@
     <nz-content nz-flex nzJustify="center" nzAlign="center">
         <div class="inner-content" nz-flex [nzVertical]="true" [nzGap]="50">
             <h1>Hola: {{user()?.email}}</h1>
+            <button nz-button nz-popconfirm nzPopconfirmTitle="¿Seguro que quieres eliminar la cuenta?"
+                (nzOnConfirm)="deleteUser()" nzDanger nzType="primary">Eliminar cuenta</button>
             <form nz-form nzLayout="vertical" [formGroup]="validateForm" (ngSubmit)="submitForm()">
                 <h2>Editar datos</h2>
                 <nz-form-item>

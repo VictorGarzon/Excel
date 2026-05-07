@@ -20,7 +20,7 @@ import { FicheroService } from '../../services/fichero.service';
   styleUrl: './header-menu.css',
 })
 export class HeaderMenu {
-  private auth = inject(AuthService);
+  auth = inject(AuthService);
   user = toSignal(this.auth.user$)
   private router = inject(Router);
   private message = inject(MessageService)

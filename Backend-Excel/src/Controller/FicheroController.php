@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class FicheroController extends AbstractController
 {
     #[Route('/fichero', name: 'home_fichero', methods: ['get'])]
-    public function index( UserRepository $repoUser, FicheroRepository $repoFich, Request $request): JsonResponse
+    public function index(UserRepository $repoUser, FicheroRepository $repoFich, Request $request): JsonResponse
     {
         try {
             $user = $repoUser->getEntityUser();
@@ -38,7 +38,7 @@ class FicheroController extends AbstractController
             $nombre = $request->query->get('nombre');
             if ($nombre) {
                 $queryFichero->andWhere('f.nombre like :nombre');
-                $queryFichero->setParameter('nombre', '%'.$nombre.'%');
+                $queryFichero->setParameter('nombre', '%' . $nombre . '%');
             }
             $ficheros = $queryFichero->getQuery()->getResult();
             $data = [];
@@ -198,6 +198,23 @@ class FicheroController extends AbstractController
             return new JsonResponse(status: 409);
         } catch (Exception $err) {
             return new JsonResponse($err->getMessage(), status: 500);
+        }
+    }
+
+    #[Route('/fichero/{id}', name: 'fichero_delete', methods: ['delete'])]
+    public function delete(EntityManagerInterface $entityManager, FicheroRepository $fiRepo, int $id): JsonResponse
+    {
+        try {
+            $accesoUser = $fiRepo->getAcceso($id);
+            if ($accesoUser->getPermiso() !== 3) {
+                throw new Exception("No tienes permiso");
+            }
+            $entityManager->remove($accesoUser->getFichero());
+            $entityManager->flush();
+
+            return new JsonResponse(status: 201);
+        } catch (Exception $err) {
+            return new JsonResponse(status: 500);
         }
     }
 }

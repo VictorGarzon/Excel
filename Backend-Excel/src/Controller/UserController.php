@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\FicheroRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -65,9 +66,26 @@ class UserController extends AbstractController
             $entityManager->flush();
             return new JsonResponse(status: 201);
         } catch (InvalidArgumentException $err) {
-            return new JsonResponse($err->getMessage(), status: 401);
+            return new JsonResponse($err->getMessage(), status: 400);
         } catch (Exception $err) {
             return new JsonResponse(status: 500);
+        }
+    }
+
+    #[Route('/user/{id}', name: 'delete_user', methods: ['delete'])]
+    public function delete(
+        EntityManagerInterface $entityManager,
+        FicheroRepository $repoFic,
+        int $id
+    ): JsonResponse {
+        try {
+            $user = $entityManager->getRepository(User::class)->find($id);
+            $repoFic->deleteUser($user);
+            $entityManager->remove($user);
+            $entityManager->flush();
+            return new JsonResponse(status: 201);
+        } catch (Exception $err) {
+            return new JsonResponse($err->getMessage(), status: 500);
         }
     }
 

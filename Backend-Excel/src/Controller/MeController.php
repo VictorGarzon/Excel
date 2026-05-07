@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Fichero;
+use App\Repository\FicheroRepository;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,7 +50,7 @@ class MeController extends AbstractController
             if ($plaintextNewPassword && $plainPassword) {
                 $this->validatePassword($plaintextNewPassword);
                 if (!$passwordHasher->isPasswordValid($user, $plainPassword)) {
-                    return new JsonResponse(status: 401);
+                    throw new InvalidArgumentException('Contraseña mal');
                 }
                 $hashedPassword = $passwordHasher->hashPassword(
                     $user,
@@ -66,6 +68,18 @@ class MeController extends AbstractController
         } catch (Exception $err) {
             return new JsonResponse(status: 500);
         }
+    }
+
+    #[Route('/me', name: 'delete_me', methods: ['delete'])]
+    public function delete(EntityManagerInterface $entityManager, UserRepository $repoUser, FicheroRepository $repoFic): JsonResponse
+    {
+        $user = $repoUser->getEntityUser();
+        $repoFic->deleteUser($user);
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return new JsonResponse(status: 201);
     }
 
     public function validateEmail(string $email): void

@@ -1,15 +1,4 @@
 <nz-header nz-row nzJustify="space-evenly" nzAlign="middle">
-    @if (user() && ficheroService.permiso()) {
-    <form nz-form nzLayout="vertical" class="form-header">
-        <nz-form-item>
-            <nz-form-label class="ant-primary-color">Nombre</nz-form-label>
-            <nz-form-control>
-                <input nz-input type="text" [value]="ficheroService.fichero()?.nombre ?? ''"
-                    (input)="cambiarNombre($event)" />
-            </nz-form-control>
-        </nz-form-item>
-    </form>
-    }
     @if (mode() == 0) {
     <div nz-col nz-flex nzGap="middle">
         @if (user() && ficheroService.permiso()) {
@@ -35,6 +24,17 @@
         </div>
         }
     </div>
+    }
+    @if (mode()==0 && user() && ficheroService.permiso()) {
+    <form nz-form class="form-header" nz-flex nzGap="middle" nzAlign="center">
+        <nz-form-item style="margin: 0;">
+            <nz-form-label class="ant-primary-color">Nombre</nz-form-label>
+            <nz-form-control>
+                <input nz-input class="border-color-primary" type="text" [value]="ficheroService.fichero()?.nombre ?? ''"
+                    (input)="cambiarNombre($event)" placeholder="Nombre del Fichero" />
+            </nz-form-control>
+        </nz-form-item>
+    </form>
     }
     <div nz-col nz-flex nzGap="middle" nzAlign="center">
         @if (ficheroService.permiso()) {

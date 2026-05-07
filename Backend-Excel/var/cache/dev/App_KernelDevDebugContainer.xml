@@ -569,7 +569,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.w3xLo7n"/>
+      <argument type="service" id=".service_locator.cziBFUX"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -1997,7 +1997,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.w3xLo7n"/>
+      <argument type="service" id=".service_locator.cziBFUX"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -7016,6 +7016,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.sYw_Iy7" method="withContext"/>
     </service>
+    <service id=".service_locator.sYw_Iy7.App\Controller\FicheroController::delete()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\FicheroController::delete()"/>
+      <argument>App\Controller\FicheroController::delete()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.sYw_Iy7" method="withContext"/>
+    </service>
     <service id=".service_locator.vGqPy89" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -7029,6 +7035,20 @@
       <argument>App\Controller\MeController::edit()</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.vGqPy89" method="withContext"/>
+    </service>
+    <service id=".service_locator.1PmMkrJ" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="repoUser" type="service_closure" id="App\Repository\UserRepository"/>
+        <argument key="repoFic" type="service_closure" id="App\Repository\FicheroRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.1PmMkrJ.App\Controller\MeController::delete()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\MeController::delete()"/>
+      <argument>App\Controller\MeController::delete()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.1PmMkrJ" method="withContext"/>
     </service>
     <service id=".service_locator..WG8ZO_" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -7086,7 +7106,20 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.4VCqJOp" method="withContext"/>
     </service>
-    <service id=".service_locator.w3xLo7n" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.q7aMtU9" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="repoFic" type="service_closure" id="App\Repository\FicheroRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.q7aMtU9.App\Controller\UserController::delete()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\UserController::delete()"/>
+      <argument>App\Controller\UserController::delete()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.q7aMtU9" method="withContext"/>
+    </service>
+    <service id=".service_locator.cziBFUX" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -7102,12 +7135,15 @@
         <argument key="App\Controller\FicheroController::getIdPermisos" type="service_closure" id=".service_locator.eiiNU0L.App\Controller\FicheroController::getIdPermisos()"/>
         <argument key="App\Controller\FicheroController::create" type="service_closure" id=".service_locator.qXGSpcB.App\Controller\FicheroController::create()"/>
         <argument key="App\Controller\FicheroController::modificar" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\FicheroController::modificar()"/>
+        <argument key="App\Controller\FicheroController::delete" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\FicheroController::delete()"/>
         <argument key="App\Controller\MeController::edit" type="service_closure" id=".service_locator.vGqPy89.App\Controller\MeController::edit()"/>
+        <argument key="App\Controller\MeController::delete" type="service_closure" id=".service_locator.1PmMkrJ.App\Controller\MeController::delete()"/>
         <argument key="App\Controller\RegistrationController::index" type="service_closure" id=".service_locator..WG8ZO_.App\Controller\RegistrationController::index()"/>
         <argument key="App\Controller\RolController::index" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\RolController::index()"/>
         <argument key="App\Controller\TiposFicheroController::index" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\TiposFicheroController::index()"/>
         <argument key="App\Controller\UserController::index" type="service_closure" id=".service_locator.c.Yvd3o.App\Controller\UserController::index()"/>
         <argument key="App\Controller\UserController::updatePass" type="service_closure" id=".service_locator.4VCqJOp.App\Controller\UserController::updatePass()"/>
+        <argument key="App\Controller\UserController::delete" type="service_closure" id=".service_locator.q7aMtU9.App\Controller\UserController::delete()"/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.1vYpZ1B.kernel::loadRoutes()"/>
         <argument key="App\Controller\AccesoController:create" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\AccesoController::create()"/>
@@ -7119,12 +7155,15 @@
         <argument key="App\Controller\FicheroController:getIdPermisos" type="service_closure" id=".service_locator.eiiNU0L.App\Controller\FicheroController::getIdPermisos()"/>
         <argument key="App\Controller\FicheroController:create" type="service_closure" id=".service_locator.qXGSpcB.App\Controller\FicheroController::create()"/>
         <argument key="App\Controller\FicheroController:modificar" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\FicheroController::modificar()"/>
+        <argument key="App\Controller\FicheroController:delete" type="service_closure" id=".service_locator.sYw_Iy7.App\Controller\FicheroController::delete()"/>
         <argument key="App\Controller\MeController:edit" type="service_closure" id=".service_locator.vGqPy89.App\Controller\MeController::edit()"/>
+        <argument key="App\Controller\MeController:delete" type="service_closure" id=".service_locator.1PmMkrJ.App\Controller\MeController::delete()"/>
         <argument key="App\Controller\RegistrationController:index" type="service_closure" id=".service_locator..WG8ZO_.App\Controller\RegistrationController::index()"/>
         <argument key="App\Controller\RolController:index" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\RolController::index()"/>
         <argument key="App\Controller\TiposFicheroController:index" type="service_closure" id=".service_locator.3BoFVFw.App\Controller\TiposFicheroController::index()"/>
         <argument key="App\Controller\UserController:index" type="service_closure" id=".service_locator.c.Yvd3o.App\Controller\UserController::index()"/>
         <argument key="App\Controller\UserController:updatePass" type="service_closure" id=".service_locator.4VCqJOp.App\Controller\UserController::updatePass()"/>
+        <argument key="App\Controller\UserController:delete" type="service_closure" id=".service_locator.q7aMtU9.App\Controller\UserController::delete()"/>
       </argument>
     </service>
     <service id=".service_locator.nqEKT7G" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -8756,7 +8795,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.w3xLo7n"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.cziBFUX"/>
     <service id="jms_serializer.authorization_checker" alias="security.authorization_checker" public="true"/>
     <service id="fos_rest.serializer" alias="fos_rest.serializer.jms"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
@@ -8812,10 +8851,12 @@
     <service id=".service_locator.fsPfQhs" alias=".service_locator.eiiNU0L"/>
     <service id=".service_locator.aRsM_rg" alias=".service_locator.qXGSpcB"/>
     <service id=".service_locator.ubY6tbD" alias=".service_locator.vGqPy89"/>
+    <service id=".service_locator.lfZu8he" alias=".service_locator.1PmMkrJ"/>
     <service id=".service_locator.618p4vZ" alias=".service_locator..WG8ZO_"/>
     <service id=".service_locator.UOV1jy9" alias=".service_locator.3BoFVFw"/>
     <service id=".service_locator.d79Y9ph" alias=".service_locator.c.Yvd3o"/>
     <service id=".service_locator.WXDZAJK" alias=".service_locator.4VCqJOp"/>
+    <service id=".service_locator.xvW804Q" alias=".service_locator.q7aMtU9"/>
     <service id=".service_locator.uqiMYGk" alias=".service_locator.TJNRSaV"/>
   </services>
 </container>

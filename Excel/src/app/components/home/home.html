@@ -7,7 +7,7 @@
             <li nz-menu-item nzSelected (click)="filtro.set({})">
                 <span>Todos</span>
             </li>
-            @if (isAdmin()) {
+            @if (this.auth.isAdmin) {
             <li nz-submenu nzTitle="Roles" nzIcon="user" nzOpen>
                 <ul>
                     @for (rol of roles(); track $index) {
@@ -38,25 +38,34 @@
         <nz-content>
             <nz-header>
                 <div nz-row>
-                    @if (isAdmin()) {
+                    @if (this.auth.isAdmin) {
+                    <div nz-col nzSpan="12">
+                        <input nz-input class="border-color-primary" placeholder="Buscar email "
+                            (input)="inputBuscar($event)" />
+                    </div>
                     }@else {
                     <div nz-col nzSpan="12">
                         <app-modal-create-fichero nz-col nzSpan="12" (cargar)="buscar()" />
                     </div>
-                    }
                     <div nz-col nzSpan="12">
-                        <input nz-input placeholder="Buscar nombre fichero" (input)="inputBuscar($event)" />
+                        <input nz-input class="border-color-primary" placeholder="Buscar nombre Fichero"
+                            (input)=" inputBuscar($event)" />
                     </div>
+                    }
                 </div>
             </nz-header>
-            @if (isAdmin()) {
+            @if (this.auth.isAdmin) {
             <nz-table #usersTable [nzData]="users()" [nzLoading]="loading()" [nzPageSize]="10"
-                [nzScroll]="{ x: 'auto',y: '60vh' }">
+                [nzScroll]="{y: '50vh' }">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Rol</th>
-                        <th>Acciones</th>
+                        <th rowSpan="2">Nombre</th>
+                        <th rowSpan="2">Rol</th>
+                        <th colspan="2">Acciones</th>
+                    </tr>
+                    <tr>
+                        <th>Editar Contraseña</th>
+                        <th>Eliminar Usuario</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,23 +76,36 @@
                         <td>
                             <app-modal-edit-user [data]="data" />
                         </td>
+                        <td>
+                            <a nz-button nzType="link" nzDanger nz-popconfirm
+                                nzPopconfirmTitle="Estas seguro que quieres eliminar este usuario?"
+                                (nzOnConfirm)="deleteUser(data.id)">
+                                Eliminar
+                            </a>
+                        </td>
                     </tr>
                     }
                 </tbody>
             </nz-table>
             }@else {
             <nz-table #fichTable [nzData]="ficheros()" [nzLoading]="loading()" [nzPageSize]="10"
-                [nzScroll]="{ x: 'auto',y: '60vh' }">
+                [nzScroll]="{y: '50vh' }">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Acciones</th>
-                        <th>Descripcion</th>
-                        <th>Permiso</th>
-                        <th>Fecha Creacion</th>
-                        <th>Fecha Modificacion</th>
-                        <th>Ultima Subida</th>
-                        <th>Tipo</th>
+                        <th rowspan="2">Nombre</th>
+                        <th colspan="4">Acciones</th>
+                        <th rowspan="2">Descripcion</th>
+                        <th rowspan="2">Permiso</th>
+                        <th rowspan="2">Fecha Creacion</th>
+                        <th rowspan="2">Fecha Modificacion</th>
+                        <th rowspan="2">Ultima Subida</th>
+                        <th rowspan="2">Tipo</th>
+                    </tr>
+                    <tr>
+                        <th>Abrir</th>
+                        <th>Editar</th>
+                        <th>Editar Permisos</th>
+                        <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,11 +114,25 @@
                         <td>{{ data.nombre }}</td>
                         <td>
                             <a nz-button nzType="link" (click)="abrir(data)">Abrir</a>
-                            @if (data.permiso === 3) {
+                        </td>
+                        <td>
+                            @if (data.permiso >= 2) {
                             <app-modal-create-fichero (cargar)="buscar()" [tipo]="1" [data]="data" />
+                            }
+                        </td>
+                        <td>
+                            @if (data.permiso === 3) {
                             <app-modal-permisos [id]="data.id" />
                             }
                         </td>
+                        <td>
+                            @if (data.permiso === 3) {
+                            <a nz-button nzType="link" nzDanger nz-popconfirm
+                                nzPopconfirmTitle="Estas seguro que quieres eliminar este fichero?"
+                                (nzOnConfirm)="deleteFic(data.id)">
+                                Eliminar
+                            </a>
+                            }
                         <td>{{ data.descripcion }}</td>
                         @switch (data.permiso) {
                         @case (1) {

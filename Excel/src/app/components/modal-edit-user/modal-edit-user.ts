@@ -56,8 +56,8 @@ export class ModalEditUser {
         this.message.createBasicMessage('success', "Editado con exito")
         this.visible.set(false);
       } catch (err: any) {
-        if (err.status === 401) {
-          this.message.createBasicMessage('error', "Contrasaeña mal introducida")
+        if (err.status === 400) {
+          this.message.createBasicMessage('error', "Contraseña mal introducida")
         } else {
           this.message.createBasicMessage('error', err.message)
         }

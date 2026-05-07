@@ -38,6 +38,28 @@ class FicheroRepository extends ServiceEntityRepository
             ->setParameter('user', $user);
     }
 
+    public function deleteUser(User $user)
+    {
+        $ids = $this->createQueryBuilder('f')
+            ->select('f.id')
+            ->join('f.accesos', 'a')
+            ->where('a.user = :user')
+            ->andWhere('a.permiso = :permiso')
+            ->setParameter('user', $user)
+            ->setParameter('permiso', 3)
+            ->getQuery()
+            ->getArrayResult();
+
+        if (!empty($ids)) {
+            $this->createQueryBuilder('f')
+                ->delete()
+                ->where('f.id IN (:ids)')
+                ->setParameter('ids', array_column($ids, 'id'))
+                ->getQuery()
+                ->execute();
+        }
+    }
+
 
     //    /**
     //     * @return Fichero[] Returns an array of Fichero objects

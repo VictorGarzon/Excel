@@ -25,10 +25,11 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { FormsModule } from "@angular/forms";
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @Component({
   selector: 'app-home',
-  imports: [NzBreadCrumbModule, NzIconModule, NzMenuModule, NzLayoutModule, NzButtonModule, NzTableModule, NzDividerModule, NzTypographyModule, ModalCreateFichero, ModalPermisos, ModalEditUser, NzInputModule, FormsModule, NzGridModule, NzFlexModule],
+  imports: [NzBreadCrumbModule, NzIconModule, NzMenuModule, NzLayoutModule, NzButtonModule, NzTableModule, NzDividerModule, NzTypographyModule, ModalCreateFichero, ModalPermisos, ModalEditUser, NzInputModule, FormsModule, NzGridModule, NzFlexModule, NzPopconfirmModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -37,7 +38,6 @@ export class Home {
   ficheroService = inject(FicheroService)
   router = inject(Router)
   auth = inject(AuthService)
-  user = toSignal(this.auth.user$)
 
   ficheros = signal<[Fichero] | []>([])
 
@@ -58,11 +58,10 @@ export class Home {
       this.buscar();
     })
   }
-  isAdmin = computed(() => this.user()?.rol === "ROLE_ADMIN")
-
+  
   buscar() {
     let filtro = this.params();
-    if (this.isAdmin()) {
+    if (this.auth.isAdmin) {
       this.buscarUsers(filtro)
     } else {
       this.buscarFicheros(filtro)
@@ -70,7 +69,7 @@ export class Home {
   }
 
   buscarFiltros() {
-    if (this.isAdmin()) {
+    if (this.auth.isAdmin) {
       this.buscarRoles()
     } else {
 
@@ -129,10 +128,33 @@ export class Home {
 
   inputBuscar(event: any) {
     let value = event.target.value
-    if (this.isAdmin()) {
+    if (this.auth.isAdmin) {
       this.filtro.update(f => ({ ...f, email: value }))
     } else {
       this.filtro.update(f => ({ ...f, nombre: value }))
+    }
+  }
+  async deleteFic(id: number) {
+    try {
+      await firstValueFrom(
+        this.api.delete(`fichero/${id}`)
+      )
+      this.buscar()
+      this.message.createBasicMessage('success', 'Fichero eliminado')
+    } catch (err: any) {
+      this.message.createBasicMessage('error', err.message)
+    }
+  }
+
+  async deleteUser(id: number) {
+    try {
+      await firstValueFrom(
+        this.api.delete(`user/${id}`)
+      )
+      this.buscar()
+      this.message.createBasicMessage('success', 'Usuario eliminado')
+    } catch (err: any) {
+      this.message.createBasicMessage('error', err.message)
     }
   }
 }

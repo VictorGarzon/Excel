@@ -11,10 +11,11 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { firstValueFrom } from 'rxjs';
 import { MessageService } from '../../services/message.service';
 import { ApiService } from '../../services/api.service';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @Component({
   selector: 'app-profile',
-  imports: [NzLayoutModule, NzFlexModule, NzButtonModule, NzFormModule, NzInputModule, ɵInternalFormsSharedModule, ReactiveFormsModule],
+  imports: [NzLayoutModule, NzFlexModule, NzButtonModule, NzFormModule, NzInputModule, ɵInternalFormsSharedModule, ReactiveFormsModule, NzPopconfirmModule],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -81,7 +82,7 @@ export class Profile {
         this.isRequiredEmail.set(false)
       }
       if (password || newpassword) {
-        if (!password || !newpassword) {
+        if (!(!password || !newpassword)) {
           return { required: true };
         }
         this.isRequired.set(true)
@@ -110,9 +111,7 @@ export class Profile {
         this.message.createBasicMessage('success', "Edicion existoso")
       } catch (err: any) {
         if (err.status === 400) {
-          this.message.createBasicMessage('error', err.error)
-        } else if (err.status === 401) {
-          this.message.createBasicMessage('error', "Contraseña mal")
+          this.message.createBasicMessage('error', 'Contraseña mal')
         } else if (err.status === 409) {
           this.message.createBasicMessage('error', "Email en uso")
         } else {
@@ -125,5 +124,17 @@ export class Profile {
     this.validateForm.markAllAsTouched();
     this.loading.set(false);
     this.validateForm.reset()
+  }
+
+  async deleteUser() {
+    try {
+      await firstValueFrom(
+        this.api.delete(`me`)
+      )
+      this.message.createBasicMessage('success', 'Usuario eliminado')
+      this.auth.logout()
+    } catch (err: any) {
+      this.message.createBasicMessage('error', err.message)
+    }
   }
 }

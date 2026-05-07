@@ -32,7 +32,12 @@ export class AuthService {
     return this.api.post("login_check", credentials).pipe(
       tap(response => localStorage.setItem('accessToken', response.token)),
       switchMap(() => this.api.get("me")),
-      tap(user => this.userSubject.next(user)),
+      tap(user => {
+        this.userSubject.next(user)
+        if (this.isAdmin) {
+          this.router.navigate(['/home']);
+        }
+      }),
     );
   }
 
@@ -61,5 +66,9 @@ export class AuthService {
 
   public setUser(user: any) {
     this.userSubject.next(user)
+  }
+
+  get isAdmin(): boolean {
+    return this.userSubject.value?.rol === "ROLE_ADMIN";
   }
 }

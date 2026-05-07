@@ -1,12 +1,19 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { catchError, Observable, throwError, timeout } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   private url = "http://localhost:8000/api/";
+  private injector = inject(Injector);
+
+  private get authService() {
+    return this.injector.get(AuthService);
+  }
+
   constructor(private http: HttpClient) { }
 
   buscar(observable: Observable<any>): Observable<any> {
@@ -18,6 +25,12 @@ export class ApiService {
         }
         if (err.name === 'TimeoutError') {
           return throwError(() => new Error('No es posible conectarse por tiempo'));
+        }
+        if (err.status === 401) {
+          if (this.authService.isAuthenticated) {
+            this.authService.logout()
+            return throwError(() => new Error('Se ha termido el tiempo de session'));
+          }
         }
         if (err.status === 406) {
           return throwError(() => new Error('No es posible conectarse'));
