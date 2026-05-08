@@ -1,15 +1,15 @@
 <nz-layout class="layout">
-    <nz-sider nzTheme="light">
-        <nz-header>
-            <span class="ant-primary-color">Filtros</span>
-        </nz-header>
+    <nz-sider class="sider" nzTheme="light">
+        @if (auth.isAdmin) {
+        <div>
+            <input nz-input class="border-color-primary" placeholder="Buscar email " (input)="inputBuscar($event)" />
+        </div>
         <ul nz-menu class="sider-menu" nzMode="inline">
-            <li nz-menu-item nzSelected (click)="filtro.set({})">
-                <span>Todos</span>
-            </li>
-            @if (this.auth.isAdmin) {
             <li nz-submenu nzTitle="Roles" nzIcon="user" nzOpen>
                 <ul>
+                    <li nz-menu-item nzSelected (click)="filtro.update(f=>({...f,rol:''}))">
+                        <span>Todo</span>
+                    </li>
                     @for (rol of roles(); track $index) {
                     <li nz-menu-item (click)="filtro.update(f=>({...f,rol:rol?.id}))">
                         <span>{{rol?.nombre}}</span>
@@ -17,9 +17,44 @@
                     }
                 </ul>
             </li>
-            }@else {
+        </ul>
+        }@else {
+        <div>
+            <div>
+                <input nz-input class="border-color-primary" placeholder="Buscar nombre Fichero"
+                    (input)="inputBuscar($event)" />
+            </div>
+            <p class="ant-primary-color" style="padding: 1em ;  margin: 0;">
+                Fecha de Modificación
+            </p>
+            <div>
+                <nz-date-picker [(ngModel)]="fecha_mod_st"
+                    (ngModelChange)="filtro.update(f=>({...f, fecha_mod_st: formatDate($event)}))" nzFormat="dd/MM/yyyy"
+                    nzPlaceHolder="Inicial" style="width: 100%;" />
+                <nz-date-picker [(ngModel)]="fecha_mod_en"
+                    (ngModelChange)="filtro.update(f=>({...f, fecha_mod_en: formatDate($event)}))" nzFormat="dd/MM/yyyy"
+                    nzPlaceHolder="Final" style="width: 100%;" />
+            </div>
+        </div>
+        <div>
+            <p class="ant-primary-color" style="padding: 1em ; margin: 0;">
+                Fecha de Creación
+            </p>
+            <div>
+                <nz-date-picker [(ngModel)]="fecha_cre_st"
+                    (ngModelChange)="filtro.update(f=>({...f, fecha_cre_st: formatDate($event)}))" nzFormat="dd/MM/yyyy"
+                    nzPlaceHolder="Inicial" style="width: 100%;" />
+                <nz-date-picker [(ngModel)]="fecha_cre_en"
+                    (ngModelChange)="filtro.update(f=>({...f, fecha_cre_en: formatDate($event)}))" nzFormat="dd/MM/yyyy"
+                    nzPlaceHolder="Final" style="width: 100%;" />
+            </div>
+        </div>
+        <ul nz-menu class="sider-menu" nzMode="inline">
             <li nz-submenu nzTitle="Permisos" nzIcon="user" nzOpen>
                 <ul>
+                    <li nz-menu-item nzSelected (click)="filtro.update(f=>({...f,permiso:''}))">
+                        <span>Todo</span>
+                    </li>
                     <li nz-menu-item (click)="filtro.update(f=>({...f,permiso:3}))">
                         <span>Creador</span>
                     </li>
@@ -31,32 +66,35 @@
                     </li>
                 </ul>
             </li>
-            }
         </ul>
+        <ul nz-menu class="sider-menu" nzMode="inline">
+            <li nz-submenu nzTitle="Tipo" nzIcon="file" nzOpen>
+                <ul>
+                    <li nz-menu-item nzSelected (click)="filtro.update(f=>({...f,tipo:''}))">
+                        <span>Todo</span>
+                    </li>
+                    @for (tipo of tipos(); track $index) {
+                    <li nz-menu-item (click)="filtro.update(f=>({...f,tipo:tipo?.id}))">
+                        <span>{{tipo?.nombre}}</span>
+                    </li>
+                    }
+                </ul>
+            </li>
+        </ul>
+        }
     </nz-sider>
     <nz-layout class="inner-layout">
         <nz-content>
-            <nz-header>
-                <div nz-row>
-                    @if (this.auth.isAdmin) {
-                    <div nz-col nzSpan="12">
-                        <input nz-input class="border-color-primary" placeholder="Buscar email "
-                            (input)="inputBuscar($event)" />
-                    </div>
-                    }@else {
-                    <div nz-col nzSpan="12">
-                        <app-modal-create-fichero nz-col nzSpan="12" (cargar)="buscar()" />
-                    </div>
-                    <div nz-col nzSpan="12">
-                        <input nz-input class="border-color-primary" placeholder="Buscar nombre Fichero"
-                            (input)=" inputBuscar($event)" />
-                    </div>
-                    }
+            <nz-header nz-row nzAlign="middle" nzJustify="space-evenly" [nzGutter]="[8, 8]">
+                @if (!auth.isAdmin) {
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="6" [nzLg]="5">
+                    <app-modal-create-fichero (cargar)="buscar()" [tipos]="tipos()" />
                 </div>
+                }
             </nz-header>
             @if (this.auth.isAdmin) {
-            <nz-table #usersTable [nzData]="users()" [nzLoading]="loading()" [nzPageSize]="10"
-                [nzScroll]="{y: '50vh' }">
+            <nz-table #usersTable [nzData]="users()" [nzLoading]="loading()" [nzPageSize]="10" [nzScroll]="{x:'auto' }"
+                style="margin-top: 1em;">
                 <thead>
                     <tr>
                         <th rowSpan="2">Nombre</th>
@@ -89,23 +127,20 @@
             </nz-table>
             }@else {
             <nz-table #fichTable [nzData]="ficheros()" [nzLoading]="loading()" [nzPageSize]="10"
-                [nzScroll]="{y: '50vh' }">
+                [nzScroll]="{x:'auto' }" style="margin-top: 1em;">
                 <thead>
                     <tr>
-                        <th rowspan="2">Nombre</th>
-                        <th colspan="4">Acciones</th>
-                        <th rowspan="2">Descripcion</th>
-                        <th rowspan="2">Permiso</th>
-                        <th rowspan="2">Fecha Creacion</th>
-                        <th rowspan="2">Fecha Modificacion</th>
-                        <th rowspan="2">Ultima Subida</th>
-                        <th rowspan="2">Tipo</th>
-                    </tr>
-                    <tr>
+                        <th>Nombre</th>
                         <th>Abrir</th>
                         <th>Editar</th>
                         <th>Editar Permisos</th>
                         <th>Eliminar</th>
+                        <th>Descripcion</th>
+                        <th>Permiso</th>
+                        <th>Fecha Creacion</th>
+                        <th>Fecha Modificacion</th>
+                        <th>Ultima Subida</th>
+                        <th>Tipo</th>
                     </tr>
                 </thead>
                 <tbody>

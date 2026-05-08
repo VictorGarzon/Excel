@@ -40,6 +40,36 @@ class FicheroController extends AbstractController
                 $queryFichero->andWhere('f.nombre like :nombre');
                 $queryFichero->setParameter('nombre', '%' . $nombre . '%');
             }
+            $tipo = $request->query->get('tipo');
+            if ($tipo) {
+                $queryFichero->andWhere('f.tipo_fichero = :tipo');
+                $queryFichero->setParameter('tipo', $tipo);
+            }
+            $fecha_mod_st = $request->query->get('fecha_mod_st');
+            if ($fecha_mod_st) {
+                $fecha = new DateTime($fecha_mod_st);
+                $queryFichero->andWhere('f.fecha_mod >= :fecha_mod_st');
+                $queryFichero->setParameter('fecha_mod_st', $fecha);
+            }
+            $fecha_mod_en = $request->query->get('fecha_mod_en');
+            if ($fecha_mod_en) {
+                $fecha = new DateTime($fecha_mod_en);
+                $queryFichero->andWhere('f.fecha_mod <= :fecha_mod_en');
+                $queryFichero->setParameter('fecha_mod_en', $fecha);
+            }
+            $fecha_cre_st = $request->query->get('fecha_cre_st');
+            if ($fecha_cre_st) {
+                $fecha = new DateTime($fecha_cre_st);
+                $queryFichero->andWhere('f.fecha_creacion >= :fecha_cre_st');
+                $queryFichero->setParameter('fecha_cre_st', $fecha);
+            }
+            $fecha_cre_en = $request->query->get('fecha_cre_en');
+            if ($fecha_cre_en) {
+                $fecha = new DateTime($fecha_cre_en);
+                $queryFichero->andWhere('f.fecha_creacion <= :fecha_cre_en');
+                $queryFichero->setParameter('fecha_cre_en', $fecha);
+            }
+
             $ficheros = $queryFichero->getQuery()->getResult();
             $data = [];
             foreach ($ficheros as $fichero) {

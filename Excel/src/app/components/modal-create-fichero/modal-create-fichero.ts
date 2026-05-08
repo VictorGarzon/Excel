@@ -32,11 +32,8 @@ export class ModalCreateFichero {
 
   visible = model(false);
   loading = signal(false);
-  validating = signal(true)
-  tipos = signal<[{
-    id: number,
-    nombre: string
-  }] | null>(null)
+
+  tipos = input<any>()
 
   get buttonType(): NzButtonType {
     return this.tipo() === 0 ? 'primary' : 'link';
@@ -44,8 +41,11 @@ export class ModalCreateFichero {
 
   showModal(): void {
     this.visible.set(true);
-    if (this.tipo() == 0 && !this.tipos()) {
-      this.buscarTipos();
+    if (this.tipo() == 0) {
+      let defaultTipo = this.tipos()[0].id
+      this.createForm.patchValue({
+        tipo: defaultTipo
+      })
     } else if (this.tipo() == 1) {
       this.editForm.patchValue({
         nombre: this.data().nombre,
@@ -65,7 +65,7 @@ export class ModalCreateFichero {
       Validators.required,
     ]),
     descripcion: this.fb.control(''),
-    tipo: this.fb.control(this.tipos()?this.tipos()![0].id:'', [
+    tipo: this.fb.control(0, [
       Validators.required,
     ]),
   });
@@ -76,22 +76,6 @@ export class ModalCreateFichero {
     ]),
     descripcion: this.fb.control('')
   });
-
-  async buscarTipos() {
-    try {
-      this.validating.set(true)
-      let tipos = await firstValueFrom(
-        this.api.get("tipos")
-      )
-      this.tipos.set(tipos);
-      this.createForm.patchValue({
-        tipo: tipos[0].id
-      })
-      this.validating.set(false)
-    } catch (err: any) {
-      this.message.createBasicMessage('error', err.message)
-    }
-  }
 
   async submitForm() {
     if ((this.tipo() == 0 ? this.createForm : this.editForm).valid) {

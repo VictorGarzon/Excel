@@ -17,7 +17,6 @@ import { FicheroService } from '../../services/fichero.service';
 import { Router } from '@angular/router'
 import { ModalPermisos } from "../modal-permisos/modal-permisos";
 import { AuthService } from '../../services/auth.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { User } from '../../models/user';
 import { ModalEditUser } from "../modal-edit-user/modal-edit-user";
 
@@ -26,10 +25,13 @@ import { FormsModule } from "@angular/forms";
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { formatDate } from '@angular/common';
+
 
 @Component({
   selector: 'app-home',
-  imports: [NzBreadCrumbModule, NzIconModule, NzMenuModule, NzLayoutModule, NzButtonModule, NzTableModule, NzDividerModule, NzTypographyModule, ModalCreateFichero, ModalPermisos, ModalEditUser, NzInputModule, FormsModule, NzGridModule, NzFlexModule, NzPopconfirmModule],
+  imports: [NzDatePickerModule, NzBreadCrumbModule, NzIconModule, NzMenuModule, NzLayoutModule, NzButtonModule, NzTableModule, NzDividerModule, NzTypographyModule, ModalCreateFichero, ModalPermisos, ModalEditUser, NzInputModule, FormsModule, NzGridModule, NzFlexModule, NzPopconfirmModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -42,7 +44,13 @@ export class Home {
   ficheros = signal<[Fichero] | []>([])
 
   users = signal<[User] | []>([])
+
   roles = signal<any>([])
+  tipos = signal<any>([])
+  fecha_mod_st = signal<Date | null>(null)
+  fecha_mod_en = signal<Date | null>(null)
+  fecha_cre_st = signal<Date | null>(null)
+  fecha_cre_en = signal<Date | null>(null)
 
   loading = signal<boolean>(true)
 
@@ -58,7 +66,7 @@ export class Home {
       this.buscar();
     })
   }
-  
+
   buscar() {
     let filtro = this.params();
     if (this.auth.isAdmin) {
@@ -72,7 +80,7 @@ export class Home {
     if (this.auth.isAdmin) {
       this.buscarRoles()
     } else {
-
+      this.buscarTipos()
     }
   }
 
@@ -111,6 +119,24 @@ export class Home {
     } catch (err: any) {
       this.message.createBasicMessage('error', err.message)
     }
+  }
+
+  async buscarTipos() {
+    try {
+      let tipos = await firstValueFrom(
+        this.api.get("tipos")
+      )
+      this.tipos.set(tipos);
+    } catch (err: any) {
+      this.message.createBasicMessage('error', err.message)
+    }
+  }
+
+  formatDate(date: string) {
+    if (date) {
+      return formatDate(date, 'yyyy-MM-dd', 'en-US')
+    }
+    return ''
   }
 
   async abrir(fichero: Fichero) {
