@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output, signal, untracked } from '@angular/core';
+import { Component, effect, inject, input, output, signal, TemplateRef, untracked, viewChild, ViewChild } from '@angular/core';
 import { NzHeaderComponent } from "ng-zorro-antd/layout";
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzButtonComponent } from "ng-zorro-antd/button";
@@ -10,10 +10,12 @@ import { NzFloatButtonModule } from 'ng-zorro-antd/float-button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { FicheroService } from '../../services/fichero.service';
+import { NzDrawerModule, NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
+import { NgTemplateOutlet } from "@angular/common";
 
 @Component({
   selector: 'app-header-tabla',
-  imports: [NzHeaderComponent, NzGridModule, NzButtonComponent, NzIconModule, NzFlexModule, NzFloatButtonModule, NzFormModule, NzInputModule],
+  imports: [NzHeaderComponent, NzDrawerModule, NzGridModule, NzButtonComponent, NzIconModule, NzFlexModule, NzFloatButtonModule, NzFormModule, NzInputModule, NgTemplateOutlet],
   templateUrl: './header-tabla.html',
   styleUrl: './header-tabla.css',
 })
@@ -36,7 +38,7 @@ export class HeaderTabla {
   tipo = signal('');
   mode = signal(0);
 
-  constructor() {
+  constructor(private drawerService: NzDrawerService) {
     effect(() => {
       if (this.mode() > 2) {
         this.setSelect.emit(true)
@@ -81,5 +83,37 @@ export class HeaderTabla {
 
   cambiarNombre(event: any) {
     this.ficheroService.setNombre(event.target.value.trim())
+  }
+
+  @ViewChild('Acciones', { static: false }) Acciones?: TemplateRef<{
+    $implicit: { isVertical: boolean };
+    drawerRef: NzDrawerRef<string>;
+  }>;
+
+  openAcciones() {
+    this.drawerService.create({
+      nzClosable: false,
+      nzContent: this.Acciones,
+      nzContentParams: {
+        isVertical: true
+      },
+      nzPlacement: 'right',
+      nzWidth: 'auto'
+    });
+  }
+
+  @ViewChild('TipoFun', { static: false }) TipoFun?: TemplateRef<{
+    $implicit: { isVertical: boolean };
+    drawerRef: NzDrawerRef<string>;
+  }>;
+  openFunciones() {
+    this.drawerService.create({
+      nzClosable: false,
+      nzContent: this.TipoFun,
+      nzContentParams: {
+        isVertical: true
+      },
+      nzWidth: 'auto'
+    });
   }
 }

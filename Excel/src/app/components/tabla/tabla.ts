@@ -7,19 +7,19 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { MessageService } from '../../services/message.service';
 import { FicheroService } from '../../services/fichero.service';
-import { firstValueFrom, switchMap, tap } from 'rxjs';
+import { firstValueFrom, switchMap, tap, timer } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import { HeaderTabla } from "../header-tabla/header-tabla";
 import { saveCanDeactivate } from '../../guards/save-guard';
-
-
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+
 
 @Component({
   selector: 'app-tabla',
-  imports: [Fila, NzLayoutComponent, NzContentComponent, NzGridModule, NzIconModule, NzFlexModule, HeaderTabla, NzAlertModule, NzButtonModule, NzSpaceModule],
+  imports: [Fila, NzLayoutComponent, NzContentComponent, NzGridModule, NzIconModule, NzFlexModule, HeaderTabla, NzAlertModule, NzButtonModule, NzSpaceModule, NzSpinModule],
   templateUrl: './tabla.html',
   styleUrl: './tabla.css',
 })
@@ -67,7 +67,15 @@ export class Tabla implements saveCanDeactivate {
     effect(() => {
       this.ficheroService.cargado.set(this.cargado())
     })
+    effect(() => {
+      if (this.cargado()) {
+        timer(1500).subscribe(() => {
+          this.spinning.set(false);
+        });
+      }
+    });
   }
+  spinning = signal(true)
 
   canDeactivate(): boolean {
     if (this.ficheroService.modificado) {

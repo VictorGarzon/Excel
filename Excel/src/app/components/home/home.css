@@ -3,7 +3,8 @@
 .sider {
     background-color: var(--secundary-color);
     overflow-y: auto;
-    height: 100vh;
+    overflow-x: hidden;
+    height: 90vh;
     position: sticky;
     top: 0;
 }

@@ -5,39 +5,43 @@
     <input #InputFile type="file" accept=".json" style="display: none;" (change)="onFileSelected($event)">
     <nz-content nz-row nzJustify="center" nzAlign="middle">
         <div nz-col class="inner-content">
-            <table id="tabla-main">
-                <thead>
-                    <tr>
-                        @for (n of [].constructor(this.tamColumna()! + 1 + 2 + 1); track $index) {
-                        @if (!$first) {
-                        <th>{{numeroALetras($index)}}</th>
-                        }@else {
-                        <th></th>
+            <nz-spin [nzSpinning]="spinning()" nzSize="large">
+                <table id="tabla-main">
+                    <thead>
+                        <tr>
+                            @for (n of [].constructor(this.tamColumna()! + 1 + 2 + 1); track $index) {
+                            @if (!$first) {
+                            <th>{{numeroALetras($index)}}</th>
+                            }@else {
+                            <th></th>
+                            }
+                            }
+                        </tr>
+                        <tr app-fila [data]="{head:cargado()?(functions()):(headers())}" [modoSelect]="modeSelect()"
+                            (selecionado)="onSelect($event)" [tamColumna]="tamColumna()" (ampliar)="ampliarColum()"
+                            [cargado]="cargado()" [disabled]="!ficheroService.permiso()">
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (n of arrayFila(); track $index) {
+                        @let fila = buscarFila($index);
+                        <tr app-fila [num]="$index +1"
+                            [data]="{body:cargado()?functions():(fila?.columnas ?? functions())}"
+                            [modoSelect]="modeSelect()" (selecionado)="onSelect($event)" [tamColumna]="tamColumna()"
+                            (click)="!modeSelect() && $index >= (tamFila()! + 1) && ampliarFila()"
+                            (ampliar)="ampliarColum()" [cargado]="cargado()" [ultimo]="!cargado() && $last"
+                            (carout)="bodyCargado()" [disabled]="!ficheroService.permiso()">
+                        </tr>
                         }
-                        }
-                    </tr>
-                    <tr app-fila [data]="{head:cargado()?(functions()):(headers())}"
-                        [modoSelect]="modeSelect()" (selecionado)="onSelect($event)" [tamColumna]="tamColumna()"
-                        (ampliar)="ampliarColum()" [cargado]="cargado()" [disabled]="!ficheroService.permiso()">
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (n of arrayFila(); track $index) {
-                    @let fila = buscarFila($index);
-                    <tr app-fila [num]="$index +1" [data]="{body:cargado()?functions():(fila?.columnas ?? functions())}"
-                        [modoSelect]="modeSelect()" (selecionado)="onSelect($event)" [tamColumna]="tamColumna()"
-                        (click)="!modeSelect() && $index >= (tamFila()! + 1) && ampliarFila()"
-                        (ampliar)="ampliarColum()" [cargado]="cargado()" [ultimo]="!cargado() && $last"
-                        (carout)="bodyCargado()" [disabled]="!ficheroService.permiso()">
-                    </tr>
-                    }
-                </tbody>
-                <tfoot>
-                    <tr app-fila [data]="{footer:footerColumnas()}" [tamColumna]="tamColumna()"
-                        (ampliar)="ampliarColum()" [cargado]="cargado()" [modoSelect]="modeSelect()" [disabled]="true">
-                    </tr>
-                </tfoot>
-            </table>
+                    </tbody>
+                    <tfoot>
+                        <tr app-fila [data]="{footer:footerColumnas()}" [tamColumna]="tamColumna()"
+                            (ampliar)="ampliarColum()" [cargado]="cargado()" [modoSelect]="modeSelect()"
+                            [disabled]="true">
+                        </tr>
+                    </tfoot>
+                </table>
+            </nz-spin>
         </div>
     </nz-content>
 </nz-layout>

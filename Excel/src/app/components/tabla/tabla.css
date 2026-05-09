@@ -17,6 +17,10 @@ nz-content {
     height: 75vh;
 }
 
+::ng-deep .ant-spin-blur::after {
+    opacity: 1;
+}
+
 #tabla-main {
     position: relative;
     width: auto;
