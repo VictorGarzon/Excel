@@ -1,3 +1,7 @@
+nz-header{
+    width: 100vw;
+    overflow-x: auto;
+}
 h1{
     font-size: 2vw;
 }

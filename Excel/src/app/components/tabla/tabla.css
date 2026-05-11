@@ -53,6 +53,7 @@ nz-content {
     height: 50px;
     padding: 0;
     margin: 0;
+    position: relative;
     box-shadow: inset 0 -1px 0 0 var(--secundary-color), inset 0 1px 0 0 var(--secundary-color), inset -1px 0 0 0 var(--secundary-color), inset 1px 0 0 0 var(--secundary-color);
 }
 
@@ -70,7 +71,7 @@ nz-content {
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding: 0 0.5em;
     border: none;
     text-align: center;
     background-color: transparent;

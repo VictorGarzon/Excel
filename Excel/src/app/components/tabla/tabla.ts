@@ -343,68 +343,76 @@ export class Tabla implements saveCanDeactivate {
 
   // descargar 
   download() {
-    const tabla = this.formatUpload();
-    const data = JSON.stringify(tabla, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
+    if (!this.ficheroService.modificado) {
+      this.message.createBasicMessage('warning', 'Sin cambios')
+    } else {
+      const tabla = this.formatUpload();
+      const data = JSON.stringify(tabla, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
 
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'datos.json';
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'datos.json';
 
-    link.click();
+      link.click();
 
-    window.URL.revokeObjectURL(url);
-    this.ficheroService.modificado = false;
+      window.URL.revokeObjectURL(url);
+      this.ficheroService.modificado = false;
+    }
   }
 
   //guardar base de datos
   async uploadDB(acept: boolean = false) {
-    try {
-      let fichero = this.ficheroService.fichero();
-      if (!fichero?.nombre) {
-        this.message.createBasicMessage('error', "Se necesita nombre")
-      } else {
-        const data = this.formatUpload();
-        let newData: any = {
-          nombre: fichero!.nombre,
-          data: data
-        }
-        if (fichero.id) {
-          try {
-            this.closedAlert();
-            newData.fecha_mod = fichero.fecha_mod
-            newData.acept = acept;
-            let fecha_mod = await firstValueFrom(
-              this.api.patch('fichero/' + fichero.id, newData)
-            )
-            untracked(() => this.ficheroService.setData(data))
-            untracked(() => this.ficheroService.setFechMod(fecha_mod))
-            this.message.createBasicMessage('success', "Se ha guardado")
-          } catch (err: any) {
-            if (err.status == 409) {
-              this.showAlert();
-            } else {
-              throw err
-            }
-          }
+    if (!this.ficheroService.modificado) {
+      this.message.createBasicMessage('warning', 'Sin cambios')
+    } else {
+      try {
+        let fichero = this.ficheroService.fichero();
+        if (!fichero?.nombre) {
+          this.message.createBasicMessage('error', "Se necesita nombre")
         } else {
-          newData.tipo = 1;
-          await firstValueFrom(
-            this.api.post('fichero', newData).pipe(
-              switchMap((id) => this.api.get('fichero/' + id)),
-              tap(f => untracked(() => this.ficheroService.fichero.set(f))),
+          const data = this.formatUpload();
+          let newData: any = {
+            nombre: fichero!.nombre,
+            data: data
+          }
+          if (fichero.id) {
+            try {
+              this.closedAlert();
+              newData.fecha_mod = fichero.fecha_mod
+              newData.acept = acept;
+              let fecha_mod = await firstValueFrom(
+                this.api.patch('fichero/' + fichero.id, newData)
+              )
+              untracked(() => this.ficheroService.setData(data))
+              untracked(() => this.ficheroService.setFechMod(fecha_mod))
+              this.message.createBasicMessage('success', "Se ha guardado")
+            } catch (err: any) {
+              if (err.status == 409) {
+                this.showAlert();
+              } else {
+                throw err
+              }
+            }
+          } else {
+            newData.tipo = 1;
+            await firstValueFrom(
+              this.api.post('fichero', newData).pipe(
+                switchMap((id) => this.api.get('fichero/' + id)),
+                tap(f => untracked(() => this.ficheroService.fichero.set(f))),
+              )
             )
-          )
-          this.message.createBasicMessage('success', "Se ha creado un nuevo fichero")
+            this.message.createBasicMessage('success', "Se ha creado un nuevo fichero")
+          }
+          this.ficheroService.modificado = false;
         }
-        this.ficheroService.modificado = false;
-      }
-    } catch (err: any) {
-      if (err.status == 409) {
+      } catch (err: any) {
+        if (err.status == 409) {
 
-      } else {
-        this.message.createBasicMessage('error', err.message)
+        } else {
+          this.message.createBasicMessage('error', err.message)
+        }
       }
     }
   }

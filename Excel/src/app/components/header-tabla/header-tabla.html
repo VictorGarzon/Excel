@@ -105,8 +105,23 @@
 
 <ng-template #TipoFun let-data let-drawerRef="drawerRef">
     <div nz-col nz-flex [nzVertical]="data?.isVertical" nzGap="middle">
-        <button nz-button nzType="default" (click)="setFuncion('suma')" (click)="drawerRef.close()">Sumar</button>
-        <button nz-button nzType="default" (click)="setFuncion('resta')" (click)="drawerRef.close()">Restar</button>
-        <button nz-button nzType="primary" nzDanger (click)="setFuncion('')" (click)="drawerRef.close()">Quitar</button>
+        <button nz-button nzType="primary" nzDanger (click)="setFuncion('')"
+            (click)="data?.isVertical && drawerRef.close()">Quitar</button>
+        <button nz-button nzType="default" (click)="setFuncion('suma')"
+            (click)="data?.isVertical && drawerRef.close()">Sumar</button>
+        <button nz-button nzType="default" (click)="setFuncion('resta')"
+            (click)="data?.isVertical && drawerRef.close()">Restar</button>
+        <button nz-button nzType="default" (click)="setFuncion('multiplicacion')"
+            (click)="data?.isVertical && drawerRef.close()">Multiplicacion</button>
+        <button nz-button nzType="default" (click)="setFuncion('division')"
+            (click)="data?.isVertical && drawerRef.close()">Division</button>
+        <button nz-button nzType="default" (click)="setFuncion('promedio')"
+            (click)="data?.isVertical && drawerRef.close()">Promedio</button>
+        @if (this.tipo() === 'f') {
+        <button nz-button nzType="default" (click)="setFuncion('dias')"
+            (click)="data?.isVertical && drawerRef.close()">Diferencia de fechas en dias</button>
+        <button nz-button nzType="default" (click)="setFuncion('meses')"
+            (click)="data?.isVertical && drawerRef.close()">Diferencia de fechas en meses</button>
+        }
     </div>
 </ng-template>
