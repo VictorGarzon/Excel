@@ -286,7 +286,7 @@
     </parameter>
     <parameter key="security.logout_uris" type="collection"/>
     <parameter key="lexik_jwt_authentication.pass_phrase">%env(JWT_PASSPHRASE)%</parameter>
-    <parameter key="lexik_jwt_authentication.token_ttl">3600</parameter>
+    <parameter key="lexik_jwt_authentication.token_ttl">86400</parameter>
     <parameter key="lexik_jwt_authentication.clock_skew">0</parameter>
     <parameter key="lexik_jwt_authentication.allow_no_expiration">false</parameter>
     <parameter key="lexik_jwt_authentication.user_id_claim">username</parameter>
@@ -5589,7 +5589,7 @@
     <service id="lexik_jwt_authentication.jws_provider.lcobucci" class="Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\LcobucciJWSProvider">
       <argument type="service" id="lexik_jwt_authentication.key_loader.raw"/>
       <argument>RS256</argument>
-      <argument>3600</argument>
+      <argument>86400</argument>
       <argument>0</argument>
       <argument>false</argument>
     </service>

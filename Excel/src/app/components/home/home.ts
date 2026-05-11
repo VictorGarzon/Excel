@@ -183,4 +183,79 @@ export class Home {
       this.message.createBasicMessage('error', err.message)
     }
   }
+
+  FicheroColumns: any[] = [
+    {
+      name: 'Nombre',
+      sortOrder: null,
+      sortFn: (a: Fichero, b: Fichero) => a.nombre.localeCompare(b.nombre),
+    },
+    {
+      name: 'Abrir',
+    },
+    {
+      name: 'Editar',
+    },
+    {
+      name: 'Editar Permisos',
+    },
+    {
+      name: 'Eliminar',
+    },
+    {
+      name: 'Descripcion',
+    },
+    {
+      name: 'Permiso',
+      sortOrder: null,
+      sortFn: (a: Fichero, b: Fichero) => a.permiso - b.permiso,
+    },
+    {
+      name: 'Fecha Creacion',
+      sortOrder: null,
+      sortFn: (a: Fichero, b: Fichero) => {
+        const aF: any = new Date(a.fecha_creacion)
+        const bF: any = new Date(b.fecha_creacion)
+        return aF - bF;
+      },
+    },
+    {
+      name: 'Fecha Modificacion',
+      sortOrder: 'descend',
+      sortFn: (a: Fichero, b: Fichero) => {
+        const aF: any = new Date(a.fecha_mod)
+        const bF: any = new Date(b.fecha_mod)
+        return aF - bF;
+      },
+    },
+    {
+      name: 'Ultima Subida',
+      sortOrder: null,
+      sortFn: (a: Fichero, b: Fichero) => a.ultima_subida.localeCompare(b.ultima_subida),
+    },
+    {
+      name: 'Tipo',
+      sortOrder: null,
+      sortFn: (a: Fichero, b: Fichero) => a.tipo.localeCompare(b.tipo),
+    },
+  ];
+
+  UserColumns: any[] = [
+    {
+      name: 'Nombre',
+      sortOrder: null,
+      sortFn: (a: User, b: User) => a.email.localeCompare(b.email),
+    },
+    {
+      name: 'Rol',
+      sortOrder: null,
+      sortFn: (a: User, b: User) => a.rol.localeCompare(b.rol),
+    },
+    {
+      name: 'Editar Contraseña'
+    },
+    {
+      name: 'Eliminar Usuario',
+    }
+  ]
 }

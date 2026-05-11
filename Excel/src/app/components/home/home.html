@@ -97,13 +97,11 @@
                 style="margin-top: 1em;">
                 <thead>
                     <tr>
-                        <th rowSpan="2">Nombre</th>
-                        <th rowSpan="2">Rol</th>
-                        <th colspan="2">Acciones</th>
-                    </tr>
-                    <tr>
-                        <th>Editar Contraseña</th>
-                        <th>Eliminar Usuario</th>
+                        @for (column of UserColumns; track column) {
+                        <th [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn">
+                            {{ column.name }}
+                        </th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -130,17 +128,11 @@
                 [nzScroll]="{x:'auto' }" style="margin-top: 1em;">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Abrir</th>
-                        <th>Editar</th>
-                        <th>Editar Permisos</th>
-                        <th>Eliminar</th>
-                        <th>Descripcion</th>
-                        <th>Permiso</th>
-                        <th>Fecha Creacion</th>
-                        <th>Fecha Modificacion</th>
-                        <th>Ultima Subida</th>
-                        <th>Tipo</th>
+                        @for (column of FicheroColumns; track column) {
+                        <th [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn">
+                            {{ column.name }}
+                        </th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
