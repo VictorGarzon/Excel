@@ -1,18 +1,21 @@
 import { Routes } from '@angular/router';
 import { Tabla } from './components/tabla/tabla';
 import { Main } from './pages/main/main';
-import { Home } from './components/home/home';
+import { Home } from './pages/home/home';
 import { authGuard } from './guards/auth-guard';
 import { saveGuard } from './guards/save-guard';
-import { Profile } from './components/profile/profile';
+import { Profile } from './pages/profile/profile';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/main' },
+  { path: '', pathMatch: 'full', redirectTo: 'main' },
   {
     path: 'main',
-    component: Tabla,
-    canDeactivate: [saveGuard],
-    runGuardsAndResolvers: 'always',
+    component: Main,
+    children: [
+      { path: '', redirectTo: 'hoja', pathMatch: 'full' },
+      { path: 'hoja', component: Tabla, canDeactivate: [saveGuard], runGuardsAndResolvers: 'always', },
+      { path: '**', redirectTo: 'hoja' }
+    ],
   },
   {
     path: 'home',
@@ -24,5 +27,5 @@ export const routes: Routes = [
     component: Profile,
     canActivate: [authGuard]
   },
-  { path: '**', redirectTo: '/main' },
+  { path: '**', redirectTo: 'main' },
 ];

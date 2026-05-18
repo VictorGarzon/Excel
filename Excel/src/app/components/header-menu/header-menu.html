@@ -1,7 +1,7 @@
 <div nz-flex [nzVertical]="isVertical" nzAlign="center">
     @if (!auth.isAdmin) {
-    <button nz-button nzType="link" nzMatchRouter [routerLink]="['/', 'main']">
-        <span>Nueva de Hoja de calculo</span>
+    <button nz-button nzType="link" nzMatchRouter [routerLink]="['/main/hoja']">
+        <span>Nueva Hoja de calculo</span>
     </button>
     }
     @if (user()) {

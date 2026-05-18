@@ -25,7 +25,7 @@ class Fichero
     #[ORM\Column(type: Types::JSONB, nullable: true)]
     private mixed $data = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $fecha_creacion = null;
 
     #[ORM\Column]

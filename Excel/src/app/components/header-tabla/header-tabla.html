@@ -54,11 +54,12 @@
         <button nz-button nz-col nzMd="0" (click)="openFunciones()">Ver funciones</button>
         }
         @else if (this.tipo() === 'f' && this.mode() === 3) {
-        <h1>Seleciona las columnas que participen</h1>
+        <h1 style="line-height: normal;" >Seleciona las columnas que participen</h1>
         }@else {
-        <h1>Seleciona la columna para poner el resultado</h1>
+        <h1 style="line-height: normal;">Seleciona la columna para poner el resultado</h1>
         }
         }
+        <!--
         @if (mode() > 2) {
         <button nz-button nzType="primary" class="success" nzShape="circle" (click)="confirm()">
             <span nz-icon nzType="check"></span>
@@ -67,6 +68,7 @@
             <span nz-icon nzType="close"></span>
         </button>
         }
+    -->
         }
     </div>
 </nz-header>

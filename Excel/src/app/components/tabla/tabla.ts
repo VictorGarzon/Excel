@@ -60,7 +60,7 @@ export class Tabla implements saveCanDeactivate {
     // en caso de cambio de la data que cambie
     effect(() => {
       let data = this.ficheroService.data();
-      if (!this.ficheroService.modificado) {
+      if (untracked(() => !this.ficheroService.modificado)) {
         untracked(() => this.reinicio(data))
       }
     })
@@ -104,6 +104,7 @@ export class Tabla implements saveCanDeactivate {
     this.organizarRows(jsonData?.rows ?? null);
     this.organizarFooter(jsonData?.footers ?? null);
     this.organizarFunctions(jsonData?.functions ?? null);
+    
     this.ficheroService.modificado = false;
   }
 
@@ -387,6 +388,7 @@ export class Tabla implements saveCanDeactivate {
               )
               untracked(() => this.ficheroService.setData(data))
               untracked(() => this.ficheroService.setFechMod(fecha_mod))
+              this.ficheroService.modificado = false;
               this.message.createBasicMessage('success', "Se ha guardado")
             } catch (err: any) {
               if (err.status == 409) {
@@ -403,9 +405,9 @@ export class Tabla implements saveCanDeactivate {
                 tap(f => untracked(() => this.ficheroService.fichero.set(f))),
               )
             )
+            this.ficheroService.modificado = false;
             this.message.createBasicMessage('success', "Se ha creado un nuevo fichero")
           }
-          this.ficheroService.modificado = false;
         }
       } catch (err: any) {
         if (err.status == 409) {

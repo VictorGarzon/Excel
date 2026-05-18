@@ -2,7 +2,6 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter, withHashLocation, withRouterConfig } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './interceptors/auth-interceptor';
 import { jwtInterceptor } from './interceptors/jwt-interceptor';
@@ -20,7 +19,6 @@ export const appConfig: ApplicationConfig = {
       withRouterConfig({
         onSameUrlNavigation: 'reload',
       })),
-    provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch()),
     //provideHttpClient(withInterceptors([authInterceptor]))
     provideHttpClient(withInterceptors([jwtInterceptor])),

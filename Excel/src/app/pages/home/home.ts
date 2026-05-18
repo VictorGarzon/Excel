@@ -11,14 +11,14 @@ import { Fichero } from '../../models/ficheros';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
-import { ModalCreateFichero } from "../modal-create-fichero/modal-create-fichero";
+import { ModalCreateFichero } from "../../components/modal-create-fichero/modal-create-fichero";
 import { MessageService } from '../../services/message.service';
 import { FicheroService } from '../../services/fichero.service';
 import { Router } from '@angular/router'
-import { ModalPermisos } from "../modal-permisos/modal-permisos";
+import { ModalPermisos } from "../../components/modal-permisos/modal-permisos";
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user';
-import { ModalEditUser } from "../modal-edit-user/modal-edit-user";
+import { ModalEditUser } from "../../components/modal-edit-user/modal-edit-user";
 
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { FormsModule } from "@angular/forms";
@@ -146,7 +146,7 @@ export class Home {
       )
       fichero.data = data
       this.ficheroService.fichero.set(fichero);
-      this.router.navigate(['/main'])
+      this.router.navigate(['/main/hoja'])
     } catch (err: any) {
       this.message.createBasicMessage('error', err.message)
     }

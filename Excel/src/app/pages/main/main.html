@@ -1,17 +1,1 @@
-<nz-layout>
-  <nz-header nz-row>
-    <button>Exportar</button>
-    <input type="file" accept=".json" (change)="($event)">
-    <button (click)="('suma')">Sumar</button>
-    <button (click)="('resta')">resta</button>
-    <button (click)="('suma')">suma columna</button>
-    <button (click)="('')">Confirmar</button>
-    <button (click)="('')">quitar</button>
-    <button (click)="('')">quitar columna</button>
-  </nz-header>
-  <nz-content>
-    <div class="inner-content">
-      <app-tabla></app-tabla>
-    </div>
-  </nz-content>
-</nz-layout>
+<router-outlet></router-outlet>

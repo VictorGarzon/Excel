@@ -286,7 +286,7 @@
     </parameter>
     <parameter key="security.logout_uris" type="collection"/>
     <parameter key="lexik_jwt_authentication.pass_phrase">%env(JWT_PASSPHRASE)%</parameter>
-    <parameter key="lexik_jwt_authentication.token_ttl">86400</parameter>
+    <parameter key="lexik_jwt_authentication.token_ttl">28800</parameter>
     <parameter key="lexik_jwt_authentication.clock_skew">0</parameter>
     <parameter key="lexik_jwt_authentication.allow_no_expiration">false</parameter>
     <parameter key="lexik_jwt_authentication.user_id_claim">username</parameter>
@@ -453,14 +453,6 @@
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\FicheroController"/>
-      </call>
-    </service>
-    <service id="App\Controller\HomeController" class="App\Controller\HomeController" public="true" autowire="true" autoconfigure="true">
-      <tag name="controller.service_arguments"/>
-      <tag name="routing.controller"/>
-      <tag name="container.service_subscriber"/>
-      <call method="setContainer">
-        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\HomeController"/>
       </call>
     </service>
     <service id="App\Controller\MeController" class="App\Controller\MeController" public="true" autowire="true" autoconfigure="true">
@@ -2081,7 +2073,6 @@
       <argument type="collection">
         <argument>App\Controller\AccesoController</argument>
         <argument>App\Controller\FicheroController</argument>
-        <argument>App\Controller\HomeController</argument>
         <argument>App\Controller\MeController</argument>
         <argument>App\Controller\RegistrationController</argument>
         <argument>App\Controller\RolController</argument>
@@ -5589,7 +5580,7 @@
     <service id="lexik_jwt_authentication.jws_provider.lcobucci" class="Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\LcobucciJWSProvider">
       <argument type="service" id="lexik_jwt_authentication.key_loader.raw"/>
       <argument>RS256</argument>
-      <argument>86400</argument>
+      <argument>28800</argument>
       <argument>0</argument>
       <argument>false</argument>
     </service>
@@ -6241,10 +6232,6 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\FicheroController" class="App\Controller\FicheroController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\FicheroController.0.App\Controller\FicheroController" class="App\Controller\FicheroController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\FicheroController" class="App\Controller\FicheroController" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" abstract="true"/>
-    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" abstract="true"/>
-    <service id=".instanceof.App\Controller\HomeController.0.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\MeController" class="App\Controller\MeController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\MeController" class="App\Controller\MeController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\MeController.0.App\Controller\MeController" class="App\Controller\MeController" autowire="true" abstract="true"/>
@@ -7472,12 +7459,6 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
-    <service id=".service_locator.TJNRSaV.App\Controller\HomeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator_context" id="App\Controller\HomeController"/>
-      <argument>App\Controller\HomeController</argument>
-      <argument type="service" id="service_container"/>
-      <factory service=".service_locator.TJNRSaV" method="withContext"/>
-    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\MeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\MeController"/>
       <argument>App\Controller\MeController</argument>
@@ -7661,7 +7642,6 @@
           <argument>App\Kernel</argument>
           <argument>App\Controller\AccesoController</argument>
           <argument>App\Controller\FicheroController</argument>
-          <argument>App\Controller\HomeController</argument>
           <argument>App\Controller\MeController</argument>
           <argument>App\Controller\RegistrationController</argument>
           <argument>App\Controller\RolController</argument>

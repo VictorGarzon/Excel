@@ -5,8 +5,6 @@ namespace App\Controller;
 use App\Entity\Acceso;
 use App\Entity\Fichero;
 use App\Entity\TiposFichero;
-use App\Entity\User;
-use App\Repository\AccesoRepository;
 use App\Repository\FicheroRepository;
 use App\Repository\UserRepository;
 use DateException;
@@ -73,13 +71,15 @@ class FicheroController extends AbstractController
             $ficheros = $queryFichero->getQuery()->getResult();
             $data = [];
             foreach ($ficheros as $fichero) {
+                $ultimaSubida = $fichero[0]->getUltimaSubida();
+                $ultimaSubida = $ultimaSubida ? $ultimaSubida->getEmail() : 'usuario eliminado';
                 $data[] = [
                     "id" => $fichero[0]->getId(),
                     "nombre" => $fichero[0]->getNombre(),
                     "descripcion" => $fichero[0]->getDescripcion(),
                     "fecha_creacion" => $fichero[0]->getFechaCreacion()->format("Y-m-d H:i:s"),
                     "fecha_mod" => $fichero[0]->getFechaMod()->format("Y-m-d H:i:s"),
-                    "ultima_subida" => $fichero[0]->getUltimaSubida()->getEmail(),
+                    "ultima_subida" => $ultimaSubida,
                     "tipo" => $fichero[0]->getTipoFichero()->getNombre(),
                     "permiso" => $fichero['permiso']
                 ];
@@ -96,13 +96,15 @@ class FicheroController extends AbstractController
         try {
             $acceso = $fiRepo->getAcceso($id);
             $fichero = $acceso->getFichero();
+            $ultimaSubida = $fichero->getUltimaSubida();
+            $ultimaSubida = $ultimaSubida ? $ultimaSubida->getEmail() : 'usuario eliminado';
             $ficheroData = [
                 "id" => $fichero->getId(),
                 "nombre" => $fichero->getNombre(),
                 "descripcion" => $fichero->getDescripcion(),
                 "fecha_creacion" => $fichero->getFechaCreacion()->format("Y-m-d H:i:s"),
                 "fecha_mod" => $fichero->getFechaMod()->format("Y-m-d H:i:s"),
-                "ultima_subida" => $fichero->getUltimaSubida()->getEmail(),
+                "ultima_subida" => $ultimaSubida,
                 "tipo" => $fichero->getTipoFichero()->getNombre(),
                 "permiso" => $acceso->getPermiso()
             ];
@@ -213,11 +215,11 @@ class FicheroController extends AbstractController
                     }
                 }
                 $fichero->setData($decoded->data);
-                $user = $acceso->getUser();
-                $fichero->setUltimaSubida($user);
                 $fecha = new DateTime();
                 $fichero->setFechaMod($fecha);
             }
+            $user = $acceso->getUser();
+            $fichero->setUltimaSubida($user);
             $entityManager->persist($fichero);
             $entityManager->flush();
 

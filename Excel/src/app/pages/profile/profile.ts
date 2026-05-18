@@ -82,7 +82,7 @@ export class Profile {
         this.isRequiredEmail.set(false)
       }
       if (password || newpassword) {
-        if (!(!password || !newpassword)) {
+        if ((password && !newpassword) || (!password && newpassword)) {
           return { required: true };
         }
         this.isRequired.set(true)

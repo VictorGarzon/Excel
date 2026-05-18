@@ -8,11 +8,6 @@ import { log } from 'console';
   providedIn: 'root',
 })
 export class FicheroService {
-  /*
-  private ficheroSubject = new BehaviorSubject<Fichero | null>(null);
-
-  fichero$: Observable<Fichero | null> = this.ficheroSubject.asObservable();
-  */
   fichero = signal<Fichero | any>(null)
 
   cargado = signal(false);

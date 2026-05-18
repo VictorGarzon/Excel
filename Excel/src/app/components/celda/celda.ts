@@ -116,7 +116,6 @@ export class Celda {
           const regex = /^\d{4}-\d{2}-\d{2}$/;
           if (!regex.test(e?.valor())) {
             const fechaFormat = fecha.toISOString().split('T')[0]
-            console.log(fechaFormat);
             e?.renderer.setProperty(input, 'value', fechaFormat);
           };
           datos.push(fecha)
@@ -132,7 +131,7 @@ export class Celda {
   resetCeldas() {
     this.celdasAnterior.forEach((e: Celda) => {
       let input = e?.el.nativeElement.querySelector('input');
-      e.renderer.setAttribute(input, 'type', 'text');
+      e?.renderer.setAttribute(input, 'type', 'text');
       e?.renderer.removeClass(e.el.nativeElement, 'error');
     })
   }

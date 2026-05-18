@@ -23,7 +23,6 @@ return [
             [['_route' => 'api_ficherohome_fichero', '_controller' => 'App\\Controller\\FicheroController::index'], null, ['GET' => 0], null, false, false, null],
             [['_route' => 'api_ficherocrear_fichero', '_controller' => 'App\\Controller\\FicheroController::create'], null, ['POST' => 0], null, false, false, null],
         ],
-        '/api/home' => [[['_route' => 'api_homehome_index', '_controller' => 'App\\Controller\\HomeController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/me' => [
             [['_route' => 'api_meme_index', '_controller' => 'App\\Controller\\MeController::index'], null, ['GET' => 0], null, false, false, null],
             [['_route' => 'api_meme_edicion', '_controller' => 'App\\Controller\\MeController::edit'], null, ['PATCH' => 0], null, false, false, null],

@@ -23,6 +23,10 @@
     height: 100%;
 }
 
+nz-header{
+    line-height: normal;
+}
+
 nz-content {
     background: #fff;
     height: 100%;

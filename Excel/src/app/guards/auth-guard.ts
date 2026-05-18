@@ -6,15 +6,13 @@ import { MessageService } from '../services/message.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
-  const router = inject(Router);
   const message = inject(MessageService)
 
-  if (authService.isAuthenticated) {
+  if (authService.user$) {
     return true;
   } else {
     message.createBasicMessage("error","No puedes acceder")
-    authService.logout
-    router.navigate(['/main']);
+    authService.logout()
     return false
   }
 };

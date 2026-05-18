@@ -18,5 +18,4 @@ export const saveGuard: CanDeactivateFn<saveCanDeactivate> = (
     return true
   }
   return false
-  //return component.canDeactivate ? component.canDeactivate() : true;
 };
