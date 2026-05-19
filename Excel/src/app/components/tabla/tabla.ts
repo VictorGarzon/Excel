@@ -1,7 +1,7 @@
-import { afterNextRender, AfterViewChecked, AfterViewInit, Component, computed, effect, ElementRef, HostListener, inject, signal, untracked, viewChild, viewChildren } from '@angular/core';
+import { afterNextRender, Component, computed, effect, HostListener, inject, signal, untracked, viewChildren } from '@angular/core';
 import { Fila } from "../fila/fila";
-import { tabla, tablaColumna, tablaFila, tablaFuncion } from '../../models/tabla';
-import { NzLayoutComponent, NzHeaderComponent, NzContentComponent } from "ng-zorro-antd/layout";
+import { tablaColumna, tablaFila, tablaFuncion } from '../../models/tabla';
+import { NzLayoutComponent, NzContentComponent } from "ng-zorro-antd/layout";
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
@@ -59,8 +59,9 @@ export class Tabla implements saveCanDeactivate {
     })
     // en caso de cambio de la data que cambie
     effect(() => {
-      let data = this.ficheroService.data();
-      if (untracked(() => !this.ficheroService.modificado)) {
+      this.ficheroService.setTipo(1)
+      let data = this.ficheroService.fichero().data;
+      if (!this.ficheroService.modificado) {
         untracked(() => this.reinicio(data))
       }
     })
@@ -104,7 +105,7 @@ export class Tabla implements saveCanDeactivate {
     this.organizarRows(jsonData?.rows ?? null);
     this.organizarFooter(jsonData?.footers ?? null);
     this.organizarFunctions(jsonData?.functions ?? null);
-    
+
     this.ficheroService.modificado = false;
   }
 
@@ -332,6 +333,7 @@ export class Tabla implements saveCanDeactivate {
         const content = e.target.result;
         const jsonData = JSON.parse(content);
         this.reinicio(jsonData)
+        this.ficheroService.modificado = true
         this.message.createBasicMessage("success", "Subido con exito")
       } catch (error) {
         this.message.createBasicMessage("error", "El archivo no tiene un formato JSON válido")
@@ -398,7 +400,7 @@ export class Tabla implements saveCanDeactivate {
               }
             }
           } else {
-            newData.tipo = 1;
+            newData.tipo = fichero.tipo;
             await firstValueFrom(
               this.api.post('fichero', newData).pipe(
                 switchMap((id) => this.api.get('fichero/' + id)),

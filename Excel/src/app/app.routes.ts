@@ -5,6 +5,7 @@ import { Home } from './pages/home/home';
 import { authGuard } from './guards/auth-guard';
 import { saveGuard } from './guards/save-guard';
 import { Profile } from './pages/profile/profile';
+import { Texto } from './components/texto/texto';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'main' },
@@ -14,6 +15,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'hoja', pathMatch: 'full' },
       { path: 'hoja', component: Tabla, canDeactivate: [saveGuard], runGuardsAndResolvers: 'always', },
+      { path: 'texto', component: Texto, canDeactivate: [saveGuard], runGuardsAndResolvers: 'always', },
       { path: '**', redirectTo: 'hoja' }
     ],
   },

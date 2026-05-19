@@ -1,0 +1,25 @@
+<nz-layout>
+    <app-header-tabla (upload)="InputFile.click()" (download)="download()" (uploadDB)="uploadDB()" />
+    <input #InputFile type="file" [accept]="ficheroService.fichero().tipo == 1?'.json':'.txt'" style="display: none;"
+        (change)="onFileSelected($event)">
+    <nz-content nz-row nzJustify="center" nzAlign="middle">
+        <div nz-col class="inner-content">
+            <textarea name="textarea" [(ngModel)]="data" (input)="ficheroService.modificado = true"></textarea>
+        </div>
+    </nz-content>
+</nz-layout>
+
+<nz-alert nzBanner nzType="warning" nzMessage="Hay una version mas actual ¿quieres sobrescribirlo?" [nzAction]="action"
+    [nzDescription]="description" [style]="visibleAlert()?'':'display: none'"
+    style="position: absolute; width: 50%; left: 25%;z-index: 1; align-items: center;" />
+<ng-template #description>
+    <p>Otro ususario ha hecho cambios, si lo sobrescribirbes los cambios de ese usuario seran borrados</p>
+    <p>Se recomienda descargar los cambios en el dispositivo y volver a abrir el archivo</p>
+</ng-template>
+<ng-template #action>
+    <nz-space nzDirection="vertical">
+        <button *nzSpaceItem nz-button nzSize="small" nzType="primary" (click)="closedAlert()">Cerrar</button>
+        <button *nzSpaceItem nz-button nzSize="small" nzType="default" nzDanger
+            (click)="uploadDB(true)">Continiar</button>
+    </nz-space>
+</ng-template>

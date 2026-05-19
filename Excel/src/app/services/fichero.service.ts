@@ -54,6 +54,10 @@ export class FicheroService {
     this.fichero.update(f => ({ ...f!, fecha_mod: fecha_mod }))
   }
 
+  public setTipo(tipo: number) {
+    this.fichero.update(f => ({ ...f!, tipo: tipo }))
+  }
+
   public reset() {
     this.fichero.set(null)
     this.modificado = false

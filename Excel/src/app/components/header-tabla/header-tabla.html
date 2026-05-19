@@ -18,6 +18,7 @@
     </div>
     }
     <!-- Formulas -->
+    @if (ficheroService.fichero()?.tipo === 1) {
     <div nz-col nz-flex nzGap="middle" nzAlign="center">
         @if (ficheroService.permiso()) {
         @if (mode()==0) {
@@ -54,7 +55,7 @@
         <button nz-button nz-col nzMd="0" (click)="openFunciones()">Ver funciones</button>
         }
         @else if (this.tipo() === 'f' && this.mode() === 3) {
-        <h1 style="line-height: normal;" >Seleciona las columnas que participen</h1>
+        <h1 style="line-height: normal;">Seleciona las columnas que participen</h1>
         }@else {
         <h1 style="line-height: normal;">Seleciona la columna para poner el resultado</h1>
         }
@@ -71,6 +72,7 @@
     -->
         }
     </div>
+    }
 </nz-header>
 
 <nz-float-button-group [style]="!isVisible()?'display: none;':''">

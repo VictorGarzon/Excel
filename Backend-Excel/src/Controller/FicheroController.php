@@ -119,8 +119,10 @@ class FicheroController extends AbstractController
     {
         try {
             $acceso = $fiRepo->getAcceso($id);
-            $data = $acceso->getFichero()->getData();
-            return new JsonResponse($data, status: 201);
+            return new JsonResponse([
+                'data' => $acceso->getFichero()->getData(),
+                'tipo' => $acceso->getFichero()->getTipoFichero()->getId()
+            ], status: 201);
         } catch (Exception $err) {
             return new JsonResponse($err->getMessage(), status: 500);
         }

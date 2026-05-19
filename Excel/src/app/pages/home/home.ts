@@ -141,12 +141,17 @@ export class Home {
 
   async abrir(fichero: Fichero) {
     try {
-      let data = await firstValueFrom(
+      let newfichero = await firstValueFrom(
         this.api.get(`fichero/${fichero.id}/data`)
       )
-      fichero.data = data
+      fichero.data = newfichero.data
+      fichero.tipo = newfichero.tipo
       this.ficheroService.fichero.set(fichero);
-      this.router.navigate(['/main/hoja'])
+      if (newfichero.tipo === 1) {
+        this.router.navigate(['/main/hoja'])
+      } else if (newfichero.tipo === 2) {
+        this.router.navigate(['/main/texto'])
+      }
     } catch (err: any) {
       this.message.createBasicMessage('error', err.message)
     }
