@@ -109,6 +109,7 @@ export class Profile {
           this.auth.setUser({ ...this.user(), email: user.email })
         }
         this.message.createBasicMessage('success', "Edicion existoso")
+        this.auth.logout()
       } catch (err: any) {
         if (err.status === 400) {
           this.message.createBasicMessage('error', 'Contraseña mal')

@@ -34,7 +34,7 @@ export class Texto {
   constructor() {
     effect(() => {
       this.ficheroService.setTipo(2)
-      let data = this.ficheroService.fichero().data;
+      let data = this.ficheroService.data();
       if (untracked(() => !this.ficheroService.modificado)) {
         untracked(() => this.reinicio(data))
       }
@@ -147,7 +147,7 @@ export class Texto {
               }
             }
           } else {
-            newData.tipo = fichero.tipo;
+            newData.tipo = this.ficheroService.tipo();
             await firstValueFrom(
               this.api.post('fichero', newData).pipe(
                 switchMap((id) => this.api.get('fichero/' + id)),

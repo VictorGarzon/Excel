@@ -32,7 +32,7 @@ class Fichero
     private ?\DateTime $fecha_mod = null;
 
     #[ORM\ManyToOne(inversedBy: 'ficheros')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $ultima_subida = null;
 
     /**

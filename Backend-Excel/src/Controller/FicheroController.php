@@ -105,7 +105,7 @@ class FicheroController extends AbstractController
                 "fecha_creacion" => $fichero->getFechaCreacion()->format("Y-m-d H:i:s"),
                 "fecha_mod" => $fichero->getFechaMod()->format("Y-m-d H:i:s"),
                 "ultima_subida" => $ultimaSubida,
-                "tipo" => $fichero->getTipoFichero()->getNombre(),
+                "tipo" => $fichero->getTipoFichero()->getId(),
                 "permiso" => $acceso->getPermiso()
             ];
             return new JsonResponse($ficheroData, status: 201);

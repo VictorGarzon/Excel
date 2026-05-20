@@ -60,7 +60,7 @@ export class Tabla implements saveCanDeactivate {
     // en caso de cambio de la data que cambie
     effect(() => {
       this.ficheroService.setTipo(1)
-      let data = this.ficheroService.fichero().data;
+      let data = this.ficheroService.data();
       if (!this.ficheroService.modificado) {
         untracked(() => this.reinicio(data))
       }
@@ -400,7 +400,7 @@ export class Tabla implements saveCanDeactivate {
               }
             }
           } else {
-            newData.tipo = fichero.tipo;
+            newData.tipo = this.ficheroService.tipo();
             await firstValueFrom(
               this.api.post('fichero', newData).pipe(
                 switchMap((id) => this.api.get('fichero/' + id)),

@@ -19,7 +19,8 @@
   display: inline-block;
   height: 90%;
   vertical-align: middle;
-  margin-top: -30%;
+  position: absolute;
+  top: 0;
 }
 
 nz-content {

@@ -1,10 +1,11 @@
 <nz-layout>
     <app-header-tabla (upload)="InputFile.click()" (download)="download()" (uploadDB)="uploadDB()" />
-    <input #InputFile type="file" [accept]="ficheroService.fichero().tipo == 1?'.json':'.txt'" style="display: none;"
+    <input #InputFile type="file" [accept]="ficheroService.tipo() == 1?'.json':'.txt'" style="display: none;"
         (change)="onFileSelected($event)">
     <nz-content nz-row nzJustify="center" nzAlign="middle">
         <div nz-col class="inner-content">
-            <textarea name="textarea" [(ngModel)]="data" (input)="ficheroService.modificado = true"></textarea>
+            <textarea name="textarea" [(ngModel)]="data" (input)="ficheroService.modificado = true"
+                [disabled]="!ficheroService.permiso()"></textarea>
         </div>
     </nz-content>
 </nz-layout>

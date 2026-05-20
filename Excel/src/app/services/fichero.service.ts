@@ -14,6 +14,8 @@ export class FicheroService {
 
   modificado = false
 
+  tipo = signal(0)
+
   data = computed(() => {
     return this.fichero()?.data
   })
@@ -55,7 +57,7 @@ export class FicheroService {
   }
 
   public setTipo(tipo: number) {
-    this.fichero.update(f => ({ ...f!, tipo: tipo }))
+    this.tipo.set(tipo)
   }
 
   public reset() {

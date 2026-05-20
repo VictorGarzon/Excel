@@ -18,7 +18,7 @@
     </div>
     }
     <!-- Formulas -->
-    @if (ficheroService.fichero()?.tipo === 1) {
+    @if (ficheroService.tipo() === 1) {
     <div nz-col nz-flex nzGap="middle" nzAlign="center">
         @if (ficheroService.permiso()) {
         @if (mode()==0) {
