@@ -346,23 +346,45 @@ export class Tabla implements saveCanDeactivate {
 
   // descargar 
   download() {
-    if (!this.ficheroService.modificado) {
-      this.message.createBasicMessage('warning', 'Sin cambios')
-    } else {
-      const tabla = this.formatUpload();
-      const data = JSON.stringify(tabla, null, 2);
-      const blob = new Blob([data], { type: 'application/json' });
+    const tabla = this.formatUpload();
+    const data = JSON.stringify(tabla, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
 
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'datos.json';
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'datos.json';
 
-      link.click();
+    link.click();
 
-      window.URL.revokeObjectURL(url);
-      this.ficheroService.modificado = false;
-    }
+    window.URL.revokeObjectURL(url);
+    this.ficheroService.modificado = false;
+  }
+
+  // descargar 
+  downloadCSV() {
+    const separator = ';';
+    const tabla = this.filas().map(f =>
+      f.celdas().map(c => {
+        const v = c.valor()
+        const str = v === null || v === undefined ? '' : String(v);
+        if (str.includes('"') || str.includes(separator) || str.includes('\n') || str.includes('\r')) {
+          return '"' + str.replace(/"/g, '""') + '"';
+        }
+        return str;
+      }).join(separator)
+    ).join('\r\n');
+    const blob = new Blob([tabla], { type: 'text/csv' });
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'datos.csv';
+
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+    this.ficheroService.modificado = false;
   }
 
   //guardar base de datos

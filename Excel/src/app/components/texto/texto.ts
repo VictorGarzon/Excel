@@ -94,22 +94,18 @@ export class Texto {
 
   // descargar 
   download() {
-    if (!this.ficheroService.modificado) {
-      this.message.createBasicMessage('warning', 'Sin cambios')
-    } else {
-      const data = this.data();
-      const blob = new Blob([data], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
+    const data = this.data();
+    const blob = new Blob([data], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
 
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = 'texto.txt';
-      anchor.click();
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'texto.txt';
+    anchor.click();
 
-      URL.revokeObjectURL(url);
+    URL.revokeObjectURL(url);
 
-      this.ficheroService.modificado = false;
-    }
+    this.ficheroService.modificado = false;
   }
 
   //guardar base de datos

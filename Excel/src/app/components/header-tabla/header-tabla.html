@@ -96,6 +96,12 @@
             <nz-icon nzType="download" />
             <span>Descargar</span>
         </button>
+        @if (ficheroService.tipo() === 1) {
+        <button nz-button nzType="default" (click)="downloadcsv.emit()">
+            <nz-icon nzType="download" />
+            <span>DescargarCSV</span>
+        </button>
+        }
         @if ( ficheroService.permiso()) {
         <div style="line-height: 0;">
             <button nz-button (click)="upload.emit()">

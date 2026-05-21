@@ -27,6 +27,7 @@ export class HeaderTabla {
   upload = output()
   uploadDB = output()
   download = output()
+  downloadcsv = output()
 
   isVisible = signal(false)
 

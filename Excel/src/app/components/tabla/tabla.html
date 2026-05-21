@@ -1,7 +1,7 @@
 <nz-layout>
     <app-header-tabla (setSelect)="modeSelect.set($event)" (setSelectMult)="modeSelectMult.set($event)"
-        (upload)="InputFile.click()" (download)="download()" (uploadDB)="uploadDB()" (clear)="clearSelect()"
-        (result)="aplicar($event)" />
+        (upload)="InputFile.click()" (download)="download()" (downloadcsv)="downloadCSV()" (uploadDB)="uploadDB()"
+        (clear)="clearSelect()" (result)="aplicar($event)" />
     <input #InputFile type="file" accept=".json" style="display: none;" (change)="onFileSelected($event)">
     <nz-content nz-row nzJustify="center" nzAlign="middle">
         <div nz-col class="inner-content">
