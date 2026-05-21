@@ -4,7 +4,7 @@
         (change)="onFileSelected($event)">
     <nz-content nz-row nzJustify="center" nzAlign="middle">
         <div nz-col class="inner-content">
-            <textarea name="textarea" [(ngModel)]="data" (input)="ficheroService.modificado = true"
+            <textarea name="textarea" [(ngModel)]="data" (input)="modificacion()"
                 [disabled]="!ficheroService.permiso()"></textarea>
         </div>
     </nz-content>

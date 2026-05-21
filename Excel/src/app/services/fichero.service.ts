@@ -12,7 +12,7 @@ export class FicheroService {
 
   cargado = signal(false);
 
-  modificado = false
+  modificado = signal(false)
 
   tipo = signal(0)
 
@@ -38,7 +38,7 @@ export class FicheroService {
         data: data
       })
     }
-    this.modificado = true
+    this.modificado.set(true)
   }
 
   public setNombre(nombre: string) {
@@ -49,7 +49,7 @@ export class FicheroService {
         nombre: nombre
       })
     }
-    this.modificado = true
+    this.modificado.set(true)
   }
 
   public setFechMod(fecha_mod: string) {
@@ -60,9 +60,13 @@ export class FicheroService {
     this.tipo.set(tipo)
   }
 
+  public setFichero(fichero: Fichero) {
+    this.fichero.set(fichero)
+  }
+
   public reset() {
     this.fichero.set(null)
-    this.modificado = false
+    this.modificado.set(false)
   }
 
 }

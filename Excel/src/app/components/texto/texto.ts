@@ -1,13 +1,11 @@
-import { afterNextRender, Component, computed, effect, HostListener, inject, signal, untracked, viewChildren } from '@angular/core';
-import { Fila } from "../fila/fila";
-import { tablaColumna, tablaFila, tablaFuncion } from '../../models/tabla';
+import { Component, effect, HostListener, inject, signal, untracked } from '@angular/core';
 import { NzLayoutComponent, NzContentComponent } from "ng-zorro-antd/layout";
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { MessageService } from '../../services/message.service';
 import { FicheroService } from '../../services/fichero.service';
-import { firstValueFrom, switchMap, tap, timer } from 'rxjs';
+import { firstValueFrom, switchMap, tap } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import { HeaderTabla } from "../header-tabla/header-tabla";
 import { saveCanDeactivate } from '../../guards/save-guard';
@@ -24,7 +22,7 @@ import { FormsModule } from "@angular/forms";
   templateUrl: './texto.html',
   styleUrl: './texto.css',
 })
-export class Texto {
+export class Texto implements saveCanDeactivate {
   message = inject(MessageService)
   ficheroService = inject(FicheroService)
   private api = inject(ApiService)
@@ -32,22 +30,24 @@ export class Texto {
   data = signal<string>('')
 
   constructor() {
+    this.ficheroService.setTipo(2)
     effect(() => {
-      this.ficheroService.setTipo(2)
-      let data = this.ficheroService.data();
-      if (untracked(() => !this.ficheroService.modificado)) {
-        untracked(() => this.reinicio(data))
-      }
+      let data = this.ficheroService.fichero()?.data;
+      untracked(() => {
+        if (!this.ficheroService.modificado()) {
+          this.reinicio(data)
+        }
+      })
     })
   }
 
   reinicio(data: any) {
     this.data.set(data?.text ?? '')
-    this.ficheroService.modificado = false;
+    this.ficheroService.modificado.set(false)
   }
 
   canDeactivate(): boolean {
-    if (this.ficheroService.modificado) {
+    if (this.ficheroService.modificado()) {
       return confirm('Tienes cambios sin guardar ¿Quieres salir?');
     }
     return true;
@@ -56,9 +56,16 @@ export class Texto {
   //alert cerrar ventana
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(event: BeforeUnloadEvent) {
-    if (this.ficheroService.modificado) {
+    if (this.ficheroService.modificado()) {
       event.preventDefault();
     }
+  }
+
+  modificacion() {
+    if (!this.ficheroService.data() && !this.ficheroService.modificado()) {
+      this.ficheroService.setData(null)
+    }
+    this.ficheroService.modificado.set(true)
   }
 
   // alerta
@@ -81,10 +88,10 @@ export class Texto {
       try {
         const content = e.target.result;
         this.reinicio({ text: content })
-        this.ficheroService.modificado = true
+        this.ficheroService.modificado.set(true)
         this.message.createBasicMessage("success", "Subido con exito")
       } catch (error) {
-        this.message.createBasicMessage("error", "El archivo no tiene un formato JSON válido")
+        this.message.createBasicMessage("error", "El archivo no tiene un formato txt válido")
       }
     };
 
@@ -105,12 +112,12 @@ export class Texto {
 
     URL.revokeObjectURL(url);
 
-    this.ficheroService.modificado = false;
+    this.ficheroService.modificado.set(false)
   }
 
   //guardar base de datos
   async uploadDB(acept: boolean = false) {
-    if (!this.ficheroService.modificado) {
+    if (!this.ficheroService.modificado()) {
       this.message.createBasicMessage('warning', 'Sin cambios')
     } else {
       try {
@@ -133,7 +140,7 @@ export class Texto {
               )
               untracked(() => this.ficheroService.setData(data))
               untracked(() => this.ficheroService.setFechMod(fecha_mod))
-              this.ficheroService.modificado = false;
+              this.ficheroService.modificado.set(false)
               this.message.createBasicMessage('success', "Se ha guardado")
             } catch (err: any) {
               if (err.status == 409) {
@@ -147,10 +154,10 @@ export class Texto {
             await firstValueFrom(
               this.api.post('fichero', newData).pipe(
                 switchMap((id) => this.api.get('fichero/' + id)),
-                tap(f => untracked(() => this.ficheroService.fichero.set(f))),
+                tap((f) => this.ficheroService.setFichero(f)),
               )
             )
-            this.ficheroService.modificado = false;
+            //this.ficheroService.modificado.set(false)
             this.message.createBasicMessage('success', "Se ha creado un nuevo fichero")
           }
         }

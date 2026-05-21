@@ -4,8 +4,9 @@
     background-color: var(--secundary-color);
     overflow-y: auto;
     overflow-x: hidden;
-    height: 90vh;
+    height: 100vh;
     position: sticky;
+    width: 10vw;
     top: 0;
 }
 
@@ -23,7 +24,7 @@
     height: 100%;
 }
 
-nz-header{
+nz-header {
     line-height: normal;
 }
 

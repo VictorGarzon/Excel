@@ -74,7 +74,7 @@ export class Celda {
   cambiar(event: Event) {
     const valor = (event.target as HTMLInputElement).value;
     this.valorCambio.set(valor)
-    if (!this.ficheroService.modificado) {
+    if (!this.ficheroService.modificado()) {
       this.ficheroService.setData(null)
     }
   }

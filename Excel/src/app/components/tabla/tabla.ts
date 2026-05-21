@@ -44,6 +44,7 @@ export class Tabla implements saveCanDeactivate {
   anchoPantalla = 0;
 
   constructor() {
+    this.ficheroService.setTipo(1)
     //poner tamaño inicial
     afterNextRender(() => {
       let height = window.innerHeight > window.outerHeight ? window.innerHeight : window.outerHeight;
@@ -59,11 +60,12 @@ export class Tabla implements saveCanDeactivate {
     })
     // en caso de cambio de la data que cambie
     effect(() => {
-      this.ficheroService.setTipo(1)
-      let data = this.ficheroService.data();
-      if (!this.ficheroService.modificado) {
-        untracked(() => this.reinicio(data))
-      }
+      let data = this.ficheroService.fichero()?.data;
+      untracked(() => {
+        if (!this.ficheroService.modificado()) {
+          this.reinicio(data)
+        }
+      })
     })
     effect(() => {
       this.ficheroService.cargado.set(this.cargado())
@@ -79,7 +81,7 @@ export class Tabla implements saveCanDeactivate {
   spinning = signal(true)
 
   canDeactivate(): boolean {
-    if (this.ficheroService.modificado) {
+    if (this.ficheroService.modificado()) {
       return confirm('Tienes cambios sin guardar ¿Quieres salir?');
     }
     return true;
@@ -88,7 +90,7 @@ export class Tabla implements saveCanDeactivate {
   //alert cerrar ventana
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(event: BeforeUnloadEvent) {
-    if (this.ficheroService.modificado) {
+    if (this.ficheroService.modificado()) {
       event.preventDefault();
     }
   }
@@ -106,7 +108,7 @@ export class Tabla implements saveCanDeactivate {
     this.organizarFooter(jsonData?.footers ?? null);
     this.organizarFunctions(jsonData?.functions ?? null);
 
-    this.ficheroService.modificado = false;
+    this.ficheroService.modificado.set(false)
   }
 
   // terminado de cargar
@@ -207,7 +209,7 @@ export class Tabla implements saveCanDeactivate {
         let ultimaColumna = datos[datos.length - 1].columna;
         this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
       } else {
-        this.ficheroService.modificado = true;
+        this.ficheroService.modificado.set(true)
       }
 
       this.functions.set(datos)
@@ -231,7 +233,7 @@ export class Tabla implements saveCanDeactivate {
         let ultimaColumna = datos[datos.length - 1].columna;
         this.tamColumna.update(tam => ultimaColumna > tam ? ultimaColumna : tam)
       } else {
-        this.ficheroService.modificado = true;
+        this.ficheroService.modificado.set(true)
       }
 
       this.footers.set(datos)
@@ -333,7 +335,7 @@ export class Tabla implements saveCanDeactivate {
         const content = e.target.result;
         const jsonData = JSON.parse(content);
         this.reinicio(jsonData)
-        this.ficheroService.modificado = true
+        this.ficheroService.modificado.set(true)
         this.message.createBasicMessage("success", "Subido con exito")
       } catch (error) {
         this.message.createBasicMessage("error", "El archivo no tiene un formato JSON válido")
@@ -358,7 +360,7 @@ export class Tabla implements saveCanDeactivate {
     link.click();
 
     window.URL.revokeObjectURL(url);
-    this.ficheroService.modificado = false;
+    this.ficheroService.modificado.set(false)
   }
 
   // descargar 
@@ -384,12 +386,12 @@ export class Tabla implements saveCanDeactivate {
     link.click();
 
     window.URL.revokeObjectURL(url);
-    this.ficheroService.modificado = false;
+    this.ficheroService.modificado.set(false)
   }
 
   //guardar base de datos
   async uploadDB(acept: boolean = false) {
-    if (!this.ficheroService.modificado) {
+    if (!this.ficheroService.modificado()) {
       this.message.createBasicMessage('warning', 'Sin cambios')
     } else {
       try {
@@ -412,7 +414,7 @@ export class Tabla implements saveCanDeactivate {
               )
               untracked(() => this.ficheroService.setData(data))
               untracked(() => this.ficheroService.setFechMod(fecha_mod))
-              this.ficheroService.modificado = false;
+              this.ficheroService.modificado.set(false)
               this.message.createBasicMessage('success', "Se ha guardado")
             } catch (err: any) {
               if (err.status == 409) {
@@ -426,10 +428,10 @@ export class Tabla implements saveCanDeactivate {
             await firstValueFrom(
               this.api.post('fichero', newData).pipe(
                 switchMap((id) => this.api.get('fichero/' + id)),
-                tap(f => untracked(() => this.ficheroService.fichero.set(f))),
+                tap(f => this.ficheroService.setFichero(f)),
               )
             )
-            this.ficheroService.modificado = false;
+            //this.ficheroService.modificado.set(false)
             this.message.createBasicMessage('success', "Se ha creado un nuevo fichero")
           }
         }
