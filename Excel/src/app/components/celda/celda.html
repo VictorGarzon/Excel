@@ -1,7 +1,10 @@
-<input type="text" [value]="valor() ?? ''" (input)="cambiar($event)"
+<input #Input type="text" [value]="valor() ?? ''" (input)="cambiar($event)"
     [readOnly]="(funcion() && parte() !== 'head' ) || disabled() ?true:false" nz-popover
     [nzPopoverTitle]="parte()=='head' && funcion()?funcion():''"
     [nzPopoverContent]="parte()=='head' && funcion()?valoresCeldas():''">
+@if (Input.type === 'date') {
+<nz-icon nzType="calendar" nzTheme="outline" (click)="$event.stopPropagation();Input.showPicker()" />
+}
 @if ((parte()=="head"||parte()=="footer") && funcion()) {
 <p>{{funcion()}}</p>
 }

@@ -84,11 +84,8 @@ nz-content {
     height: 50%;
 }
 
-#tabla-main ::ng-deep input:disabled[type='date']::-webkit-calendar-picker-indicator {
-    position: absolute;
-    right: 0;
-    top: 25%;
-    height: 50%;
+#tabla-main ::ng-deep input[type="date"]::-webkit-calendar-picker-indicator {
+    visibility: hidden;
 }
 
 #tabla-main ::ng-deep .seleccionado {

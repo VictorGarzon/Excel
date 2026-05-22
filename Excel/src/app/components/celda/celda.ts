@@ -1,10 +1,12 @@
-import { Component, computed, signal, ElementRef, Renderer2, input, AfterViewInit, OnInit, effect, output, untracked, AfterViewChecked, inject } from '@angular/core';
+import { Component, computed, signal, ElementRef, Renderer2, input, effect, untracked, inject } from '@angular/core';
 import { FicheroService } from '../../services/fichero.service';
 
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+
 @Component({
   selector: 'td[app-celda],th[app-celda]',
-  imports: [NzPopoverModule],
+  imports: [NzPopoverModule, NzIconModule],
   templateUrl: './celda.html',
   styleUrl: './celda.css',
 })
